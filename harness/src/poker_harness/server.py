@@ -8,6 +8,9 @@ grader in `grading.py`. Each policy decision is one chat completion against the 
 `env_params.table_talk` (default false) turns on table talk: every seat's `submit_action` gains an optional `say`,
 sanitized and shown to the other seats.
 
+`env_params.system_hint` (training and testing only; the arena never sets it) appends a hint to the policy seats'
+system prompt, as OPSD's teacher sees it, so a prompt can be tested before it is distilled. Opponents never see it.
+
 A server keeps its tables in memory, so scale out by sharding (`shard_router.py` sends every call for a rollout to
 the same server), not with `uvicorn --workers`.
 
@@ -235,6 +238,7 @@ def create_app(
         try:
             seats = int(params.get("seats", 10))
             policy = {int(i) for i in params.get("policy_seats", range(seats))}
+            hint = params.get("system_hint") or ""  # checked to be a string in `submit`
             if params.get("opponent_model") and not opponent_key and len(policy) < seats:
                 raise RuntimeError("opponent seats need POKER_OPPONENT_API_KEY or AC2_API_KEY in the harness environment")
             decision_timeout = float(params.get("decision_timeout_seconds", DEFAULT_DECISION_TIMEOUT_SECONDS))
@@ -269,11 +273,14 @@ def create_app(
                         model="ac2/policy" if i in policy else f"opponent/{params.get('opponent_model', 'policy')}",
                         timeout_seconds=decision_timeout if i in policy else opponent_timeout,
                         cleanup_complete=policy_cleanup if i in policy else opponent_cleanup,
+                        system_hint=hint if i in policy else "",
                     )
                     for i in range(seats)
                 ]
                 rollout.policy_seats = [f"seat{i}" for i in sorted(policy)]
                 rollout.log = await play_session(rollout.id, int(params["seed"]), players, rollout.rules)
+                if hint:  # so a hinted game can be told apart from a plain one (the grader reports its hash)
+                    rollout.log["system_hint"] = hint
                 label_folds(rollout.log, set(rollout.policy_seats))
                 if params.get("ev_labels"):  # all-in EV for the policy seats, scored by grading.py
                     rollout.log = await asyncio.get_running_loop().run_in_executor(
@@ -312,6 +319,8 @@ def create_app(
         params = with_preset(request.task.env_params or {})  # `preset: "event"` applies the event rules
         if "seed" not in params:
             raise HTTPException(status_code=422, detail="env_params.seed is required")
+        if not isinstance(params.get("system_hint", ""), str):
+            raise HTTPException(status_code=422, detail="env_params.system_hint must be a string")
         rollout = Rollout(id=rollout_id, rules=table_rules(params))
         rollouts[rollout_id] = rollout
         rollout.task = asyncio.create_task(run_table(rollout, request))

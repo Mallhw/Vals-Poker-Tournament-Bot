@@ -4,7 +4,9 @@
     uv run python -m vals_tools.score --project <project> --run train_xxx --step 20
 
 Reads the sample grader's score artifacts (`ev_bb`, `realized_bb`, `policy_format_errors`), not the shifted reward.
-Both evals must use the same dataset: the same deals, so the difference can be paired hand by hand.
+Both evals must play the same deals, so the difference can be paired hand by hand: the same dataset (paired by task),
+or a copy of it with other params, such as a hinted copy from rl/make_hint_dataset.py (paired by the grader's `deal`
+artifact, the seed and policy seats, when every score has one).
 """
 
 from __future__ import annotations
@@ -52,14 +54,25 @@ def summarize(rows: dict, base: dict | None = None) -> dict[str, Any]:
         "format_error_hands": round(statistics.fmean(r["policy_format_errors"] > 0 for r in rows.values()), 4),
     }
     if base:
-        diffs = [rows[k]["ev_bb"] - base[k]["ev_bb"] for k in rows if k in base]
+        paired_by, pairs = _pairs(rows, base)
+        diffs = [mine["ev_bb"] - theirs["ev_bb"] for mine, theirs in pairs]
         if diffs:
             out["vs_base"] = {
                 "paired_hands": len(diffs),
+                "paired_by": paired_by,
                 "diff": round(statistics.fmean(diffs), 3),
                 "ci95": round(_ci95(diffs), 3),
             }
     return out
+
+
+def _pairs(rows: dict, base: dict) -> tuple[str, list[tuple[dict, dict]]]:
+    """Pair by deal when every score names one (a hinted copy of a dataset has new task ids but the same deals),
+    else by task id."""
+    if all("deal" in r for r in (*rows.values(), *base.values())):
+        by_deal = {r["deal"]: r for r in base.values()}
+        return "deal", [(r, by_deal[r["deal"]]) for r in rows.values() if r["deal"] in by_deal]
+    return "task", [(rows[k], base[k]) for k in rows if k in base]
 
 
 def main() -> None:

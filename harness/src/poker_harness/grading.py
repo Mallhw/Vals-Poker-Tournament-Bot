@@ -37,6 +37,7 @@ read, so nothing here rewards or exercises scratchpad use; how to train that is 
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass
 from typing import Any
@@ -145,8 +146,17 @@ def grade_log(
             "policy_format_errors": result.format_errors,
             "folded": result.folded,
             "hands": result.hands,
+            # The deal (seed and policy seats), so `vals_tools.score` can pair two datasets of the same deals, such
+            # as a hinted copy of pokerbots-select, and the hint's hash when the game was played with one.
+            "deal": deal_key(log, policy_seats),
+            **({"hint": hashlib.sha256(log["system_hint"].encode()).hexdigest()[:12]} if log.get("system_hint") else {}),
         },
     }
+
+
+def deal_key(log: dict[str, Any], policy_seats: list[str]) -> str:
+    """`<seed>:<policy seats>`: the same for every game dealt from one task's cards, whatever dataset it is in."""
+    return f"{log.get('session_info', {}).get('seed')}:{'/'.join(sorted(policy_seats))}"
 
 
 def bounded(score: dict[str, Any]) -> dict[str, Any]:

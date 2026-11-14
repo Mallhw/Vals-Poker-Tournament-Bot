@@ -63,6 +63,10 @@ Rules:
 On every turn you see only the current hand: your hole cards, the board, the table and the actions so far this hand. Earlier hands are not shown. Reason through the spot as much as you need, then call the submit_action tool exactly once with your decision.
 An illegal action is replaced by check or fold, an out-of-range amount is clamped to the legal range, and a turn without a submit_action call is played as check or fold."""
 
+# A test hint (`env_params.system_hint`) goes after the system prompt with this separator, the same text OPSD's teacher
+# sees (`opsd/hint.py` SEPARATOR, appended to the system message), so a hinted game shows what distillation aims for.
+HINT_SEPARATOR = "\n\n"
+
 SEAT_WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten"}
 SUBMIT_ACTION = "submit_action"
 SUBMIT_ACTION_PROPERTIES: dict[str, dict[str, Any]] = {
