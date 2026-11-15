@@ -258,3 +258,4 @@ v10-s9 arena (30 games as Alea iacta est): place 3.40, bust 6.7%, EV -8.6 bb/100
 checked candidate (deployed, infer_f617937bbaa3). RL v3 train_29d356cee24f was preempted at 08:36 before any checkpoint
 (no resume possible); relaunched as train_674b9d7e683a with --checkpoint-every 5 (resume with --non-preemptible if stopped).
 10:05: teammate entry (solver-GRPO round 4 step 10) after 31 games: place 3.45, BUST 22.6%, EV +11.8, VPIP 23%; team rating 1142 -> 1094, rank #10. v10-s9 final 38 games: place 3.39, bust 5.3%, EV -2.1. RL v3 relaunch train_674b9d7e683a ALSO preempted (09:57) before step 5 -> no ckpt; not relaunched (teammate jobs keep taking the GPUs).
+10:10: RL v3 '10.10' = step-0 baseline reward of v10-s9 on rl2 tables (251 rollouts; v6 baseline 9.85), NOT training progress (no update happened before preemption). Relaunched as train_f47a076b7b24 with --checkpoint-every 2 (resumable after preemption).
