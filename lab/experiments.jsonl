@@ -1,0 +1,6 @@
+{"time": "2026-11-14 21:02:11", "name": "local A/B hint v1 (llama 27B, thinking off, 6 seeds)", "kind": "local", "result": "hint: 0 busts, +108.5 BB, 2/96 format errors; no hint: 2 busts, +19 BB, 0/87"}
+{"time": "2026-11-14 21:02:11", "name": "local hint v2 (format fix), same 6 seeds", "kind": "local", "result": "0/64 format errors (fixed); 2 busts (KK call-off on hand 1 = allowed; one other), -115.5 BB"}
+{"time": "2026-11-14 21:05:57", "name": "base on pokerbots-mb-select (500 hands)", "kind": "eval", "eval": "eval_29f9d8cd0fce", "result": "mean score 9.461, EV +0.39 BB/hand (+-1.73), format err 0.36%/decision, busts 0.6/100 hands"}
+{"time": "2026-11-14 21:05:57", "name": "OPSD dataset pokerbots-opsd-v3 (hint v3, from eval_29f9d8cd0fce)", "kind": "dataset", "result": "1114 decisions"}
+{"time": "2026-11-14 21:06:11", "name": "OPSD v3 training (20 steps, hint v3)", "kind": "train", "train": "train_f4dce31ab4bf", "result": "submitted 21:06; queued for 4 GPUs"}
+{"time": "2026-11-14 21:06:11", "name": "shover-table evals: base vs live arena entry (solver-spot step 10)", "kind": "eval", "evals": ["eval_8b800c4577cd", "eval_72e98313dcb1"], "result": "running"}

@@ -36,11 +36,14 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   wording; re-test running in ~/Worker/research/local_hint_test_v2).
 
 ## Plan / queue
-1. [running] base eval on pokerbots-mb-select: eval_29f9d8cd0fce (baseline + OPSD source traces).
-2. After (1): restart harness (shover support), then evals on pokerbots-sh-select for: base, the arena entry
-   (vals-hackathon/ho-af0ee9-step10 = teammate solver-spot RL step 10, submitted ~20:43).
-3. Hint v3 = v2 + research call-off rules; build OPSD dataset from base traces (mb-select, or sh-select for
-   shove spots) with hint v3; opsd/train.py (4 GPUs) when GPUs free (teammate RL train_1a76d7af0ee9 holds ~6-8).
+1. [done] base eval on pokerbots-mb-select: eval_29f9d8cd0fce — mean score 9.461, EV +0.39 (+-1.73).
+2. [running] harness restarted 21:03 with shover support (verified). Evals on pokerbots-sh-select:
+   base = eval_8b800c4577cd, arena entry (vals-hackathon/ho-af0ee9-step10) = eval_72e98313dcb1.
+   When done: vals_tools.score --eval eval_72e98313dcb1 --base eval_8b800c4577cd, and leaks.py on both.
+3. [queued] OPSD v3: dataset pokerbots-opsd-v3 (1114 decisions from eval_29f9d8cd0fce), train_f4dce31ab4bf
+   (4 GPUs, 20 steps, ckpts 10 & 20). When done: deploy ckpts as vals-hackathon-matt/opsd3-s10, -s20 (they can only
+   be deployed in vals-hackathon-matt), play_local check (--opponents bots), sh-select eval, score vs base.
+   Local v3 hint test running: ~/Worker/research/local_hint_test_v3.
 4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
