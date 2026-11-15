@@ -2,17 +2,19 @@
 # Generic: after training run $1 finishes, deploy its last checkpoint as vals-hackathon-matt/$2, check it, eval sh-select + games12-control.
 # Usage: lab/pipeline_ckpt.sh <train_id> <deployment-name>   (log to ~/Worker/logs/pipeline_<name>.log)
 set -u
-TRAIN=$1; NAME=$2
+TRAIN=$1; NAME=$2; CKARG=${3:-}   # optional 3rd arg: deploy this ckpt now (skip waiting for the run)
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 KEY="$(/usr/bin/python3 -I -c 'import json,os;print(json.load(open(os.path.expanduser("~/.ac2/config")))["api_key"])')"
 export UV_INDEX_AC2_USERNAME=__token__ UV_INDEX_AC2_PASSWORD="$KEY"
 R=$HOME/Worker/projects/vals-poker-matt; R2=$HOME/Worker/projects/vals-poker-matt2
 log(){ echo "$(date +%H:%M) $*"; }
 
+if [ -n "$CKARG" ]; then CK=$CKARG; else
 until s=$(cd /tmp && ac2 -p vals-hackathon-matt train get $TRAIN 2>/dev/null | awk '/^status:/{print $2}'); case "$s" in succeeded|failed|stopped|cancelled|error) true;; *) false;; esac; do sleep 90; done
 log "$TRAIN finished: $s"
 [ "$s" = "succeeded" ] || exit 1
 CK=$(cd /tmp && ac2 -p vals-hackathon-matt train checkpoints $TRAIN 2>/dev/null | awk '/ckpt_/{print $1; exit}')
+fi
 log "last checkpoint: $CK"
 
 cd $R && uv run python -m vals_tools.deploy --project vals-hackathon-matt --name $NAME --checkpoint $CK > /tmp/dep_$NAME.log 2>&1 &

@@ -118,7 +118,9 @@ Each check-in: if harness2 has < 3 evals running, launch the next untested idea 
 on the current best policy copy, 36 games, max-parallel 8); if GPUs allow (4 for OPSD, 6 for RL), train the current
 best hint. Judge on chips + busts (paired, lab/games.py), sh-select score/busts for trained models; keep winners,
 drop losers, write one line per result below. Status: [ ] todo, [~] running, [x] kept, [-] dropped.
-- [~] v10 "Vals + notes" (opsd/hint.py HINTS['v10']): OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
+- [~] v10 "Vals + notes": prompt test -> busts 1/36 (best) but chips 191-212 (too tight, VPIP 11%). OPSD training
+      FAILED at final save; step-9 ckpt -> v10-s9 (pipeline_ckpt.sh 3-arg mode, log pipeline_v10-s9.log). Was:
+      OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
       prompt test games12-v10 eval_d2411489bbab (first try failed on AC2: no space left).
 - [~] v6 (trained notes+endgame): busts 2.0/100 + junk call-offs 1.8 = BEST survival, but fmt errors 5.6% (calls
       update_scratchpad mid-hand; no-JSON replies) -> score 8.81 < v4. Not candidate. RL v2 from v6 queued
@@ -137,6 +139,9 @@ drop losers, write one line per result below. Status: [ ] todo, [~] running, [x]
 - [ ] Endgame variants: chip-leader protection vs short-stack accumulation in last 6 hands.
 - [-] v5 strict-evidence notes (worse: place +0.44, shover flagged 3/36). [-] short reasoning. [-] model-chosen talk
       (barely talked). [-] RL on 2-shover bot tables (butter: arena busts 22%).
+
+## SCOREBOARD (04:30): survival best = v10/v6 (1-2% busts); chips best = simple notes (318 vs control 231);
+nobody does both yet. Next combo to try (v11): simple notes + v8 aggression/price-aware preflop + v10 survival rules.
 
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
 1. ANALYZE: `python3 -I lab/scouting.py` (per-opponent type + how to beat it; worst matchups first), `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
