@@ -132,12 +132,17 @@ def hand_ev(
     realized = (hand["ending_stacks"][hero] - start) / big_blind
     folded = {a["player"] for a in hand["actions"] if a["action"]["type"] == "fold"}
     live = [name for name in hand["starting_state"] if name not in folded]
-    out = {"realized_bb": realized, "ev_bb": realized, "method": "no-showdown"}
+    # bust_prob: chance the hero ends the hand with no chips. Without a showdown (or with side pots, where no
+    # expectation is taken) that is just what happened; at a showdown it is averaged like the EV, so an all-in
+    # with 70% equity counts as a 30% bust, whichever way the cards fell.
+    busted = float(hand["ending_stacks"][hero] <= 0)
+    out = {"realized_bb": realized, "ev_bb": realized, "method": "no-showdown", "bust_prob": busted}
     if hero not in live or len(live) < 2:
         return out
     contrib = _contributions(hand)
     if len({contrib[name] for name in live}) > 1:
         return out | {"method": "side-pot"}
+    hero_all_in = start - contrib[hero] <= 0
     pot = sum(contrib.values())
     last_street = hand["actions"][-1]["street"]
     able = [name for name in live if hand["starting_state"][name]["starting_stack"] - contrib[name] > 0]
@@ -175,8 +180,10 @@ def hand_ev(
             shares.append(_share(holes, known_board, hero))
     share = statistics.fmean(shares)
     ev = (share * pot - contrib[hero]) / big_blind
+    bust_prob = statistics.fmean(s == 0 for s in shares) if hero_all_in else 0.0  # a split pot is not a bust
     return out | {
         "ev_bb": round(ev, 3),
+        "bust_prob": round(bust_prob, 4),
         "method": "allin" if allin_before_river else "showdown",
         "ev_share": round(share, 4),
         "pot_bb": pot / big_blind,
