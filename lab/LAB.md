@@ -266,3 +266,10 @@ EXPERIMENT v12 (shover call range, from the bust analysis): v10 prompt with rule
 call a PREFLOP shove with 77+, A9s+, ATo+, KQ if nobody else called; never after a weak limp; postflop only TPGK+.
 Paired on games12 (36 games, shover seat 3), policy = v10-s9: games12-v10 eval_da78b93972ac vs games12-v12
 eval_1e3b7fd45eff. ADOPT if chips up and busts not up -> then OPSD v12 from v10-s9's base.
+11:30 check-in: teammate swapped the live entry again: "talk round step 20 (any-talk penalty)" (vals-hackathon/ho-e07e40-step20,
+infer_a5aaffeb4304, deployed 10:51): 12 games place 3.33, EV -31.5, VPIP 33/PFR 25. solver-GRPO r4 s10 final: 76 games,
+place 3.41, 14 wins, 13 lasts, bust 10.5%, EV +17. Team #13, rating 1056, 627 matches. Auto-submit HOLD stays.
+RL v3 (train_f47a076b7b24) stopped 11:05 with NO checkpoint even at ckpt-every-2 (never completed 2 steps; teammate
+pbspot runs hold the GPUs) -> NOT relaunching while teammates train continuously. v12 vs v10 games12 evals still running.
+Report for Nathan (v10-s9 vs solver-GRPO): Vals-Poker-Tournament-Bot branch report-v10s9-vs-solver-grpo,
+reports/v10-s9-vs-solver-grpo.md.
