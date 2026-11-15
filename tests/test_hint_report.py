@@ -65,3 +65,59 @@ def test_talk_rate_and_answers_to_bets_after_talk() -> None:
     s = hr.policy_stats(logs)
     assert s["talk_rate"] == 0.25 and s["after_talk_facing"] == 2
     assert s["after_talk_fold"] == 0.5 and s["after_talk_call"] == 0.5 and s["after_talk_raise"] == 0.0
+
+
+def test_opponent_health_is_reported_from_opponent_decisions() -> None:
+    slow = OTHER | {"format_error": True, "latency_seconds": 60.0}
+    fine = OTHER | {"latency_seconds": 3.0}
+    logs = [game([act("preflop", "fold", 2, slow, "seat1"), act("preflop", "call", 2, fine, "seat2"),
+                  act("preflop", "call", 2, fine, "seat3"), act("preflop", "fold", 2)])]
+    s = hr.policy_stats(logs)
+    assert s["opp_decisions"] == 3 and s["opp_failed"] == round(1 / 3, 3) and s["opp_latency_p90"] == 60.0
+    assert hr.policy_stats([game([act("preflop", "fold", 2)])])["opp_failed"] is None  # no opponents: not a failure
+
+
+RULE = {0: "i like this spot", 1: "not much here", 2: "feeling lucky today"}
+
+
+def hand(number: int, *actions: dict) -> dict:
+    return {"hand_number": number, "actions": list(actions)}
+
+
+def talk_game(*hands: dict) -> dict:
+    return {"relay_job_id": "job_a", "hands": list(hands)}
+
+
+def test_the_talk_rule_file_is_read_as_the_hint_states_it() -> None:
+    rule = hr.load_talk_rule()  # opsd/hints/talk_rule.txt
+    assert sorted(rule) == [0, 1, 2, 3, 4, 5] and rule[0] == "i like this spot"
+    assert not any(hr.HAND_TALK.search(line) for line in rule.values())  # the rule's own lines tell nothing of a hand
+
+
+def test_rule_compliance_leaks_and_opponent_answers_to_our_bets() -> None:
+    def say(a: dict, line: str) -> dict:
+        return a | {"say": line}
+
+    logs = [talk_game(
+        hand(3, say(act("preflop", "raise", 2), "i like this spot"), act("preflop", "fold", 6, OTHER, "seat1")),  # 3 % 3 = 0
+        hand(4, say(act("flop", "bet", 0), "got nothing but ace-high"), act("flop", "call", 4, OTHER, "seat1")),  # rule: 1
+        hand(5, act("flop", "bet", 0), act("flop", "fold", 4, OTHER, "seat1")),  # silent bet, opponent folds
+    )]
+    s = hr.policy_stats(logs, RULE)
+    assert s["say_rule"] == round(1 / 3, 3)  # one of three decisions said the rule's line
+    assert s["say_hand_talk"] == 0.5 and s["talk_rate"] == round(2 / 3, 3)  # "got nothing but ace-high" leaks
+    assert s["opp_answers_to_our_bet"] == 3 and s["opp_fold_to_bet"] == round(2 / 3, 3)
+    assert s["opp_fold_to_talk_bet"] == 0.5 and s["opp_fold_to_silent_bet"] == 1.0
+    assert hr.policy_stats(logs)["say_rule"] is None  # no rule given: not reported
+
+
+def test_effects_of_talk_on_answers_to_bets_need_size_and_significance() -> None:
+    plain = {"facing_counts": {"n": 200, "fold": 80, "call": 80, "raise": 40}}
+    strong = {"facing_counts": {"n": 200, "fold": 112, "call": 56, "raise": 32}}  # +16 points fold: well outside noise
+    tiny = {"facing_counts": {"n": 200, "fold": 88, "call": 76, "raise": 36}}  # +4 points: below the 5-point bar
+    effects = hr.talk_effects({"plain": plain, "strong": strong, "tiny": tiny, "empty": {"facing_counts": None}})
+    assert effects["strong"]["fold"]["significant"] and effects["strong"]["fold"]["diff"] == 0.16
+    assert not effects["tiny"]["fold"]["significant"] and "empty" not in effects
+    assert hr.prop_diff(5, 0, 1, 10) is None
+    text = hr.effects_text(effects)
+    assert "strong:" in text and "fold +16%" in text and "*" in text

@@ -79,6 +79,71 @@ def hand_tasks(count: int, base_seed: int, opponents: Opponents, seats: int = SE
     return [hand_task(rng.getrandbits(48), i % seats, opponents, seats) for i in range(count)]
 
 
+# Multi-hand tables (event rules, stacks carried between hands, the scratchpad read back): the count is tables, not
+# hands. Seeds differ from SPLITS' so no table repeats a single-hand deal. A table of N hands costs about N times a
+# single hand, so the splits are small.
+TABLE_SPLITS = {"train": (240, 7_610_001), "select": (48, 7_620_002)}
+
+
+def table_task(seed: int, policy_seat: int, opponents: Opponents, total_hands: int, seats: int = SEATS) -> Task:
+    """`total_hands` hands with the policy in `policy_seat` for the whole game (the button moves, so its position
+    changes every hand); the other seats are `opponents`. Chips carry over, as at the event."""
+    return Task(
+        input=[
+            Message(
+                role="user",
+                content=f"Play a {seats}-seat no-limit hold'em table for {total_hands} hands from seat {policy_seat}.",
+            )
+        ],
+        env_params=TABLE_RULES
+        | {
+            "seed": seed,
+            "seats": seats,
+            "total_hands": total_hands,
+            "policy_seats": [policy_seat],
+            "ev_labels": True,
+            "ev_runouts": 64,
+            **opponents.env_params(),
+        },
+    )
+
+
+def table_tasks(
+    count: int, base_seed: int, opponents: Opponents, total_hands: int, seats: int = SEATS
+) -> list[Task]:
+    """Fresh 48-bit seeds; the policy seat cycles through every seat so each is equally represented."""
+    rng = random.Random(base_seed)
+    return [table_task(rng.getrandbits(48), i % seats, opponents, total_hands, seats) for i in range(count)]
+
+
+def split_tasks(
+    split: str, opponents: Opponents, seats: int = SEATS, total_hands: int = 1, limit: int | None = None
+) -> list[Task]:
+    """One split's tasks: single hands (`SPLITS`) or `total_hands`-hand tables (`TABLE_SPLITS`)."""
+    if total_hands == 1:
+        tasks = hand_tasks(*SPLITS[split], opponents, seats)
+    elif split in TABLE_SPLITS:
+        tasks = table_tasks(*TABLE_SPLITS[split], opponents, total_hands, seats)
+    else:
+        raise ValueError(f"no {total_hands}-hand tables for split {split!r}: choose from {sorted(TABLE_SPLITS)}")
+    return tasks[:limit]
+
+
+def spread_opponents(tasks: list[Task], models: list[str] | None) -> list[Task]:
+    """Give each task one of `models` as its opponent, chosen from the task's own seed. Seeds are unrelated to the
+    policy seat and the same in every copy of a split (plain, hinted, talk), so a deal meets the same opponent in all
+    of them and their evals still pair fairly. Tasks with no opponent seats are left alone."""
+    if not models:
+        return tasks
+    spread = []
+    for task in tasks:
+        params = task.env_params or {}
+        if "opponent_model" in params:
+            task = Task(input=task.input, env_params={**params, "opponent_model": models[params["seed"] % len(models)]})
+        spread.append(task)
+    return spread
+
+
 def table_smoke_tasks(seats: int = SEATS) -> list[Task]:
     """Two 3-hand tables where the evaluated model plays every seat: no opponent endpoint needed."""
     rng = random.Random(6_650_005)

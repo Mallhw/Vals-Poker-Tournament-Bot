@@ -29,7 +29,7 @@ from ac2.runtime import Task
 from ac2.sdk import Client
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from vals_tools.tasks import SEATS, SPLITS, Opponents, hand_tasks  # noqa: E402
+from vals_tools.tasks import SEATS, SPLITS, TABLE_SPLITS, Opponents, split_tasks, spread_opponents  # noqa: E402
 
 
 def read_hint(path: Path) -> str:
@@ -40,10 +40,18 @@ def read_hint(path: Path) -> str:
     return hint.strip()
 
 
-def hinted_tasks(split: str, hint: str, opponents: Opponents, seats: int = SEATS, limit: int | None = None) -> list[Task]:
-    """The split's tasks (same seeds and seats as rl/make_dataset.py), each with `system_hint` set."""
-    count, seed = SPLITS[split]
-    tasks = hand_tasks(count, seed, opponents, seats)[:limit]
+def hinted_tasks(
+    split: str,
+    hint: str,
+    opponents: Opponents,
+    seats: int = SEATS,
+    limit: int | None = None,
+    total_hands: int = 1,
+    models: list[str] | None = None,
+) -> list[Task]:
+    """The split's tasks (same seeds and seats as rl/make_dataset.py), each with `system_hint` set. `total_hands` above
+    1 makes tables, and `models` spreads opponents exactly as rl/make_dataset.py does, so deals stay paired."""
+    tasks = spread_opponents(split_tasks(split, opponents, seats, total_hands, limit), models)
     # Built anew, not copied, so each task's content hash covers the hint.
     return [Task(input=t.input, env_params={**(t.env_params or {}), "system_hint": hint}) for t in tasks]
 
@@ -54,7 +62,9 @@ def main() -> None:
     parser.add_argument("--prefix", default="pokerbots")
     parser.add_argument("--hint-file", type=Path, required=True)
     parser.add_argument("--name", required=True, help="short name for the hint: lowercase letters, digits and -")
-    parser.add_argument("--split", choices=sorted(SPLITS), default="select")
+    parser.add_argument("--split", choices=sorted({*SPLITS, *TABLE_SPLITS}), default="select")
+    parser.add_argument("--total-hands", type=int, default=1, help="more than 1: N-hand tables, as rl/make_dataset.py")
+    parser.add_argument("--opponent-models", help="comma-separated deployments to spread over the tasks, as make_dataset")
     parser.add_argument("--limit", type=int, help="only the first N tasks (a multiple of 6 covers every seat evenly)")
     parser.add_argument("--opponent-model", default="vals-hackathon/ac-vals-model")
     parser.add_argument("--opponent-api", choices=["responses", "chat"], default="chat")
@@ -67,8 +77,15 @@ def main() -> None:
 
     hint = read_hint(args.hint_file)
     effort = None if args.opponent_effort == "none" else args.opponent_effort
-    tasks = hinted_tasks(args.split, hint, Opponents(args.opponent_model, args.opponent_api, effort), args.seats, args.limit)
-    name = f"{args.prefix}-{args.split}-hint-{args.name}"
+    models = [m.strip() for m in args.opponent_models.split(",") if m.strip()] if args.opponent_models else None
+    if args.total_hands > 1 and args.split not in TABLE_SPLITS:
+        parser.error(f"--split for tables: choose from {sorted(TABLE_SPLITS)}")
+    if args.total_hands == 1 and args.split not in SPLITS:
+        parser.error(f"--split for single hands: choose from {sorted(SPLITS)}")
+    opponents = Opponents(args.opponent_model, args.opponent_api, effort)
+    tasks = hinted_tasks(args.split, hint, opponents, args.seats, args.limit, args.total_hands, models)
+    tables = f"t{args.total_hands}-" if args.total_hands > 1 else ""
+    name = f"{args.prefix}-{tables}{args.split}-hint-{args.name}"
     digest = hashlib.sha256(hint.encode()).hexdigest()[:12]  # the grader reports the same hash as `hint`
     print(f"{name}: {len(tasks)} tasks, hint {digest} ({len(hint)} characters)")
     if args.dry_run:
