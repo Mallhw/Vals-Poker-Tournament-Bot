@@ -16,6 +16,11 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   Restart harness only when no eval/run is using it (kills in-flight games):
   `launchctl kickstart -k gui/$(id -u)/com.mallhw.vals-harness`.
 
+- NEVER eval (or otherwise load) the live arena deployment or any teammate deployment directly: my eval of
+  ho-af0ee9-step10 (21:04, 32 concurrent games on its 1 GPU) overloaded it and caused 17-31 forced folds per arena
+  game in 4 arena games (05:00-05:20 UTC). Deploy a separate copy (matt-* name, in the checkpoint's own project) and
+  eval that, or keep eval concurrency low.
+
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
 - `python3 -I lab/arena.py` — pull arena matches, per-entry metrics, rank/rating history.
 - `uv run --project harness python lab/leaks.py --eval <eval_id>` — leak report from local game logs.
@@ -37,9 +42,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 
 ## Plan / queue
 1. [done] base eval on pokerbots-mb-select: eval_29f9d8cd0fce — mean score 9.461, EV +0.39 (+-1.73).
-2. [running] harness restarted 21:03 with shover support (verified). Evals on pokerbots-sh-select:
-   base = eval_8b800c4577cd, arena entry (vals-hackathon/ho-af0ee9-step10) = eval_72e98313dcb1.
-   When done: vals_tools.score --eval eval_72e98313dcb1 --base eval_8b800c4577cd, and leaks.py on both.
+2. [running] harness restarted 21:03 with shover support (verified). base on pokerbots-sh-select = eval_8b800c4577cd.
+   eval_72e98313dcb1 (solver-spot step 10) INVALID: 420/538 decisions were HTTP 502 (deployment overloaded by this
+   eval, then deleted). Arena entry is now teammate's step 20 = infer_5fe0799751ef (vals-hackathon/ho-af0ee9-step20).
 3. [queued] OPSD v3: dataset pokerbots-opsd-v3 (1114 decisions from eval_29f9d8cd0fce), train_f4dce31ab4bf
    (4 GPUs, 20 steps, ckpts 10 & 20). When done: deploy ckpts as vals-hackathon-matt/opsd3-s10, -s20 (they can only
    be deployed in vals-hackathon-matt), play_local check (--opponents bots), sh-select eval, score vs base.

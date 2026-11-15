@@ -4,3 +4,4 @@
 {"time": "2026-11-14 21:05:57", "name": "OPSD dataset pokerbots-opsd-v3 (hint v3, from eval_29f9d8cd0fce)", "kind": "dataset", "result": "1114 decisions"}
 {"time": "2026-11-14 21:06:11", "name": "OPSD v3 training (20 steps, hint v3)", "kind": "train", "train": "train_f4dce31ab4bf", "result": "submitted 21:06; queued for 4 GPUs"}
 {"time": "2026-11-14 21:06:11", "name": "shover-table evals: base vs live arena entry (solver-spot step 10)", "kind": "eval", "evals": ["eval_8b800c4577cd", "eval_72e98313dcb1"], "result": "running"}
+{"time": "2026-11-14 21:28:08", "name": "eval of live arena entry (solver-spot step 10) on sh-select", "kind": "eval", "eval": "eval_72e98313dcb1", "result": "INVALID: 78% HTTP 502; my 32-game eval overloaded the live deployment and caused 17-31 arena fallbacks/game in 4 games. Rule added: never eval live deployments directly."}
