@@ -52,6 +52,18 @@ VARIANTS: dict[str, str] = {
         "their raises, steal when they are not in the pot. Most AI players here fold to a raise 70-90% of the time: "
         "when it is folded to you in the cutoff, button or small blind, raise more often."
     ),
+    "v7": (
+        "Opponent tracking (scratchpad, every hand): keep exact running counts per seat, one line each: "
+        "'seatN: H hands, played P, raised R, all-ins A, folds-to-my-raise F, showed [cards] -> type'. Update every "
+        "hand; you have 5000 characters. Label only with evidence: shover = 2+ preflop all-ins; nit = played under "
+        "1 in 8 after 8+ hands; maniac = raised 3+ of their first 8 hands or keeps re-raising; calling-station = calls "
+        "a lot, rarely bets; tight-aggressive = plays few, always raises. BEFORE EVERY DECISION facing a bet or raise, "
+        "read that player's line and name their type in your reasoning, then: maniac or aggressive -> do NOT fold "
+        "decent hands to them: call down with any pair or ace-high on dry boards, 3-bet them with 99+, AJ+, KQ, and "
+        "let them bluff; tight-aggressive or nit -> fold medium hands; shover -> call only 99+, AJs+, AQo+ and only if "
+        "nobody else has called; calling-station -> value-bet big, never bluff. If another player already called an "
+        "all-in, call only with KK+."
+    ),
     "endgame": (
         "End of game: final rank is by chips among players still seated, and every busted player ranks below them. "
         "In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are "
