@@ -126,7 +126,7 @@ drop losers, write one line per result below. Status: [ ] todo, [~] running, [x]
       update_scratchpad mid-hand; no-JSON replies) -> score 8.81 < v4. Not candidate. RL v2 from v6 queued
       (lab/pipeline_rl2.sh, starts when v10 training ends) to train out format errors. Watch v10 for the same issue.
 - [-] v7 notes-at-decision: best shover detection (13/36) but no chip gain (228 vs control 231), busts equal -> dropped.
-- [ ] talk: chaos + bluff-talk (pipeline_talk.sh, after v7). [ ] v8 Accord-style + price-aware preflop (after talk).
+- [-] talk: chaos HURTS (place +0.71), bluff-talk no gain; opponents ignore talk. [-] v8 aggression: no chip gain.
 - [ ] RL v2 realistic tables (pokerbots-rl2, bust_penalty 3) from the best OPSD ckpt (v10 or v6) when 6 GPUs free.
 - [ ] Exploit Accord specifically (we fold 63 vs 25): 3-bet its opens wider in position (AJs+, KQs, 99+, A5s),
       call its c-bets with any pair; profile it via notes (aggressive/TAG).
@@ -142,6 +142,13 @@ drop losers, write one line per result below. Status: [ ] todo, [~] running, [x]
 
 ## SCOREBOARD (04:30): survival best = v10/v6 (1-2% busts); chips best = simple notes (318 vs control 231);
 nobody does both yet. Next combo to try (v11): simple notes + v8 aggression/price-aware preflop + v10 survival rules.
+
+## 06:30 RESULTS: v10-s9 (trained Vals+notes) = best survival (sh busts 0.6/100, games12 1/36) -> CANDIDATE.
+Talk: chaos HURTS (place +0.71, opp fold 50% vs 48% = no effect) DROP; bluff-talk no gain DROP. v8 aggression/
+price-aware: no chip gain (239 vs 231) DROP for now. Simple notes still best chips (318). RL v2 stopped externally
+twice (05:20, 06:10) while teammate runs (pbspot2-r4, pbspot3) needed GPUs — not resubmitting overnight; flag for
+the user. NEXT (when GPUs free): finish v10 OPSD (resume from ckpt_0a19c764c8d4) or RL from v10-s9 on pokerbots-rl2
+to add chips without losing survival.
 
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
 1. ANALYZE: `python3 -I lab/scouting.py` (per-opponent type + how to beat it; worst matchups first), `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
@@ -208,7 +215,12 @@ nobody does both yet. Next combo to try (v11): simple notes + v8 aggression/pric
 - Decide in the morning: best of rl-s10 (live "butter"), rl-s40, v6-s20 by sh-select score/busts + games12 place.
 
 ## Candidate to submit
-**BEST CHECKED CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
+**BEST CHECKED CANDIDATE (06:30): vals-hackathon-matt/v10-s9 (infer of deployment "v10-s9"; OPSD v10 "Vals + notes"
+step 9, ckpt_0a19c764c8d4)** — sh-select: score 9.106 vs v4 9.003, busts 0.6/100 vs 4.6, junk call-offs 0.4 vs 4.8,
+fmt 3.4% (= v4); games12 (no hint): busts 1/36, place = control, chips lower (205 vs 231); play_local 0/5 failed.
+Very tight (VPIP 8%): survival-first, like Vals/Alice. Submit as "Alea iacta est". Revert to v4 (opsd4-s30, keep
+deployed) if after 20+ arena games it's worse on place/busts.
+**PREVIOUS CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
 busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
 **SUBMITTED 2026-11-15 02:28 PT by the Chrome session: opsd4-s30 (infer_496116c2999d) as "Alea iacta est" — now LIVE (console shows Current entry). NEVER delete or eval it.** rl-s10 ("butter") is no longer live; keep it deployed unless GPUs are needed.
 **LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
