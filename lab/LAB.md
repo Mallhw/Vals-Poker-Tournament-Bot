@@ -63,6 +63,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    Hint v4 (v3 + wide late-position steals, bigger value bets) written; local A/B v3 vs v4 at arena-like tables
    (shover, maniac, nit, station, random) running: ~/Worker/research/local_hint_v3_v4. If v4 is clearly better and
    OPSD v3mix hasn't started, rebuild the OPSD dataset with v4 (build_dataset reads HINT; set HINT = HINTS["v4"]).
+   22:48: teammate RL stopped (broken, user OK). Running both: v3mix train_f485ce511a1a and v4mix
+   train_c2f55e32f7e3 (pokerbots-opsd-v4mix, hint v4). After both: redeploy base, deploy s20/s30 of each as
+   vals-hackathon-matt/opsd3-s30 etc, check, eval on sh-select, pick best by mean score + busts + VPIP.
 4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
