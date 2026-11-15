@@ -17,3 +17,4 @@
 {"time": "2026-11-14 23:52:40", "name": "OPSD v4mix finished", "kind": "train", "train": "train_c2f55e32f7e3", "result": "30 steps; deployed s30 (infer_496116c2999d), s20 (infer_eb929696902d) for check + sh-select eval"}
 {"time": "2026-11-15 00:09:30", "name": "v4 ckpts on pokerbots-sh-select", "kind": "eval", "evals": {"s30": "eval_8c0e96ff4dad", "s20": "eval_c37b1be532e0"}, "result": "running (00:10)"}
 {"time": "2026-11-15 00:10:04", "name": "v4 step 29 (opsd4-s30) went live in arena ~00:08", "kind": "arena", "result": "stopped its sh-select eval immediately to avoid overloading the live deployment; s20 eval (separate deployment) continues"}
+{"time": "2026-11-15 00:11:22", "name": "play_local check opsd4-s20 (6 hands vs bots)", "kind": "check", "result": "0/6 failed decisions, -1.5 BB. s30 check stopped (went live); monitor its arena fallback rate."}
