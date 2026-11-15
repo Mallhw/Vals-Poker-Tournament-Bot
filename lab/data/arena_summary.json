@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 01:27:15",
-  "rank": 7.0,
-  "rating": 1102.0,
-  "bb100": -2.5,
-  "matches": 215.0,
-  "deployment": "infer_496116c2999d"
+  "time": "2026-11-15 02:00:02",
+  "rank": 9.0,
+  "rating": 1082.0,
+  "bb100": -1.4,
+  "matches": 244.0,
+  "deployment": "infer_96d341a589e2"
  },
- "new_matches": 10,
+ "new_matches": 29,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -62,17 +62,30 @@
    "fallback_rate": 0.0054
   },
   "opsd4-s30 (infer_496116c2999d)": {
-   "games": 43,
-   "mean_place": 3.44,
-   "wins": 3,
-   "lasts": 3,
-   "bust_rate": 0.116,
-   "bb100": 2.9,
-   "ev_bb100": 29.9,
-   "vpip": 0.145,
-   "pfr": 0.099,
-   "bigcalls100": 0.42,
-   "fallback_rate": 0.0189
+   "games": 67,
+   "mean_place": 3.46,
+   "wins": 8,
+   "lasts": 7,
+   "bust_rate": 0.104,
+   "bb100": 13.2,
+   "ev_bb100": 30.1,
+   "vpip": 0.144,
+   "pfr": 0.096,
+   "bigcalls100": 0.54,
+   "fallback_rate": 0.0184
+  },
+  "butter (infer_96d341a589e2)": {
+   "games": 5,
+   "mean_place": 3.4,
+   "wins": 0,
+   "lasts": 1,
+   "bust_rate": 0.2,
+   "bb100": -108.2,
+   "ev_bb100": 87.9,
+   "vpip": 0.151,
+   "pfr": 0.103,
+   "bigcalls100": 0.68,
+   "fallback_rate": 0.0113
   }
  },
  "busts": [
@@ -763,8 +776,70 @@
     "Ks",
     "5s"
    ]
+  },
+  {
+   "match": "m_20261115t092122_798b04",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 13,
+   "hole": [
+    "Kc",
+    "Kh"
+   ],
+   "chen": 16,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "9c",
+    "Ah",
+    "Tc",
+    "Jd",
+    "6d"
+   ]
+  },
+  {
+   "match": "m_20261115t092456_6bf9fa",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 5,
+   "hole": [
+    "Th",
+    "Qs"
+   ],
+   "chen": 6,
+   "actions": [
+    "call",
+    "call"
+   ],
+   "board": [
+    "Ac",
+    "2c",
+    "9c",
+    "2d",
+    "Kh"
+   ]
+  },
+  {
+   "match": "m_20261115t094554_3868b0",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 26,
+   "hole": [
+    "Jh",
+    "Jd"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "7s",
+    "Th",
+    "Kc",
+    "3d",
+    "6c"
+   ]
   }
  ],
- "weak_busts": 20,
- "total_busts": 32
+ "weak_busts": 21,
+ "total_busts": 35
 }

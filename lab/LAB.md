@@ -29,7 +29,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - BEFORE DELETING ANY DEPLOYMENT, check the "Deployments in use" list below: evals call deployments by name and
   the CLI can't show which eval uses which. 01:30: deleting v4s30-eval broke the 5 feature evals for ~15 min
   (fixed by redeploying the same name; lab/games.py drops games with relay/HTTP errors).
-- Deployments in use (keep updated): opsd4-s30 = LIVE arena entry; base = opponent for sh/games12 datasets;
+- Deployments in use (keep updated): rl-s10 = LIVE arena entry ("butter"); opsd4-s30 = fallback (previous entry); base = opponent for sh/games12 datasets;
   v4s30-eval (infer_ac58d18d0a7d) = policy for games12-* feature evals (until they finish); rl-s10 = eval_ecbb6ba6dfb7.
 
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
@@ -104,6 +104,8 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
 ## Candidate to submit
+**LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
+opsd4-s30 (v4, infer_496116c2999d; 67 games: place 3.46, bust 10%, EV +30 bb/100) stays deployed.
 **BEST CHECKED CANDIDATE (01:45): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
 ckpt_52d6b4b511f4). sh-select 500 hands: score 9.397 vs v4 9.003, busts 4.4 vs 4.6, weak call-offs 3.4 vs 4.8,
 fmt err 0.89% vs 3.2%, EV +1.32 vs +0.09 BB/hand (paired diff +1.23 +-1.33). play_local 17 decisions, 0 failed.
