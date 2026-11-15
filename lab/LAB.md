@@ -29,7 +29,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - BEFORE DELETING ANY DEPLOYMENT, check the "Deployments in use" list below: evals call deployments by name and
   the CLI can't show which eval uses which. 01:30: deleting v4s30-eval broke the 5 feature evals for ~15 min
   (fixed by redeploying the same name; lab/games.py drops games with relay/HTTP errors).
-- Deployments in use (keep updated): opsd4-s30 = LIVE arena entry ("Alea iacta est", since 02:28 Nov 15); rl-s10 = previous entry ("butter"); base = opponent for sh/games12 datasets;
+- Deployments in use (keep updated): v10-s9 = LIVE arena entry ("Alea iacta est", since 08:18 Nov 15); opsd4-s30 = previous entry/fallback; rl-s10 = older entry ("butter"); base = opponent for sh/games12 datasets;
   v4s30-eval (infer_ac58d18d0a7d) = policy for games12-* feature evals (until they finish); rl-s10 = eval_ecbb6ba6dfb7.
 
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
@@ -223,7 +223,7 @@ step 9, ckpt_0a19c764c8d4)** — sh-select: score 9.106 vs v4 9.003, busts 0.6/1
 fmt 3.4% (= v4); games12 (no hint): busts 1/36, place = control, chips lower (205 vs 231); play_local 0/5 failed.
 Very tight (VPIP 8%): survival-first, like Vals/Alice. Submit as "Alea iacta est". Revert to v4 (opsd4-s30, keep
 deployed) if after 20+ arena games it's worse on place/busts.
-- 06:37 PT hourly check: v10-s9 NOT yet submitted — AC2 console Vals Arena page returns 502 Bad gateway (arena backend down; public arena site DB also over quota since ~03:18). Will retry every hour; live entry is still opsd4-s30.
+**SUBMITTED 2026-11-15 08:18 PT by the Chrome session (after 502 outage 06:37-07:37): v10-s9 (infer_f617937bbaa3) as "Alea iacta est" — now LIVE (console Current entry). NEVER delete or eval it.** opsd4-s30 is the previous entry/fallback — keep deployed.
 **PREVIOUS CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
 busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
 **SUBMITTED 2026-11-15 02:28 PT by the Chrome session: opsd4-s30 (infer_496116c2999d) as "Alea iacta est" — now LIVE (console shows Current entry). NEVER delete or eval it.** rl-s10 ("butter") is no longer live; keep it deployed unless GPUs are needed.
@@ -238,3 +238,7 @@ user/teammate. NEVER delete it and NEVER eval it directly** (its sh-select eval 
 moment it went live; no arena games overlapped). To eval v4 s30, deploy a second copy of ckpt_db759b762b5d.
 Submission name for every model: **Alea iacta est** (user's request).
 - none of mine yet (arena entry = teammate's solver-spot step 20, infer_5fe0799751ef).
+
+## 08:21: v10-s9 LIVE in arena (Chrome session submitted 08:18, infer_f617937bbaa3). Team rank #5, rating 1155,
+490 ranked matches. v4 (infer_496116c2999d) total as Alea iacta est: 203 games, place 3.34, bust 3%, EV +7.7.
+Fallback = opsd4-s30. v10-s19 evals running: sh-select eval_07d2401a69d8, games12-control eval_db4368501a27.
