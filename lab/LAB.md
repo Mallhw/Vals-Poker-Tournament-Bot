@@ -65,7 +65,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    OPSD v3mix hasn't started, rebuild the OPSD dataset with v4 (build_dataset reads HINT; set HINT = HINTS["v4"]).
    22:48: teammate RL stopped (broken, user OK). 23:08: v3mix stopped (user: "just do v4"). RUNNING: OPSD v4mix
    train_c2f55e32f7e3 (pokerbots-opsd-v4mix, hint v4, 30 steps, ckpts 10/20/30). HINT default = v4 now.
-   After it: redeploy base, deploy s20 + s30 as vals-hackathon-matt/opsd4-s20, -s30, play_local check, eval on
+   23:28: v4 at step 8/30 (~1 min/step). base redeployed (infer_74f29225a15a). After v4: deploy s20 + s30 as vals-hackathon-matt/opsd4-s20, -s30, play_local check, eval on
    sh-select, pick best by mean score + busts + VPIP (target: Pete-like ~30% VPIP / ~20% PFR, busts << base).
 4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
