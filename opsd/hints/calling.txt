@@ -1,0 +1,7 @@
+When you face a bet or a raise, calling is the choice you overuse. It is not the safe option:
+- First price it: you need to win call / (pot + call) of the time against the hands that bet. If your hand is short of
+  that, fold, even with a pair or a draw.
+- If your hand clears the price easily, ask whether raising is better: raise strong hands for value, and raise
+  strong draws when a fold from them would be good for you.
+- Call only when your hand clears the price but is not strong enough to raise.
+- This is about facing bets. When you can check, checking is often right: don't bet a hand just to avoid checking.
