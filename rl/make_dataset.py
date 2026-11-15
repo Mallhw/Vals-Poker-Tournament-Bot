@@ -14,6 +14,7 @@ By default the opponents are `vals-hackathon/ac-vals-model`, the model every tea
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -47,6 +48,7 @@ def main() -> None:
         default="",
         help="training harness only: seats played by scripted bots, e.g. '2:shover,4:maniac' (never the policy seat)",
     )
+    parser.add_argument("--grader-params", default="", help='JSON grader_params for every task, e.g. \'{"bust_penalty": 3}\'')
     parser.add_argument("--seats", type=int, default=SEATS)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -56,9 +58,14 @@ def main() -> None:
     scripted = tuple(tuple(x.split(":", 1)) for x in args.scripted_seats.split(",") if x)
     opponents = Opponents(args.opponent_model, args.opponent_api, effort, thinking=thinking, scripted=scripted)
     built = datasets(args.prefix, opponents, args.seats)
+    if args.grader_params:
+        gp = json.loads(args.grader_params)
+        for tasks in built.values():
+            for t in tasks:
+                t.grader_params = gp
     if args.dry_run:
         for name, tasks in built.items():
-            print(name, len(tasks), tasks[0].env_params)
+            print(name, len(tasks), tasks[0].env_params, tasks[0].grader_params)
         return
     client = Client(project=args.project)
     for name, tasks in built.items():

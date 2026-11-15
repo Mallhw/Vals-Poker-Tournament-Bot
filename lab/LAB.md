@@ -29,7 +29,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - BEFORE DELETING ANY DEPLOYMENT, check the "Deployments in use" list below: evals call deployments by name and
   the CLI can't show which eval uses which. 01:30: deleting v4s30-eval broke the 5 feature evals for ~15 min
   (fixed by redeploying the same name; lab/games.py drops games with relay/HTTP errors).
-- Deployments in use (keep updated): rl-s10 = LIVE arena entry ("butter"); opsd4-s30 = fallback (previous entry); base = opponent for sh/games12 datasets;
+- Deployments in use (keep updated): opsd4-s30 = LIVE arena entry ("Alea iacta est", since 02:28 Nov 15); rl-s10 = previous entry ("butter"); base = opponent for sh/games12 datasets;
   v4s30-eval (infer_ac58d18d0a7d) = policy for games12-* feature evals (until they finish); rl-s10 = eval_ecbb6ba6dfb7.
 
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
@@ -136,6 +136,13 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
   bust_penalty 3) from the best OPSD ckpt; (c) v6 (notes+endgame OPSD) results from pipeline_v6.
   02:33: v7 prompt test launched: games12-v7 = eval_10bc6af2a4e4 (vals-poker-matt2 lab/make_games.py VARIANTS v7). rl-s40 sh-select = eval_162f5d4531cc.
 
+- 02:30 check-in: v4 (opsd4-s30) is LIVE again (Chrome session submitted 02:28 as "Alea iacta est"). butter final:
+  23 games, bust 22%, 0 wins. Built pokerbots-rl2-* (base LLM opps + 1 shover seat2 + 1 maniac seat4,
+  grader_params bust_penalty 3; rl/make_dataset.py --grader-params). NEXT when v6 is evaluated: RL v2 =
+  `rl/train.py --prefix pokerbots-rl2 --from-checkpoint <v6 ckpt if it beats v4, else ckpt_db759b762b5d>
+  --steps 30 --no-eval --concurrency 16 --checkpoint-every 10`. Free GPUs for it: v6 training ends (4) + delete
+  rl-s40 after its eval + rl-s10 (butter, retired; NOT live — re-check arena status first).
+
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
   not available on the OPSD cluster). lab/pipeline_v6.sh (log ~/Worker/logs/pipeline_v6.log) then deploys v6-s20,
@@ -146,6 +153,7 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
 ## Candidate to submit
 **BEST CHECKED CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
 busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
+**SUBMITTED 2026-11-15 02:28 PT by the Chrome session: opsd4-s30 (infer_496116c2999d) as "Alea iacta est" — now LIVE (console shows Current entry). NEVER delete or eval it.** rl-s10 ("butter") is no longer live; keep it deployed unless GPUs are needed.
 **LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
 opsd4-s30 (v4, infer_496116c2999d; 67 games: place 3.46, bust 10%, EV +30 bb/100) stays deployed.
 **SUPERSEDED (was candidate 01:45, now live as butter): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
