@@ -141,7 +141,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
 **LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
 opsd4-s30 (v4, infer_496116c2999d; 67 games: place 3.46, bust 10%, EV +30 bb/100) stays deployed.
-**BEST CHECKED CANDIDATE (01:45): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
+**SUPERSEDED (was candidate 01:45, now live as butter): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
 ckpt_52d6b4b511f4). sh-select 500 hands: score 9.397 vs v4 9.003, busts 4.4 vs 4.6, weak call-offs 3.4 vs 4.8,
 fmt err 0.89% vs 3.2%, EV +1.32 vs +0.09 BB/hand (paired diff +1.23 +-1.33). play_local 17 decisions, 0 failed.
 Submit as "Alea iacta est". Caveat: VPIP 11% (tight). Keep rl-s10 deployed; once submitted it becomes LIVE (never eval it).
