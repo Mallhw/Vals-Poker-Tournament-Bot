@@ -153,7 +153,8 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
   Gap ~0.5 place = (a) busts 10% -> Vals ~2-3% and (b) Accord-style aggression (more hands, more 3-bets, fold less).
   QUEUED v8 = "Accord-style" games12 variant: open ~22-25%, 3-bet 7-8% (QQ+/AK + some A5s/KQs bluffs in position),
   fold to raises ~80% (defend pairs/suited broadways in position), keep all survival rules (v4 sections 2-3) + v7
-  multiway rule. Launch after the talk tests (needs harness2 free of nothing; system_hint only, no restart).
+  multiway rule. Appended to pipeline_talk.sh; CHECK-IN BACKSTOP: if no "games12-v8 eval" line in
+  ~/Worker/logs/pipeline_talk.log after the talk evals launched, upload + launch v8 manually (make_games.py --variants v8).
 
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
