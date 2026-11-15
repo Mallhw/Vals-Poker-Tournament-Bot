@@ -117,7 +117,7 @@ best hint. Judge on chips + busts (paired, lab/games.py), sh-select score/busts 
 drop losers, write one line per result below. Status: [ ] todo, [~] running, [x] kept, [-] dropped.
 - [~] v10 "Vals + notes" (opsd/hint.py HINTS['v10']): OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
       prompt test games12-v10 eval_5949fdd91dba.
-- [~] v6 notes+endgame trained (pipeline_v6 -> v6-s20). [~] v7 notes-at-decision eval_10bc6af2a4e4.
+- [~] v6 notes+endgame trained -> v6-s20 (infer_60c930ca75cb): sh-select eval_efddd596cc0f, games12 eval_80f62e7eb7eb; play_local 1 unreadable reply. [~] v7 notes-at-decision eval_10bc6af2a4e4.
 - [ ] talk: chaos + bluff-talk (pipeline_talk.sh, after v7). [ ] v8 Accord-style + price-aware preflop (after talk).
 - [ ] RL v2 realistic tables (pokerbots-rl2, bust_penalty 3) from the best OPSD ckpt (v10 or v6) when 6 GPUs free.
 - [ ] Exploit Accord specifically (we fold 63 vs 25): 3-bet its opens wider in position (AJs+, KQs, 99+, A5s),
