@@ -273,3 +273,10 @@ RL v3 (train_f47a076b7b24) stopped 11:05 with NO checkpoint even at ckpt-every-2
 pbspot runs hold the GPUs) -> NOT relaunching while teammates train continuously. v12 vs v10 games12 evals still running.
 Report for Nathan (v10-s9 vs solver-GRPO): Vals-Poker-Tournament-Bot branch report-v10s9-vs-solver-grpo,
 reports/v10-s9-vs-solver-grpo.md.
+11:45 v12 RESULT -> NOT ADOPTED (inconclusive): games12 paired by seed (36): v12 chips 221 vs v10 201, busts 0 vs 1, place
+3.00 vs 3.11, but per-game diffs 15 better / 15 worse / 6 same, mean +60 +- 41 SE (one +1007 game) = noise. The rule never
+fired: v10 faced 8 shover all-ins, v12 7, mostly hands 1-2 (shover not yet identified) and all with out-of-range hands
+(83o, 23o, Q8, T5o, KJo, 66); v12 applied the range correctly (folded KJo citing it). 12-hand games can't test it.
+NEXT (from the Nathan report: both models finish last mostly by FADING, not busting): v13 = v10 + steal ~40% when folded
+to on CO/BTN/SB, defend BB vs min-raises, push-or-fold at <= 15 BB. games12-v13 eval_50b5db16ad59, paired vs v10
+eval_da78b93972ac (same seed, policy v10-s9). Judge chips + busts + place (lasts!).
