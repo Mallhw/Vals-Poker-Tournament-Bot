@@ -101,7 +101,8 @@ HINTS = {
    - short (20-40 BB): QQ+, AK vs tight; TT+, AQ+ vs a frequent shover.
    Offsuit junk (T9o, J8o, Q8o, K6o, 96o) and weak aces never call off, whoever shoved.
 
-4. Before the flop raise or fold; flat-call rarely. Open to 2.5 BB: first seat 66+, ATs+, KJs+, QJs, AQo+;
+4. Before the flop raise or fold; flat-call rarely, and NEVER limp (just call the big blind when nobody has raised):
+   raise it or fold it. Open to 2.5 BB: first seat 66+, ATs+, KJs+, QJs, AQo+;
    middle seat add 55, A9s, A5s, KTs, QTs, JTs, AJo, KQo. When it is folded to you in the cutoff, button or small
    blind, RAISE a wide range: any pair, any ace, suited kings and queens, suited connectors 54s+, KTo+, QJo, JTo
    (button: also K9o, Q9o, T9o). Most bots fold their blinds too often, so these steals win chips without risking
