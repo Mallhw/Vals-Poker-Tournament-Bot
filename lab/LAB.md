@@ -70,7 +70,11 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    play_local checks launching automatically (bg job). Local v3 vs v4: v4 looser (VPIP 51%, 3 busts/6) — watch busts.
    23:28: v4 at step 8/30 (~1 min/step). base redeployed (infer_74f29225a15a). After v4: deploy s20 + s30 as vals-hackathon-matt/opsd4-s20, -s30, play_local check, eval on
    sh-select, pick best by mean score + busts + VPIP (target: Pete-like ~30% VPIP / ~20% PFR, busts << base).
-4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
+4. [RUNNING 00:21] GRPO from v4 s29 (ckpt_db759b762b5d, rl/train.py --from-checkpoint) on pokerbots-bots-train
+   (all-scripted tables: nit, 2 shovers, maniac, station, random; no opponent GPU), 40 steps, ckpts every 10,
+   concurrency 32: train_63646e72d9bc. Deleted opsd4-s20 + my base to free GPUs (redeploy base before sh evals).
+   v4 s20 on sh-select (241 hands): score 9.14 vs base 8.845, busts 4.6 vs 13.6/100, weak call-offs 2.9 vs 15.4.
+   (old) GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
 ## Candidate to submit

@@ -18,3 +18,6 @@
 {"time": "2026-11-15 00:09:30", "name": "v4 ckpts on pokerbots-sh-select", "kind": "eval", "evals": {"s30": "eval_8c0e96ff4dad", "s20": "eval_c37b1be532e0"}, "result": "running (00:10)"}
 {"time": "2026-11-15 00:10:04", "name": "v4 step 29 (opsd4-s30) went live in arena ~00:08", "kind": "arena", "result": "stopped its sh-select eval immediately to avoid overloading the live deployment; s20 eval (separate deployment) continues"}
 {"time": "2026-11-15 00:11:22", "name": "play_local check opsd4-s20 (6 hands vs bots)", "kind": "check", "result": "0/6 failed decisions, -1.5 BB. s30 check stopped (went live); monitor its arena fallback rate."}
+{"time": "2026-11-15 00:20:30", "name": "v4 s20 on sh-select (241/500 hands, stopped early to free GPUs)", "kind": "eval", "eval": "eval_c37b1be532e0", "result": "score 9.14 vs base 8.845; busts 4.6/100 vs 13.6; weak call-offs 2.9/100 vs 15.4; fmt err 3.6% (token cap); VPIP 12%"}
+{"time": "2026-11-15 00:20:30", "name": "v4 s29 live in arena (first 8 games)", "kind": "arena", "result": "avg place 3.25, 1 bust, VPIP 14% PFR 10%; team rank #8 rating 1095 (best yet)"}
+{"time": "2026-11-15 00:20:30", "name": "GRPO from v4 s29 on bot tables (2 shovers, maniac, nit, station, random), bust-penalty grader, 40 steps", "kind": "train", "train": "train_63646e72d9bc", "result": "running 00:21"}
