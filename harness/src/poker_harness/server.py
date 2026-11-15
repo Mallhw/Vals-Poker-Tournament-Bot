@@ -131,6 +131,17 @@ ESSENTIAL_RESPONSE = (
 )
 
 
+def _with_system_hint(complete, hint: str):
+    """Wrap a `complete(messages)` so the system message gets `hint` appended (training/eval only)."""
+
+    async def hinted(messages: list[dict[str, Any]]):
+        if messages and messages[0].get("role") == "system":
+            messages = [{**messages[0], "content": f"{messages[0]['content']}\n\n{hint}"}, *messages[1:]]
+        return await complete(messages)
+
+    return hinted
+
+
 def _size(log: dict[str, Any]) -> int:
     return len(json.dumps(log, separators=(",", ":")))
 
@@ -262,6 +273,11 @@ def create_app(
                     if params.get("opponent_model")
                     else policy_cleanup
                 )
+                # Training/eval only: `system_hint` is appended to the policy seats' system prompt (A/B-test
+                # prompt ideas before distilling them). Opponents never see it. The arena's harness has no such key.
+                if params.get("system_hint"):
+                    policy_complete = _with_system_hint(policy_complete, str(params["system_hint"]))
+                    policy_cleanup = _with_system_hint(policy_cleanup, str(params["system_hint"]))
                 # Training-only: `scripted_seats` = {"3": "shover", ...} puts the engine's scripted players in those
                 # seats (e.g. a frequent all-in shover like the arena's house bots). Never a policy seat.
                 scripted = {int(k): v for k, v in (params.get("scripted_seats") or {}).items() if int(k) not in policy}

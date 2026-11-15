@@ -1,0 +1,102 @@
+"""Multi-hand A/B game datasets for prompt-level ideas (table talk, opponent notes, short reasoning, end-game play).
+
+Every variant gets the SAME games (seeds, policy seat, opponents); only `system_hint` (appended to the policy's
+system prompt by the training harness, never shown to opponents) differs. Opponents are an LLM deployment (so table
+talk can work on them) plus one scripted shover seat, like the arena's house bots.
+
+    uv run python lab/make_games.py --project vals-hackathon-matt2 --opponent-model vals-hackathon-matt/base \
+        --games 40 --hands 12 [--dry-run]
+
+Creates <prefix>-<variant> datasets. Compare variants with lab/games.py (place, chips, busts, fallbacks).
+"""
+
+from __future__ import annotations
+
+import argparse
+import random
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from ac2.runtime import Message, Task  # noqa: E402
+from ac2.sdk import Client  # noqa: E402
+from vals_tools.tasks import SEATS, TABLE_RULES  # noqa: E402
+
+VARIANTS: dict[str, str] = {
+    "control": "",
+    "talk": (
+        "Table talk tactic: the other players are AI models that read your say field. When you bet or raise big for "
+        "value, add a short confident line such as 'i have it', 'you are beat' or 'fold, i hold the nuts'. When you "
+        "are bluffing or weak, say nothing. Never name your real cards."
+    ),
+    "notes": (
+        "Opponent notes: in every update_scratchpad, keep one line per seat in this format: "
+        "'seatN: played X/Y hands, raised R, all-in A, showed [cards] -> type' where type is nit, tight, loose, "
+        "maniac, shover or calling-station. Use them: fold to a nit's raise without a premium hand; value-bet "
+        "calling-stations bigger and never bluff them; call shovers and maniacs wider (99+, AJs+, AQo+); steal the "
+        "blinds of nits and tight players."
+    ),
+    "short": (
+        "Decide fast: keep your private reasoning under about 250 words. Replies cut off at the token limit are "
+        "auto-folded, which costs more than a slightly worse decision."
+    ),
+    "endgame": (
+        "End of game: final rank is by chips among players still seated, and every busted player ranks below them. "
+        "In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are "
+        "the chip leader, protect the lead; if you are short but safe, pick up chips with raises when it is folded "
+        "to you rather than calling all-ins."
+    ),
+}
+
+
+def game_tasks(games: int, hands: int, opponent_model: str, seed: int, hint: str) -> list[Task]:
+    rng = random.Random(seed)
+    out = []
+    for g in range(games):
+        policy = g % SEATS
+        shover = (policy + 3) % SEATS
+        params = TABLE_RULES | {
+            "seed": rng.getrandbits(48),
+            "seats": SEATS,
+            "total_hands": hands,
+            "policy_seats": [policy],
+            "ev_labels": True,
+            "ev_runouts": 32,
+            "opponent_model": opponent_model,
+            "opponent_timeout_seconds": 120,
+            "opponent_thinking": False,
+            "scripted_seats": {str(shover): "shover"},
+        }
+        if hint:
+            params["system_hint"] = hint
+        out.append(Task(input=[Message(role="user", content=f"Play a {SEATS}-seat game of {hands} hands from seat {policy}.")],
+                        env_params=params))
+    return out
+
+
+def main() -> None:
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--project", required=True)
+    p.add_argument("--prefix", default="games12")
+    p.add_argument("--opponent-model", required=True)
+    p.add_argument("--games", type=int, default=40)
+    p.add_argument("--hands", type=int, default=12)
+    p.add_argument("--seed", type=int, default=20261115)
+    p.add_argument("--variants", nargs="+", default=list(VARIANTS))
+    p.add_argument("--dry-run", action="store_true")
+    a = p.parse_args()
+    client = None if a.dry_run else Client(project=a.project)
+    for v in a.variants:
+        tasks = game_tasks(a.games, a.hands, a.opponent_model, a.seed, VARIANTS[v])
+        name = f"{a.prefix}-{v}"
+        if a.dry_run:
+            print(name, len(tasks), {k: tasks[0].env_params[k] for k in ("total_hands", "policy_seats", "scripted_seats")},
+                  (tasks[0].env_params.get("system_hint") or "")[:60])
+            continue
+        client.datasets.create(name, description=f"{len(tasks)} {a.hands}-hand A/B games, variant {v}", exist_ok=True)
+        client.datasets.add_tasks(name, tasks=tasks)
+        print(f"{name}: {len(tasks)} tasks")
+
+
+if __name__ == "__main__":
+    main()
