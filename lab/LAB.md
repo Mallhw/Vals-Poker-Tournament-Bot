@@ -120,7 +120,9 @@ best hint. Judge on chips + busts (paired, lab/games.py), sh-select score/busts 
 drop losers, write one line per result below. Status: [ ] todo, [~] running, [x] kept, [-] dropped.
 - [~] v10 "Vals + notes" (opsd/hint.py HINTS['v10']): OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
       prompt test games12-v10 eval_d2411489bbab (first try failed on AC2: no space left).
-- [~] v6 notes+endgame trained -> v6-s20 (infer_60c930ca75cb): sh-select eval_efddd596cc0f, games12 eval_80f62e7eb7eb; play_local 1 unreadable reply.
+- [~] v6 (trained notes+endgame): busts 2.0/100 + junk call-offs 1.8 = BEST survival, but fmt errors 5.6% (calls
+      update_scratchpad mid-hand; no-JSON replies) -> score 8.81 < v4. Not candidate. RL v2 from v6 queued
+      (lab/pipeline_rl2.sh, starts when v10 training ends) to train out format errors. Watch v10 for the same issue.
 - [-] v7 notes-at-decision: best shover detection (13/36) but no chip gain (228 vs control 231), busts equal -> dropped.
 - [ ] talk: chaos + bluff-talk (pipeline_talk.sh, after v7). [ ] v8 Accord-style + price-aware preflop (after talk).
 - [ ] RL v2 realistic tables (pokerbots-rl2, bust_penalty 3) from the best OPSD ckpt (v10 or v6) when 6 GPUs free.
