@@ -291,3 +291,9 @@ teammates' pbspot runs hold. Also 12-hand games are too short to test shover/fad
 "talk round step 20 (any-talk penalty)" (infer_a5aaffeb4304): 53 games, place 3.21, 10 wins, 6 lasts, bust 5.7%, EV +22.2
 -- best of all pineapple entries so far (v10-s9 3.39, solver-GRPO 3.41, v4 3.37). Team #8, rating 1123. HOLD stays.
 12:50: team #3, rating 1173 (684 matches). Talk round s20 finished at 69 games: place 3.07, 15 wins, 7 lasts, bust 5.8%, EV +22.5 (best pineapple entry). Teammate swapped live entry again to vals-hackathon/ho-7620e6-step20 (infer_1daa9f6ac6d3, deployed 12:30; no games yet). RL v3 train_8d97d5324ce9 preempted (4th time) at 12:44 by pbspot15, no ckpt.
+13:30 check-in: TEAM #2, rating 1191 (719 matches). Live: teammate "final round step 20 (small-pot reward)"
+(ho-7620e6-step20, infer_1daa9f6ac6d3): 27 games place 3.19, win 26%, top-2 44%, bust 3.7%, EV +67, fallbacks 0.7%
+(deployment briefly "provisioning", back to ready, no forced folds). Talk round s20 final 76 games: place 2.93, win 26%,
+last 9%, bust 5.3%: best entry so far; its edge = Accord-style aggression (PFR 21%, 3-bet 8.5%, steal 47%, limp 6%).
+Added section 8 to the Nathan report (branch report-v10s9-vs-solver-grpo). Our RL: not relaunched (GPUs: pbspot15).
+Awaiting user: delete idle opsd4-s30 + v10-s9 to free GPUs for the team? (not done)
