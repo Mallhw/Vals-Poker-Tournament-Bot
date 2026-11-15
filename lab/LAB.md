@@ -298,3 +298,9 @@ last 9%, bust 5.3%: best entry so far; its edge = Accord-style aggression (PFR 2
 Added section 8 to the Nathan report (branch report-v10s9-vs-solver-grpo). Our RL: not relaunched (GPUs: pbspot15).
 Awaiting user: delete idle opsd4-s30 + v10-s9 to free GPUs for the team? (not done)
 14:30 check-in: team #12, 1059 (from #2 1191). final round s20 collapsed: games 28-60 place 4.39, 12 lasts / 2 busts (fades; small-pot reward), first 27 were 3.04. Teammate already reverted live entry to talk round s20 (infer_a5aaffeb4304, 16 more games place 3.06). Report section 9 added. No GPUs free for us; deletions still awaiting user.
+15:30 check-in: RANKED LADDER STOPPED ~14:07 PT (every entry "last played 1h ago"; site now runs only EXHIBITION
+tables; homepage still says "Ranked ladder · Live"). Standings at the freeze: pineapple 11th of 17 entries, 8th of 11
+teams, rating 1059, 767 matches, bb/100 +7.4, EV +11.8 (live entry talk round s20 = ho-e07e40-step20).
+Teams: 1 Accord 1238, Lincoln 1147, Friends 1109, Vals 1100, Martingale 1076, Spark 1068, 🥵🥵🥵 1061, pineapple 1059,
+LoRA 1007, The Evaluators 948, Benji's Test Team 899. Our rating fell 1191 -> 1059 in the last hour before the freeze
+(final round s20 collapse). Unknown whether ranked resumes or an official tournament follows -- check the organizers.
