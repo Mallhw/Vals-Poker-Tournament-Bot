@@ -7,7 +7,9 @@ For each chosen checkpoint (default: every checkpoint the run saved), once the r
 
 1. deploy it as `<prefix>-<run>-step<N>` (1 GPU each; `vals_tools.deploy` waits until it answers with a tool call);
 2. play a short local game against scripted bots under the event rules (`harness/play_local.py`) and count failed
-   decisions: a checkpoint whose decisions mostly fail is not evaluated, since the arena would pause it;
+   decisions: a checkpoint whose decisions mostly fail is not evaluated, since the arena would pause it. The same game
+   gives a free talk check: how often it talks, how much of that is about its hand, and how often it says the talk
+   rule's line (opsd/hints/talk_rule.txt);
 3. run it on the eval dataset through your harness (the harness and connector must be up), as the base eval did;
 4. when every eval (and the base eval) has finished, score each checkpoint paired by deal against base.
 
@@ -31,6 +33,7 @@ from typing import Any
 from ac2.sdk import Client
 
 from vals_tools.eval import eval_config
+from vals_tools.hint_report import TALK_RULE, load_talk_rule, policy_stats
 from vals_tools.score import score_rows, summarize
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +44,27 @@ MAX_FAILED_SHARE = 0.5  # more than this in the local game: don't spend an eval 
 
 def deployment_name(prefix: str, train_id: str, step: int) -> str:
     return f"{prefix}-{train_id.removeprefix('train_')[-6:]}-step{step}"
+
+
+LOG = re.compile(r"log: (\S+\.json)")
+
+
+def parse_log_path(output: str) -> str | None:
+    """The game log's path from play_local's last line (relative to harness/), or None."""
+    found = LOG.findall(output)
+    return found[-1] if found else None
+
+
+def talk_check(path: Path, model: str) -> dict[str, float | None] | None:
+    """What the checkpoint says in its local game, for free: the share of its decisions with talk, how much of that
+    talk is about its hand, and how often it says the talk rule's line for the hand (None without a rule file)."""
+    try:
+        log = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    rule = load_talk_rule() if TALK_RULE.exists() else None
+    stats = policy_stats([log], rule, policy=model)
+    return {key: stats[key] for key in ("talk_rate", "say_hand_talk", "say_rule")}
 
 
 def parse_check(output: str) -> tuple[int, int] | None:
@@ -98,6 +122,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         print(played.stdout[-600:], flush=True)
         check = parse_check(played.stdout)
         entry["tool_check"] = {"decisions": check[0], "failed": check[1]} if check else {"error": played.stderr[-300:]}
+        log_path = parse_log_path(played.stdout)
+        entry["talk_check"] = talk_check(ROOT / "harness" / log_path, model) if log_path else None
+        print(f"talk in the local game: {entry['talk_check']}", flush=True)
         if not check or not check[0] or check[1] / check[0] > MAX_FAILED_SHARE:
             entry["error"] = "most decisions failed in the local game: not evaluated"
             continue

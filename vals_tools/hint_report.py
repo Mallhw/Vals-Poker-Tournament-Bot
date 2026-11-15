@@ -85,17 +85,20 @@ def effects_text(effects: dict[str, Any], base: str = "plain") -> str:
     return "\n".join(lines)
 
 
-def policy_stats(logs: list[dict[str, Any]], rule: dict[int, str] | None = None) -> dict[str, Any]:
-    """The trained seat's behavior over these games. With `rule`, how often its talk is the rule's line for the hand."""
+def policy_stats(
+    logs: list[dict[str, Any]], rule: dict[int, str] | None = None, policy: str = POLICY
+) -> dict[str, Any]:
+    """The trained seat's behavior over these games. With `rule`, how often its talk is the rule's line for the hand.
+    `policy` is the seat's model name in the logs: the harness names it `ac2/policy`, `play_local.py` by deployment."""
     decisions = [a for log in logs for h in log["hands"] for a in h["actions"]
-                 if a["model_response"].get("model_name") == POLICY]
+                 if a["model_response"].get("model_name") == policy]
     failed = [a for a in decisions if a["model_response"].get("format_error")]
     clean = [a for a in decisions if not a["model_response"].get("format_error")]
     tokens = sorted(a["model_response"]["out_tokens"] for a in decisions if a["model_response"].get("out_tokens"))
     hands = [
-        [a for a in h["actions"] if a["model_response"].get("model_name") == POLICY and a["street"] == "preflop"]
+        [a for a in h["actions"] if a["model_response"].get("model_name") == policy and a["street"] == "preflop"]
         for log in logs for h in log["hands"]
-        if any(a["model_response"].get("model_name") == POLICY for a in h["actions"])
+        if any(a["model_response"].get("model_name") == policy for a in h["actions"])
     ]
     facing = Counter(a["action"]["type"] for a in clean if a["call_amount"] > 0)
     free = Counter(a["action"]["type"] for a in clean if a["call_amount"] == 0)
@@ -105,14 +108,14 @@ def policy_stats(logs: list[dict[str, Any]], rule: dict[int, str] | None = None)
         for log in logs
         for h in log["hands"]
         for i, a in enumerate(h["actions"])
-        if a["model_response"].get("model_name") == POLICY and not a["model_response"].get("format_error")
+        if a["model_response"].get("model_name") == policy and not a["model_response"].get("format_error")
         and a["call_amount"] > 0 and any(b.get("say") and b["player"] != a["player"] for b in h["actions"][:i])
     )
     share = lambda part, whole: round(part / whole, 3) if whole else None  # noqa: E731
     # Our own talk: how often it follows the rule, and how often it says something about our hand.
     said = [a for a in decisions if a.get("say")]
     by_hand = [(h["hand_number"], a) for log in logs for h in log["hands"] for a in h["actions"]
-               if a["model_response"].get("model_name") == POLICY and not a["model_response"].get("format_error")
+               if a["model_response"].get("model_name") == policy and not a["model_response"].get("format_error")
                ] if rule else []
     compliant = sum(a.get("say", "") == rule.get(n % len(rule)) for n, a in by_hand) if rule else 0
     # How opponents answer our bets: right after we spoke, or after we bet in silence.
@@ -121,7 +124,7 @@ def policy_stats(logs: list[dict[str, Any]], rule: dict[int, str] | None = None)
         for h in log["hands"]:
             last = None
             for a in h["actions"]:
-                if a["model_response"].get("model_name") == POLICY:
+                if a["model_response"].get("model_name") == policy:
                     last = ("talk" if a.get("say") else "silent") if a["action"]["type"] in ("bet", "raise") else None
                 elif last and a["call_amount"] > 0 and not a["model_response"].get("format_error"):
                     answers[last][a["action"]["type"]] += 1

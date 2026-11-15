@@ -121,3 +121,10 @@ def test_effects_of_talk_on_answers_to_bets_need_size_and_significance() -> None
     assert hr.prop_diff(5, 0, 1, 10) is None
     text = hr.effects_text(effects)
     assert "strong:" in text and "fold +16%" in text and "*" in text
+
+
+def test_a_policy_named_for_its_deployment_is_found_by_the_policy_argument() -> None:
+    mine = {"model_name": "vals-hackathon/ckpt-x"}
+    logs = [game([act("preflop", "fold", 2, mine), act("preflop", "call", 2, OTHER, "seat1")])]
+    assert hr.policy_stats(logs)["decisions"] == 0  # the harness's name, `ac2/policy`, is the default
+    assert hr.policy_stats(logs, policy="vals-hackathon/ckpt-x")["decisions"] == 1
