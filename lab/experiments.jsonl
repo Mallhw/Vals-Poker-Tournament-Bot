@@ -15,3 +15,5 @@
 {"time": "2026-11-14 23:08:42", "name": "stopped OPSD v3mix (train_f485ce511a1a) to run v4 only", "kind": "ops", "result": "user: just do v4; teammates took 2 GPUs (base-t1/t2) so v3+v4 could not run together"}
 {"time": "2026-11-14 23:49:41", "name": "local v3 vs v4 at shover tables (llama 27B, 6 seeds)", "kind": "local", "result": "v3: 1 bust, -64.5 BB, VPIP 25%, 2/89 fmt err; v4: 3 busts, +10 BB (one +345), VPIP 51%, 5 big calls, 0/78 fmt err -> v4 may be too loose; check trained ckpt bust rate on sh-select"}
 {"time": "2026-11-14 23:52:40", "name": "OPSD v4mix finished", "kind": "train", "train": "train_c2f55e32f7e3", "result": "30 steps; deployed s30 (infer_496116c2999d), s20 (infer_eb929696902d) for check + sh-select eval"}
+{"time": "2026-11-15 00:09:30", "name": "v4 ckpts on pokerbots-sh-select", "kind": "eval", "evals": {"s30": "eval_8c0e96ff4dad", "s20": "eval_c37b1be532e0"}, "result": "running (00:10)"}
+{"time": "2026-11-15 00:10:04", "name": "v4 step 29 (opsd4-s30) went live in arena ~00:08", "kind": "arena", "result": "stopped its sh-select eval immediately to avoid overloading the live deployment; s20 eval (separate deployment) continues"}

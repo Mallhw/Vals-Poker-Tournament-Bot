@@ -74,5 +74,8 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
 ## Candidate to submit
+**LIVE since ~00:08 Nov 15: vals-hackathon-matt/opsd4-s30 (infer_496116c2999d, OPSD v4 step 29) — submitted by the
+user/teammate. NEVER delete it and NEVER eval it directly** (its sh-select eval eval_8c0e96ff4dad was stopped the
+moment it went live; no arena games overlapped). To eval v4 s30, deploy a second copy of ckpt_db759b762b5d.
 Submission name for every model: **Alea iacta est** (user's request).
 - none of mine yet (arena entry = teammate's solver-spot step 20, infer_5fe0799751ef).

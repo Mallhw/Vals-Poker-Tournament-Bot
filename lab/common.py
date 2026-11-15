@@ -17,7 +17,7 @@ EXPERIMENTS = LAB / "experiments.jsonl"
 
 PROJECT = "vals-hackathon-matt"
 ORG = "org_9197691edc5e"
-ARENA_ENTRY = "infer_5fe0799751ef"  # live arena entry since ~21:20 (vals-hackathon/ho-af0ee9-step20): never touch; check lab/arena.py status
+ARENA_ENTRY = "infer_496116c2999d"  # LIVE arena entry since ~00:08 Nov 15 = MY vals-hackathon-matt/opsd4-s30 (v4 step 29): never delete, never eval it directly
 BASE = f"{PROJECT}/base"
 
 
