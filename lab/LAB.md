@@ -97,6 +97,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - 01:55: v5 variant (counted per-seat notes, min-sample labels, bot fingerprints + counter-play, more steals;
   text in vals-poker-matt2/lab/make_games.py VARIANTS['v5']) on the same games: eval_832ce52f3280. If v5 beats
   control: add it to opsd/hint.py as HINTS['v5'] (v4 + this block), build OPSD data, train on top of the best RL ckpt.
+- 02:05 RESULTS (19-24 clean games each; CIs ~+-0.5 place): control 2.96 / 220 chips / 17% busts; talk 2.90 / 240 /
+  10% (model barely talked, no fold effect) DROP; notes 2.76 / 318 / 5% KEEP; short 3.26 / 209 / 16% DROP;
+  endgame 2.62 / 272 / 8% KEEP. Plan: hint v6 = v4 + v5 notes block + endgame block; OPSD on best RL ckpt when GPUs free.
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
