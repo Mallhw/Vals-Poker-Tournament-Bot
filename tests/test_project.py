@@ -106,3 +106,37 @@ def test_every_deployment_is_exactly_one_gpu(monkeypatch: pytest.MonkeyPatch) ->
     with pytest.raises(SystemExit) as exit_info:
         deploy.main()
     assert exit_info.value.code == 2  # argparse rejects the unknown flag before anything reaches AC2
+
+
+def test_opsd_builder_distills_the_talk_rule_into_the_replayed_call_and_the_teachers_hint() -> None:
+    system = Message(role="system", content="rules")
+    scratchpad = Message(role="user", content="## Your scratchpad (private)\n(empty)")
+    rule = {0: "i like this spot", 1: "not much here", 2: "feeling lucky today"}
+
+    def span(start: int, hand: str, arguments: str) -> dict:
+        prompt = [system, scratchpad, Message(role="user", content=f"{hand}\nLegal actions: fold, call 2")]
+        reply = [Reasoning(content="think"), FunctionCall(call_id="c1", name="submit_action", arguments=arguments)]
+        dump = lambda items: json.dumps([i.model_dump(mode="json") for i in items])  # noqa: E731
+        return {"name": "get_completion", "status": "OK", "start_time": start, "input": dump(prompt),
+                "output": dump(reply), "tokens_out": 10}
+
+    trace = {"trace_id": "t", "spans": [
+        span(1, "## Hand 7 of 30", '{"action":"fold"}'),                    # 7 % 3 = 1
+        span(2, "## Hand 9 of 30", '{"action":"raise","amount":6,"say":"i have aces"}'),  # 9 % 3 = 0
+        span(3, "no hand line here", '{"action":"fold"}'),
+    ]}
+    tasks, stats = build_dataset.decision_tasks(trace, "", 100, rule)
+    assert stats == {"decisions": 3, "kept": 2, "cleanup": 0, "format": 0, "truncated": 0, "no_hand": 1}
+    first, second = tasks
+    calls = [[i for i in t.input if isinstance(i, FunctionCall)][0] for t in tasks]
+    assert json.loads(calls[0].arguments) == {"action": "fold", "say": "not much here"}
+    assert json.loads(calls[1].arguments) == {"action": "raise", "amount": 6, "say": "i like this spot"}  # replaced
+    assert first.opsd_hint_selections[0].hint == 'On this call, set say to exactly "not much here".'
+    assert "not much here" not in json.dumps([i.model_dump(mode="json") for i in first.input[:3]])  # prompt unchanged
+    # with a strategy hint too, the line is added after it; prompts-only keeps no reply (one-step OPSD)
+    prompt_tasks, _ = build_dataset.decision_tasks(trace, "Play tight.", 100, rule, prompts_only=True)
+    only = prompt_tasks[0]
+    assert only.opsd_hint_selections[0].hint.startswith("Play tight.\n\nOn this call, set say to exactly")
+    assert len(only.input) == 3 and only.opsd_hint_selections[0].rollout_prefix_len == 3
+    assert build_dataset.hand_number([system, scratchpad]) is None
+    assert build_dataset.load_talk_rule(ROOT / "opsd" / "hints" / "talk_rule.txt")[3] == "this one is easy"
