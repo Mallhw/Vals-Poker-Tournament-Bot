@@ -14,7 +14,4 @@ build/
 harness/
 vals_tools/
 rl/
-opsd/
-tests/
 traces/
-videos/
