@@ -74,6 +74,8 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    (all-scripted tables: nit, 2 shovers, maniac, station, random; no opponent GPU), 40 steps, ckpts every 10,
    concurrency 32: train_63646e72d9bc. Deleted opsd4-s20 + my base to free GPUs (redeploy base before sh evals).
    v4 s20 on sh-select (241 hands): score 9.14 vs base 8.845, busts 4.6 vs 13.6/100, weak call-offs 2.9 vs 15.4.
+   00:28: freed 3 idle teammate deployments; base back (infer_6156223eb22d) + v4s30-eval copy (infer_6fecaa0f2f29)
+   -> full sh-select eval of v4 s29 launching (bg). 1 GPU kept free for RL ckpt copies.
    (old) GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 

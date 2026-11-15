@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 00:18:26",
-  "rank": 8.0,
-  "rating": 1095.0,
-  "bb100": -8.1,
-  "matches": 170.0,
+  "time": "2026-11-15 00:27:14",
+  "rank": 7.0,
+  "rating": 1133.0,
+  "bb100": -0.6,
+  "matches": 182.0,
   "deployment": "infer_496116c2999d"
  },
- "new_matches": 16,
+ "new_matches": 12,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -49,30 +49,30 @@
    "fallback_rate": 0.3108
   },
   "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)": {
-   "games": 82,
-   "mean_place": 3.68,
-   "wins": 9,
-   "lasts": 10,
-   "bust_rate": 0.037,
-   "bb100": -2.2,
-   "ev_bb100": 2.2,
+   "games": 92,
+   "mean_place": 3.65,
+   "wins": 11,
+   "lasts": 11,
+   "bust_rate": 0.033,
+   "bb100": 4.8,
+   "ev_bb100": 8.7,
    "vpip": 0.22,
-   "pfr": 0.092,
-   "bigcalls100": 0.37,
-   "fallback_rate": 0.0059
+   "pfr": 0.094,
+   "bigcalls100": 0.33,
+   "fallback_rate": 0.0054
   },
   "opsd4-s30 (infer_496116c2999d)": {
-   "games": 8,
-   "mean_place": 3.25,
-   "wins": 0,
+   "games": 10,
+   "mean_place": 3.0,
+   "wins": 1,
    "lasts": 0,
-   "bust_rate": 0.125,
-   "bb100": -3.1,
-   "ev_bb100": -23.4,
-   "vpip": 0.138,
-   "pfr": 0.098,
-   "bigcalls100": 0.44,
-   "fallback_rate": 0.0148
+   "bust_rate": 0.1,
+   "bb100": 52.6,
+   "ev_bb100": 43.4,
+   "vpip": 0.151,
+   "pfr": 0.102,
+   "bigcalls100": 0.35,
+   "fallback_rate": 0.0111
   }
  },
  "busts": [
