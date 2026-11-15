@@ -148,6 +148,13 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
   after v5+v7 finish (pipeline_talk.sh). Judge by games.py (opp fold after talk vs silent, place, chips). If it helps,
   train the model to talk (OPSD with a talk hint); otherwise drop. SCOUTING: lab/scouting.py each check-in.
 
+- 02:45 TEAM GAP ANALYSIS (shared games): Accord place 2.97, win 30%, bust 8%, EV +44, VPIP 27/PFR 17, 3bet 7%,
+  fold-vs-raise 81%; Vals 3.08, bust 2%(!), tight 14/10; v4 3.48, win 12%, bust 10%, 14/10, 3bet 4%, fold-vs-raise 89%.
+  Gap ~0.5 place = (a) busts 10% -> Vals ~2-3% and (b) Accord-style aggression (more hands, more 3-bets, fold less).
+  QUEUED v8 = "Accord-style" games12 variant: open ~22-25%, 3-bet 7-8% (QQ+/AK + some A5s/KQs bluffs in position),
+  fold to raises ~80% (defend pairs/suited broadways in position), keep all survival rules (v4 sections 2-3) + v7
+  multiway rule. Launch after the talk tests (needs harness2 free of nothing; system_hint only, no restart).
+
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
   not available on the OPSD cluster). lab/pipeline_v6.sh (log ~/Worker/logs/pipeline_v6.log) then deploys v6-s20,

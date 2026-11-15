@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 02:28:49",
-  "rank": 12.0,
-  "rating": 1034.0,
-  "bb100": -6.0,
-  "matches": 264.0,
+  "time": "2026-11-15 02:41:24",
+  "rank": 11.0,
+  "rating": 1077.0,
+  "bb100": -4.2,
+  "matches": 275.0,
   "deployment": "infer_496116c2999d"
  },
- "new_matches": 1,
+ "new_matches": 11,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -75,17 +75,17 @@
    "fallback_rate": 0.0179
   },
   "butter (infer_96d341a589e2)": {
-   "games": 23,
-   "mean_place": 3.7,
-   "wins": 0,
+   "games": 34,
+   "mean_place": 3.5,
+   "wins": 1,
    "lasts": 4,
-   "bust_rate": 0.217,
-   "bb100": -78.2,
-   "ev_bb100": 16.6,
-   "vpip": 0.15,
-   "pfr": 0.096,
-   "bigcalls100": 0.96,
-   "fallback_rate": 0.0089
+   "bust_rate": 0.147,
+   "bb100": -39.4,
+   "ev_bb100": 23.5,
+   "vpip": 0.142,
+   "pfr": 0.091,
+   "bigcalls100": 0.63,
+   "fallback_rate": 0.0065
   }
  },
  "busts": [
