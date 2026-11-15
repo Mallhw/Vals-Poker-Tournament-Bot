@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 00:27:14",
-  "rank": 7.0,
-  "rating": 1133.0,
-  "bb100": -0.6,
-  "matches": 182.0,
+  "time": "2026-11-15 00:44:09",
+  "rank": 8.0,
+  "rating": 1121.0,
+  "bb100": -2.3,
+  "matches": 195.0,
   "deployment": "infer_496116c2999d"
  },
- "new_matches": 12,
+ "new_matches": 13,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -62,17 +62,17 @@
    "fallback_rate": 0.0054
   },
   "opsd4-s30 (infer_496116c2999d)": {
-   "games": 10,
-   "mean_place": 3.0,
+   "games": 23,
+   "mean_place": 3.43,
    "wins": 1,
    "lasts": 0,
-   "bust_rate": 0.1,
-   "bb100": 52.6,
-   "ev_bb100": 43.4,
-   "vpip": 0.151,
-   "pfr": 0.102,
-   "bigcalls100": 0.35,
-   "fallback_rate": 0.0111
+   "bust_rate": 0.087,
+   "bb100": 9.1,
+   "ev_bb100": 24.8,
+   "vpip": 0.141,
+   "pfr": 0.096,
+   "bigcalls100": 0.31,
+   "fallback_rate": 0.0122
   }
  },
  "busts": [
@@ -679,8 +679,29 @@
     "Ac",
     "Qd"
    ]
+  },
+  {
+   "match": "m_20261115t083120_bf9dfd",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 8,
+   "hole": [
+    "Jc",
+    "Jh"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "Ad",
+    "8d",
+    "Kd",
+    "5c",
+    "3h"
+   ]
   }
  ],
  "weak_busts": 18,
- "total_busts": 28
+ "total_busts": 29
 }
