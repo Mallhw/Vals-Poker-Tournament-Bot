@@ -57,4 +57,4 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 
 ## Candidate to submit
 Submission name for every model: **Alea iacta est** (user's request).
-- none of mine yet (arena entry = teammate's ho-af0ee9-step10).
+- none of mine yet (arena entry = teammate's solver-spot step 20, infer_5fe0799751ef).
