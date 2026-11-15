@@ -280,3 +280,9 @@ fired: v10 faced 8 shover all-ins, v12 7, mostly hands 1-2 (shover not yet ident
 NEXT (from the Nathan report: both models finish last mostly by FADING, not busting): v13 = v10 + steal ~40% when folded
 to on CO/BTN/SB, defend BB vs min-raises, push-or-fold at <= 15 BB. games12-v13 eval_50b5db16ad59, paired vs v10
 eval_da78b93972ac (same seed, policy v10-s9). Judge chips + busts + place (lasts!).
+12:20 v13 RESULT -> DROP: vs v10 on the same 36 games (policy v10-s9): place 3.33 vs 3.11, chips 186 vs 201, busts 0 vs 1,
+lasts 3 vs 4, fallbacks 5.3% vs 2.7%; PFR 14% vs 18% (it did NOT steal more). Paired: 16 better / 15 worse, +23 +- 41 chips,
+place +0.14 +- 0.33 = noise. Longer prompt mostly added format errors.
+LESSON: prompt-only tweaks on v10-s9 no longer move it (v8, v12, v13 all null); the trained model mostly ignores new
+rules (v13 PFR went DOWN). Real change needs training (OPSD with the new rules or RL on rl2 tables), which needs GPUs that
+teammates' pbspot runs hold. Also 12-hand games are too short to test shover/fading rules: use 30-hand games if retesting.
