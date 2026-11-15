@@ -57,3 +57,4 @@
 {"time": "2026-11-15 09:30:09", "name": "check-in 09:30", "kind": "ops", "result": "teammate submitted ho-ee668d-step10 (infer_7fe0e70e868b) as live entry; auto-submit on HOLD for user decision. v10-s9 arena 30 games: place 3.40, bust 6.7%, EV -8.6 (v4 3.34/3%/+7.7). RL v3 preempted w/o ckpt, relaunched train_674b9d7e683a (ckpt every 5)."}
 {"time": "2026-11-15 10:05:19", "name": "teammate entry check", "kind": "arena", "result": "solver-GRPO r4 s10 31 games: place 3.45, bust 22.6%, EV +11.8; team 1142->1094 (#10). v10-s9 38 games: 3.39, bust 5.3%. RL v3 preempted again, no ckpt."}
 {"time": "2026-11-15 10:09:32", "name": "RL v3 relaunch #3", "kind": "train", "result": "train_f47a076b7b24 ckpt every 2; prior run step-0 reward 10.10 (v10-s9 baseline) vs v6 9.85"}
+{"time": "2026-11-15 10:28:15", "name": "v12 shover-call-range prompt test", "kind": "eval", "eval": "eval_1e3b7fd45eff", "result": "launched; paired vs games12-v10 eval_da78b93972ac, policy v10-s9"}

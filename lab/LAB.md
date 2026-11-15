@@ -260,3 +260,9 @@ checked candidate (deployed, infer_f617937bbaa3). RL v3 train_29d356cee24f was p
 10:05: teammate entry (solver-GRPO round 4 step 10) after 31 games: place 3.45, BUST 22.6%, EV +11.8, VPIP 23%; team rating 1142 -> 1094, rank #10. v10-s9 final 38 games: place 3.39, bust 5.3%, EV -2.1. RL v3 relaunch train_674b9d7e683a ALSO preempted (09:57) before step 5 -> no ckpt; not relaunched (teammate jobs keep taking the GPUs).
 10:10: RL v3 '10.10' = step-0 baseline reward of v10-s9 on rl2 tables (251 rollouts; v6 baseline 9.85), NOT training progress (no update happened before preemption). Relaunched as train_f47a076b7b24 with --checkpoint-every 2 (resumable after preemption).
 10:20 teammate-entry bust analysis (7 busts/39): 4 = calling Bob the Buster all-ins (A3o, QJo, J7o preflop for 100BB; 66 river call of 85x-pot shove); QQ 27BB shove vs A5 (fine); K7o 14BB reshove (loose); 99 3-way all-in overcall (marginal). It calls Bob 14/57 (+1223 chips net), v10-s9 0/16, v4 12/76 (+189). Calling Bob = chips + wins but busts; a tighter call range vs Bob (77+, A9+/KQ, no limp-calls, no weak river calls) would keep most of the chips. Idea for our next model.
+10:30 check-in: teammate entry 48 games: place 3.38 (= v10-s9 3.39), 11 wins, 8 lasts, bust 14.6%, EV +22.8; team #10, 1081.
+Auto-submit HOLD stays (user decision). RL v3 train_f47a076b7b24 pending (teammate pbspot10 holds GPUs).
+EXPERIMENT v12 (shover call range, from the bust analysis): v10 prompt with rule 4 = vs an identified shover (2+ all-ins)
+call a PREFLOP shove with 77+, A9s+, ATo+, KQ if nobody else called; never after a weak limp; postflop only TPGK+.
+Paired on games12 (36 games, shover seat 3), policy = v10-s9: games12-v10 eval_da78b93972ac vs games12-v12
+eval_1e3b7fd45eff. ADOPT if chips up and busts not up -> then OPSD v12 from v10-s9's base.
