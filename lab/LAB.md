@@ -45,10 +45,11 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 2. [running] harness restarted 21:03 with shover support (verified). base on pokerbots-sh-select = eval_8b800c4577cd.
    eval_72e98313dcb1 (solver-spot step 10) INVALID: 420/538 decisions were HTTP 502 (deployment overloaded by this
    eval, then deleted). Arena entry is now teammate's step 20 = infer_5fe0799751ef (vals-hackathon/ho-af0ee9-step20).
-3. [queued] OPSD v3: dataset pokerbots-opsd-v3 (1114 decisions from eval_29f9d8cd0fce), train_f4dce31ab4bf
-   (4 GPUs, 20 steps, ckpts 10 & 20). When done: deploy ckpts as vals-hackathon-matt/opsd3-s10, -s20 (they can only
-   be deployed in vals-hackathon-matt), play_local check (--opponents bots), sh-select eval, score vs base.
-   Local v3 hint test running: ~/Worker/research/local_hint_test_v3.
+3. [queued] OPSD v3mix: dataset pokerbots-opsd-v3mix (1861 decisions: 747 from base on sh-select + 1114 from
+   mb-select, hint v3), train_f485ce511a1a (4 GPUs, 30 steps, ckpts 10/20/30). Replaced train_f4dce31ab4bf.
+   When done: deploy ckpts as vals-hackathon-matt/opsd3-s20, -s30, play_local check (--opponents bots), eval on
+   pokerbots-sh-select (concurrency ok: my own deployments), score vs base eval_8b800c4577cd, leaks.py.
+   KEY BENCHMARK = pokerbots-sh-select: base mean score 8.845, busts 13.6/100, weak call-offs 15.4/100.
 4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
