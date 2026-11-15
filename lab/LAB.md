@@ -79,6 +79,18 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    (old) GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
+## Feature experiments (user asked: table talk, opponent memory, other edges; revert if no gain)
+- Second harness/project for experiments: `vals-hackathon-matt2` (prj_9166711eab18), checkout
+  ~/Worker/projects/vals-poker-matt2 (branch matt-project2), launchd com.mallhw.vals-harness2 (127.0.0.1:8785) +
+  com.mallhw.vals-connector2. Has `system_hint` (policy-only prompt add-on) and lab/games.py.
+- 00:50: 36 identical 12-hand games per variant (LLM base opponents + 1 shover), policy = v4s30-eval copy:
+  control eval_aea14fba8798, talk eval_fdb75841326c, notes eval_d64b4bc20a1a, short eval_83d67c6df934,
+  endgame eval_e1607639bcbf. Analyze: `uv run --project harness python lab/games.py --evals control=... talk=...`
+  (run in vals-poker-matt2). Adopt a variant only if it beats control (place, chips, busts); then fold it into
+  the hint (v5) and OPSD/RL it. Otherwise keep v4 — the live entry stays the fallback.
+- Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
+- v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
+
 ## Candidate to submit
 **LIVE since ~00:08 Nov 15: vals-hackathon-matt/opsd4-s30 (infer_496116c2999d, OPSD v4 step 29) — submitted by the
 user/teammate. NEVER delete it and NEVER eval it directly** (its sh-select eval eval_8c0e96ff4dad was stopped the
