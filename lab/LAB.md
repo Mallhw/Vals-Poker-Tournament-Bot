@@ -94,6 +94,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   endgame eval_e1607639bcbf. Analyze: `uv run --project harness python lab/games.py --evals control=... talk=...`
   (run in vals-poker-matt2). Adopt a variant only if it beats control (place, chips, busts); then fold it into
   the hint (v5) and OPSD/RL it. Otherwise keep v4 — the live entry stays the fallback.
+- 01:55: v5 variant (counted per-seat notes, min-sample labels, bot fingerprints + counter-play, more steals;
+  text in vals-poker-matt2/lab/make_games.py VARIANTS['v5']) on the same games: eval_832ce52f3280. If v5 beats
+  control: add it to opsd/hint.py as HINTS['v5'] (v4 + this block), build OPSD data, train on top of the best RL ckpt.
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
