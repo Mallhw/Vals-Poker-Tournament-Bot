@@ -297,3 +297,4 @@ teammates' pbspot runs hold. Also 12-hand games are too short to test shover/fad
 last 9%, bust 5.3%: best entry so far; its edge = Accord-style aggression (PFR 21%, 3-bet 8.5%, steal 47%, limp 6%).
 Added section 8 to the Nathan report (branch report-v10s9-vs-solver-grpo). Our RL: not relaunched (GPUs: pbspot15).
 Awaiting user: delete idle opsd4-s30 + v10-s9 to free GPUs for the team? (not done)
+14:30 check-in: team #12, 1059 (from #2 1191). final round s20 collapsed: games 28-60 place 4.39, 12 lasts / 2 busts (fades; small-pot reward), first 27 were 3.04. Teammate already reverted live entry to talk round s20 (infer_a5aaffeb4304, 16 more games place 3.06). Report section 9 added. No GPUs free for us; deletions still awaiting user.
