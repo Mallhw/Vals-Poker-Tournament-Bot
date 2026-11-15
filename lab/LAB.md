@@ -156,6 +156,10 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
   multiway rule. Appended to pipeline_talk.sh; CHECK-IN BACKSTOP: if no "games12-v8 eval" line in
   ~/Worker/logs/pipeline_talk.log after the talk evals launched, upload + launch v8 manually (make_games.py --variants v8).
 
+- 02:55 PREFLOP OVER-FOLDING: v4 folds 90% to raises <=3BB (same as to all-ins), BB folds 85% vs small raises,
+  folded AK/KQs/99 cheaply. Price-blind; survival rules over-generalized. v8 now includes price-aware preflop + BB
+  defense. If v8 wins: fold its text into the next OPSD hint; consider RL tasks weighted toward small-raise spots.
+
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
   not available on the OPSD cluster). lab/pipeline_v6.sh (log ~/Worker/logs/pipeline_v6.log) then deploys v6-s20,
