@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-14 22:28:57",
+  "time": "2026-11-14 22:33:45",
   "rank": 15.0,
-  "rating": 895.0,
-  "bb100": -5.4,
-  "matches": 106.0,
+  "rating": 930.0,
+  "bb100": -3.5,
+  "matches": 109.0,
   "deployment": "infer_5fe0799751ef"
  },
- "new_matches": 8,
+ "new_matches": 3,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -49,17 +49,17 @@
    "fallback_rate": 0.3108
   },
   "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)": {
-   "games": 26,
-   "mean_place": 3.69,
+   "games": 29,
+   "mean_place": 3.66,
    "wins": 3,
    "lasts": 5,
-   "bust_rate": 0.038,
-   "bb100": 21.0,
-   "ev_bb100": 22.8,
-   "vpip": 0.224,
-   "pfr": 0.094,
-   "bigcalls100": 0.64,
-   "fallback_rate": 0.0079
+   "bust_rate": 0.034,
+   "bb100": 24.5,
+   "ev_bb100": 26.2,
+   "vpip": 0.223,
+   "pfr": 0.086,
+   "bigcalls100": 0.57,
+   "fallback_rate": 0.007
   }
  },
  "busts": [

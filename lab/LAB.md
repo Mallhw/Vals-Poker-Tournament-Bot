@@ -45,6 +45,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Local hint A/B (llama 27B, 6 seeds): hint -> 0 busts vs 2, +108 vs +19 BB, but ~2% format errors (hint v2 fixes
   wording; re-test running in ~/Worker/research/local_hint_test_v2).
 
+- Live entry (solver-spot step 20, 29 games): survives (1 bust) but weak-tight — limps 14% vs open-raises 12%,
+  3-bets 3%, never raises post-flop, loses on the BTN, wins 69% of showdowns. Hint v4 targets this (+ never limp).
+
 ## Plan / queue
 1. [done] base eval on pokerbots-mb-select: eval_29f9d8cd0fce — mean score 9.461, EV +0.39 (+-1.73).
 2. [running] harness restarted 21:03 with shover support (verified). base on pokerbots-sh-select = eval_8b800c4577cd.
