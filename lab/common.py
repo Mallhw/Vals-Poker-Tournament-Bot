@@ -17,7 +17,7 @@ EXPERIMENTS = LAB / "experiments.jsonl"
 
 PROJECT = "vals-hackathon-matt"
 ORG = "org_9197691edc5e"
-ARENA_ENTRY = "infer_96d341a589e2"  # LIVE arena entry since ~01:55 Nov 15 = vals-hackathon-matt/rl-s10 submitted as "butter": never delete, never eval it directly
+ARENA_ENTRY = "infer_f617937bbaa3"  # LIVE since 08:18 Nov 15 = vals-hackathon-matt/v10-s9 (v10 Vals+notes step 9): never delete, never eval directly
 BASE = f"{PROJECT}/base"
 
 
