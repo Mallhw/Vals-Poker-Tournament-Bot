@@ -48,6 +48,13 @@ def analyze(logs: list[dict]) -> dict:
         if not pol:
             continue
         seat = sorted(pol)[0]
+        infra = any(
+            any(k in str((a.get("model_response") or {}).get("error") or "") for k in ("Relay", "HTTP", "404", "502"))
+            for h in log["hands"] for a in h["actions"] if a["player"] == seat
+        )
+        if infra:  # the policy deployment was unreachable (not the model's fault): drop the game
+            c["dropped_infra"] += 1
+            continue
         c["games"] += 1
         p = places(log)
         pl.append(p[seat])
@@ -73,6 +80,7 @@ def analyze(logs: list[dict]) -> dict:
     g = max(1, c["games"])
     return {
         "games": c["games"],
+        "dropped_infra": c["dropped_infra"],
         "mean_place": round(statistics.fmean(pl), 2) if pl else None,
         "place_ci95": round(1.96 * statistics.stdev(pl) / len(pl) ** 0.5, 2) if len(pl) > 1 else None,
         "mean_final_chips": round(statistics.fmean(chips), 1) if chips else None,
