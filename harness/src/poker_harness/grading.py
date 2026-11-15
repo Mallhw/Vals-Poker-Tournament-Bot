@@ -11,18 +11,36 @@ A run that names no grader is graded by the harness itself, through AC2's Grader
 `server.py` calls `check_grader_params` with the task's `grader_params`, then `grade_log` with the finished game log,
 or `failure_score` when the rollout never produced one. Nothing in this module talks to the network.
 
-What it scores (deliberately naive)
------------------------------------
+What it scores
+--------------
 The trained seat's result in big blinds. With `env_params.ev_labels`, an all-in before the river counts its expected
 share of the pot instead of the cards that came (`ev.py`); otherwise it is the chips actually won.
 
-    score = 6 + clip(hand_reward, -5, +5),  hand_reward = clip(EV, -100 BB, +100 BB) / 1 BB
+    x            = clip(EV, -100 BB, +100 BB) / ev_unit_bb
+    hand_reward  = sign(x) * ln(1 + |x|)               (shape "signed_log", the default)
+    hand_reward *= loss_weight   if it is negative     (losses hurt more than equal wins)
+    score        = failure_gap + hand_reward - hand_reward(-100 BB)
 
-So every real hand scores in [1, 11]. Using 1 BB per reward point (not 20) makes typical single-hand pots
-actually use that band, so GRPO sees real within-group gaps. Model-caused failures score exactly 0: a format
-error (no usable `submit_action`, or a reply cut off at the token cap), or a rollout AC2 reports as failed or
-truncated. Rewards are never negative, a failure is always worse than any real hand, and failed samples still
-train instead of being dropped. The +6 is a shift, not a rescale, so group-relative advantages (GRPO) are unchanged.
+With the defaults (ev_unit_bb 1, loss_weight 1.25, failure_gap 2):
+
+    EV (BB)   -100   -20    -5    -1     0    +1    +5   +20  +100
+    score     2.00  3.96  5.53  6.90  7.77  8.46  9.56 10.81 12.38
+
+Why this shape, not the old `6 + clip(EV, -5, +5)`:
+- The old clip made every pot over 5 BB look the same, so a correct 100 BB stack-off and a reckless one both scored
+  like a 5 BB pot. The log curve still separates 5, 20 and 100 BB while keeping small pots (most hands) well spread.
+- In the event a busted seat is out for the rest of the 30-hand game, so losing chips costs more than winning the
+  same amount gains. `loss_weight` > 1 makes the reward risk-averse in that direction.
+- GRPO only sees differences within a group, so a constant offset changes nothing except the distance between a
+  failure and a real hand. The old gap was 1 point (0 vs. the worst hand's 1), smaller than a typical small-pot
+  swing; `failure_gap` sets it explicitly (2 by default).
+
+Model-caused failures score exactly 0: a format error (no usable `submit_action`, or a reply cut off at the token
+cap), or a rollout AC2 reports as failed or truncated. Rewards are never negative, a failure is always worse than any
+real hand, and failed samples still train instead of being dropped.
+
+Every knob can be set per task in the dataset's `grader_params` (see `DEFAULT_PARAMS`). To get the old reward back
+exactly: {"shape": "clip", "loss_weight": 1, "failure_gap": 1}.
 
 Extension points (search for "EXTENSION POINT")
 -----------------------------------------------
@@ -38,19 +56,25 @@ read, so nothing here rewards or exercises scratchpad use; how to train that is 
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import dataclass
 from typing import Any
 
-REWARD_OFFSET = 6.0  # shifts the clipped reward [-5, +5] to [1, 11]
-REWARD_FLOOR, REWARD_CEILING = -5.0, 5.0
 FAILURE_SCORE = 0.0  # every model-caused failure
 EV_CLIP_BB = 100.0  # one hand can't swing the reward by more than a full stack
-EV_UNIT_BB = 1.0  # 1 BB of EV = 1 reward point so typical hands use most of [1, 11]
+CLIP_LIMIT = 5.0  # shape "clip" only: the old +-5 band
+SHAPES = ("signed_log", "clip")
 MAX_SCORE_BYTES = 1 << 20  # AC2 rejects collect_score replies over 1 MiB
 
-# EXTENSION POINT 2: the `grader_params` keys your reward accepts. Unknown keys fail the grading, so a typo in a
-# dataset can't silently change the reward.
-GRADER_PARAMS: frozenset[str] = frozenset()
+# EXTENSION POINT 2: the `grader_params` keys your reward accepts, with their defaults. Unknown keys fail the
+# grading, so a typo in a dataset can't silently change the reward.
+DEFAULT_PARAMS: dict[str, Any] = {
+    "shape": "signed_log",  # "signed_log" (default) or "clip" (the old +-5 BB band)
+    "ev_unit_bb": 1.0,  # BB of EV per unit before shaping
+    "loss_weight": 1.25,  # multiplier on negative rewards (risk aversion: busting ends the game)
+    "failure_gap": 2.0,  # how far the worst real hand scores above a failure (0)
+}
+GRADER_PARAMS: frozenset[str] = frozenset(DEFAULT_PARAMS)
 
 
 class GradingError(ValueError):
@@ -72,10 +96,18 @@ class SeatResult:
 
 def check_grader_params(grader_params: dict[str, Any] | None) -> dict[str, Any]:
     """The task's `grader_params`, after refusing any key not in `GRADER_PARAMS`."""
-    params = dict(grader_params or {})
-    unknown = set(params) - GRADER_PARAMS
+    given = dict(grader_params or {})
+    unknown = set(given) - GRADER_PARAMS
     if unknown:
         raise GradingError(f"unknown grader_params: {sorted(unknown)}")
+    params = {**DEFAULT_PARAMS, **given}
+    if params["shape"] not in SHAPES:
+        raise GradingError(f"grader_params.shape must be one of {SHAPES}, got {params['shape']!r}")
+    for key in ("ev_unit_bb", "loss_weight", "failure_gap"):
+        value = params[key]
+        if isinstance(value, bool) or not isinstance(value, int | float) or not math.isfinite(value) or value <= 0:
+            raise GradingError(f"grader_params.{key} must be a positive number, got {value!r}")
+        params[key] = float(value)
     return params
 
 
@@ -108,14 +140,29 @@ def seat_result(log: dict[str, Any], policy_seats: list[str]) -> SeatResult:
     )
 
 
-def hand_reward(result: SeatResult, params: dict[str, Any]) -> float:
-    """EXTENSION POINT 1: the raw reward for a game the seat played without failing, before clipping and the +6.
+def shaped_ev(ev_bb: float, params: dict[str, Any]) -> float:
+    """EV in BB -> reward before the offset: clipped to +-100 BB, compressed, with losses weighted up."""
+    x = max(-EV_CLIP_BB, min(EV_CLIP_BB, ev_bb)) / params["ev_unit_bb"]
+    if params["shape"] == "clip":
+        value = max(-CLIP_LIMIT, min(CLIP_LIMIT, x))
+    else:  # signed_log
+        value = math.copysign(math.log1p(abs(x)), x)
+    return value * params["loss_weight"] if value < 0 else value
 
-    The default is EV in units of 1 BB, clipped to +-100 BB. `result` has everything the log says about the trained
-    seat; read more from the log in `seat_result` if you need it. `params` is the task's checked `grader_params`.
+
+def hand_reward(result: SeatResult, params: dict[str, Any]) -> float:
+    """EXTENSION POINT 1: the raw reward for a game the seat played without failing, before the offset.
+
+    The default is `shaped_ev` of the seat's EV. `result` has everything the log says about the trained seat; read
+    more from the log in `seat_result` if you need it. `params` is the task's checked `grader_params`. If you replace
+    it, also update `reward_floor` so the worst real hand still lands `failure_gap` above a failure.
     """
-    del params  # the default reward takes no parameters
-    return max(-EV_CLIP_BB, min(EV_CLIP_BB, result.ev_bb)) / EV_UNIT_BB
+    return shaped_ev(result.ev_bb, params)
+
+
+def reward_floor(params: dict[str, Any]) -> float:
+    """The lowest value `hand_reward` can return (a full-stack loss)."""
+    return shaped_ev(-EV_CLIP_BB, params)
 
 
 def failure_score(reason: str) -> dict[str, Any]:
@@ -127,11 +174,13 @@ def grade_log(
     log: dict[str, Any], policy_seats: list[str], params: dict[str, Any] | None = None
 ) -> dict[str, Any]:
     """Score one finished game for its policy seats, as a `collect_score` reply."""
+    params = check_grader_params(params)
     result = seat_result(log, policy_seats)
     if result.format_errors:  # model-caused failure: exactly 0, below every real hand
         score = FAILURE_SCORE
     else:
-        score = REWARD_OFFSET + max(REWARD_FLOOR, min(REWARD_CEILING, hand_reward(result, params or {})))
+        floor = reward_floor(params)
+        score = FAILURE_SCORE + params["failure_gap"] + max(0.0, hand_reward(result, params) - floor)
     return {
         "score": score,
         "reasoning": f"Policy seat {'/'.join(sorted(policy_seats))}: EV {result.ev_bb:+.1f} BB "
