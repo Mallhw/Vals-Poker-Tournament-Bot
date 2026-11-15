@@ -286,3 +286,7 @@ place +0.14 +- 0.33 = noise. Longer prompt mostly added format errors.
 LESSON: prompt-only tweaks on v10-s9 no longer move it (v8, v12, v13 all null); the trained model mostly ignores new
 rules (v13 PFR went DOWN). Real change needs training (OPSD with the new rules or RL on rl2 tables), which needs GPUs that
 teammates' pbspot runs hold. Also 12-hand games are too short to test shover/fading rules: use 30-hand games if retesting.
+12:30 check-in: GPUs FREE (no trains running) -> relaunched RL v3 from v10-s9 on pokerbots-rl2 as train_8d97d5324ce9
+(ckpt every 2; if stopped with a ckpt: `ac2 train resume <id> --non-preemptible`). Live entry still teammate's
+"talk round step 20 (any-talk penalty)" (infer_a5aaffeb4304): 53 games, place 3.21, 10 wins, 6 lasts, bust 5.7%, EV +22.2
+-- best of all pineapple entries so far (v10-s9 3.39, solver-GRPO 3.41, v4 3.37). Team #8, rating 1123. HOLD stays.
