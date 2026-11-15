@@ -40,6 +40,18 @@ VARIANTS: dict[str, str] = {
         "Decide fast: keep your private reasoning under about 250 words. Replies cut off at the token limit are "
         "auto-folded, which costs more than a slightly worse decision."
     ),
+    "v5": (
+        "Opponent tracking (scratchpad, every hand): keep exact running counts per seat, one line each: "
+        "'seatN: H hands, played P, raised R, all-ins A, river bets B, showed [cards]'. Update the numbers every hand; "
+        "use the space, you have 5000 characters. Label a seat only with evidence: shover = 2+ preflop all-ins; "
+        "nit = played under 1 in 8 hands after 8+ hands; maniac = raised 3+ of their first 8 hands; calling-station = "
+        "calls often but almost never bets or raises; tight-aggressive = plays few but always raises. Counter-play: "
+        "shover -> call all-ins with 99+, AJs+, AQo+, fold the rest; nit -> steal their blinds, fold to their bets and "
+        "raises without a premium hand; maniac -> call and re-raise wider, let them bluff, their big river bets are "
+        "often bluffs; calling-station -> bet big for value every street, never bluff; tight-aggressive -> respect "
+        "their raises, steal when they are not in the pot. Most AI players here fold to a raise 70-90% of the time: "
+        "when it is folded to you in the cutoff, button or small blind, raise more often."
+    ),
     "endgame": (
         "End of game: final rank is by chips among players still seated, and every busted player ranks below them. "
         "In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are "
