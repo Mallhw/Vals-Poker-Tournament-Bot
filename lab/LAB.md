@@ -21,6 +21,11 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   game in 4 arena games (05:00-05:20 UTC). Deploy a separate copy (matt-* name, in the checkpoint's own project) and
   eval that, or keep eval concurrency low.
 
+- 22:31 (user: "replace anything idle"): deleted idle old "👀" entry infer_2ff17466cceb and my idle
+  vals-hackathon-matt/base. BEFORE any mb/sh eval, redeploy base (the datasets' opponent):
+  `uv run python -m vals_tools.deploy --project vals-hackathon-matt --name base --model Qwen/Qwen3.6-35B-A3B`
+  (its readiness probe is buggy — check `ac2 -p vals-hackathon-matt inference list` for "ready" instead).
+
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
 - `python3 -I lab/arena.py` — pull arena matches, per-entry metrics, rank/rating history.
 - `uv run --project harness python lab/leaks.py --eval <eval_id>` — leak report from local game logs.
