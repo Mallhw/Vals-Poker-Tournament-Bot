@@ -7,9 +7,10 @@ KEY="$(/usr/bin/python3 -I -c 'import json,os;print(json.load(open(os.path.expan
 export UV_INDEX_AC2_USERNAME=__token__ UV_INDEX_AC2_PASSWORD="$KEY"
 log(){ echo "$(date +%H:%M) $*"; }
 st(){ (cd /tmp && ac2 -p vals-hackathon-matt2 eval get $1 2>/dev/null | awk '/status:/{print $2}'); }
-while true; do a=$(st eval_832ce52f3280); b=$(st eval_10bc6af2a4e4); case "$a $b" in *running*|*pending*|*queued*) sleep 120;; *) break;; esac; done
+# (v5/v7 already finished)
 log "v5=$a v7=$b done"
-for i in $(seq 1 60); do r=$(curl -s -m 5 http://127.0.0.1:8785/health | grep -oE '"running": [0-9]+' | grep -oE '[0-9]+'); [ "${r:-1}" = "0" ] && break; sleep 30; done
+# restart only when harness2 is idle (no rollouts) on two checks in a row; never force it
+idle=0; while [ $idle -lt 2 ]; do r=$(curl -s -m 5 http://127.0.0.1:8785/health | grep -oE '"running": [0-9]+' | grep -oE '[0-9]+'); if [ "${r:-1}" = "0" ]; then idle=$((idle+1)); else idle=0; fi; sleep 60; done
 launchctl kickstart -k gui/$(id -u)/com.mallhw.vals-harness2
 for i in $(seq 1 60); do curl -s -m 2 http://127.0.0.1:8785/health | grep -q '"ok", "ok", "ok", "ok"' && break; sleep 2; done
 log "harness2 restarted: $(curl -s -m 5 http://127.0.0.1:8785/health)"
