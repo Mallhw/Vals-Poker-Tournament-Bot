@@ -36,12 +36,20 @@ def main() -> None:
         "--opponent-api", choices=["responses", "chat"], default="chat", help="responses for OpenAI reasoning models"
     )
     parser.add_argument("--opponent-effort", default="none", help="reasoning effort for the opponents, e.g. medium")
+    parser.add_argument(
+        "--opponent-thinking",
+        choices=["on", "off", "table"],
+        default="table",
+        help="Qwen thinking for the opponent seats; 'off' makes a Qwen opponent much faster (default: the table's)",
+    )
     parser.add_argument("--seats", type=int, default=SEATS)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     effort = None if args.opponent_effort == "none" else args.opponent_effort
-    built = datasets(args.prefix, Opponents(args.opponent_model, args.opponent_api, effort), args.seats)
+    thinking = {"on": True, "off": False, "table": None}[args.opponent_thinking]
+    opponents = Opponents(args.opponent_model, args.opponent_api, effort, thinking=thinking)
+    built = datasets(args.prefix, opponents, args.seats)
     if args.dry_run:
         for name, tasks in built.items():
             print(name, len(tasks), tasks[0].env_params)

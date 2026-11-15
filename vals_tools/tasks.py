@@ -45,6 +45,7 @@ class Opponents:
     api: str = "responses"
     reasoning_effort: str | None = "medium"
     timeout_seconds: int = 60
+    thinking: bool | None = None  # Qwen-style thinking switch for the opponents; None follows the table's setting
 
     def env_params(self) -> dict[str, Any]:
         params: dict[str, Any] = {"opponent_model": self.model, "opponent_timeout_seconds": self.timeout_seconds}
@@ -52,6 +53,8 @@ class Opponents:
             params["opponent_api"] = "responses"
         if self.reasoning_effort:
             params["opponent_reasoning_effort"] = self.reasoning_effort
+        if self.thinking is not None:
+            params["opponent_thinking"] = self.thinking
         return params
 
 
