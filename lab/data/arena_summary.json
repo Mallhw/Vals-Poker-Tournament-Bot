@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-14 21:30:43",
+  "time": "2026-11-14 22:28:57",
   "rank": 15.0,
-  "rating": 885.0,
-  "bb100": -11.5,
-  "matches": 86.0,
+  "rating": 895.0,
+  "bb100": -5.4,
+  "matches": 106.0,
   "deployment": "infer_5fe0799751ef"
  },
- "new_matches": 2,
+ "new_matches": 8,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -49,17 +49,17 @@
    "fallback_rate": 0.3108
   },
   "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)": {
-   "games": 6,
-   "mean_place": 3.0,
-   "wins": 0,
-   "lasts": 1,
-   "bust_rate": 0.0,
-   "bb100": 35.6,
-   "ev_bb100": 36.0,
-   "vpip": 0.206,
-   "pfr": 0.067,
-   "bigcalls100": 1.67,
-   "fallback_rate": 0.0076
+   "games": 26,
+   "mean_place": 3.69,
+   "wins": 3,
+   "lasts": 5,
+   "bust_rate": 0.038,
+   "bb100": 21.0,
+   "ev_bb100": 22.8,
+   "vpip": 0.224,
+   "pfr": 0.094,
+   "bigcalls100": 0.64,
+   "fallback_rate": 0.0079
   }
  },
  "busts": [
@@ -580,8 +580,31 @@
     "Th",
     "9h"
    ]
+  },
+  {
+   "match": "m_20261115t060724_35cf92",
+   "entry": "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)",
+   "hand": 30,
+   "hole": [
+    "Js",
+    "Jc"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "bet",
+    "bet",
+    "bet"
+   ],
+   "board": [
+    "6h",
+    "5h",
+    "Tc",
+    "Ks",
+    "Td"
+   ]
   }
  ],
  "weak_busts": 17,
- "total_busts": 24
+ "total_busts": 25
 }

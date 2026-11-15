@@ -33,17 +33,17 @@ from poker_harness.prompts import talk_fields
 from poker_harness.seat import ModelSeat
 
 sys.path.insert(0, str(Path(__file__).parent))
-from hint import HINT, SEPARATOR  # noqa: E402
+from hint import HINT, HINTS, SEPARATOR  # noqa: E402
 
 OPPONENTS = ["maniac", "calling_station", "nit", "maniac", "random"]
 
 
-def with_hint(complete):
+def with_hint(complete, text: str = HINT):
     """Wrap a `complete(messages)` so the system message gets the hint appended (OPSD teacher's view)."""
 
     async def hinted(messages: list[dict[str, Any]]):
         if messages and messages[0].get("role") == "system":
-            messages = [{**messages[0], "content": messages[0]["content"] + SEPARATOR + HINT}, *messages[1:]]
+            messages = [{**messages[0], "content": messages[0]["content"] + SEPARATOR + text}, *messages[1:]]
         return await complete(messages)
 
     return hinted
@@ -93,10 +93,11 @@ async def play_one(args: argparse.Namespace, seed: int, variant: str, client: ht
     mine = params | {"model_label": args.model}
     decide = relay_completion(client, args.base_url, args.api_key, mine)
     cleanup = relay_completion(client, args.base_url, args.api_key, cleanup_params(mine))
-    if variant == "hint":
-        decide, cleanup = with_hint(decide), with_hint(cleanup)
+    if variant != "none":
+        text = HINT if variant == "hint" else HINTS[variant]
+        decide, cleanup = with_hint(decide, text), with_hint(cleanup, text)
     players = [ModelSeat("seat0", decide, rules, model=args.model, cleanup_complete=cleanup)]
-    players += [ScriptedPlayer(f"seat{i + 1}", kind, seed) for i, kind in enumerate(OPPONENTS)]
+    players += [ScriptedPlayer(f"seat{i + 1}", kind, seed) for i, kind in enumerate(args.opponents)]
     t0 = time.monotonic()
     log = await play_session(f"local-{variant}-{seed}", seed, players, rules,
                              on_hand=lambda lg: print(f"  [{variant} seed {seed}] hand {len(lg['hands'])}", flush=True))
@@ -133,7 +134,10 @@ def main() -> None:
     parser.add_argument("--model", default="local", help="model name sent in requests")
     parser.add_argument("--seeds", type=int, nargs="+", default=[1, 2, 3])
     parser.add_argument("--hands", type=int, default=10, help="hands per game (the event plays 30)")
-    parser.add_argument("--variants", nargs="+", default=["none", "hint"], choices=["none", "hint"])
+    parser.add_argument("--variants", nargs="+", default=["none", "hint"], choices=["none", "hint", *HINTS],
+                        help="'none', 'hint' (opsd/hint.py's HINT) or a named version from HINTS")
+    parser.add_argument("--opponents", nargs=5, default=OPPONENTS,
+                        help="archetypes for seats 1-5 (random, maniac, nit, calling_station, shover)")
     parser.add_argument("--no-thinking", action="store_true", help="turn off Qwen thinking (much faster locally)")
     parser.add_argument("--max-tokens", type=int, help="override the event's 5,000-token cap per decision")
     parser.add_argument("--out", type=Path, default=Path("runs/local_test"))

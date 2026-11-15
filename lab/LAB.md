@@ -52,6 +52,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
    KEY BENCHMARK = pokerbots-sh-select: base mean score 8.845, busts 13.6/100, weak call-offs 15.4/100.
    WATCH: local v3 test was very passive (VPIP 0% in 3/6 games). If OPSD ckpts show VPIP < 15% on sh-select or
    mean score below base, write hint v4 = v3 with wider late-position opens/steals and value-bet emphasis.
+   Hint v4 (v3 + wide late-position steals, bigger value bets) written; local A/B v3 vs v4 at arena-like tables
+   (shover, maniac, nit, station, random) running: ~/Worker/research/local_hint_v3_v4. If v4 is clearly better and
+   OPSD v3mix hasn't started, rebuild the OPSD dataset with v4 (build_dataset reads HINT; set HINT = HINTS["v4"]).
 4. GRPO on pokerbots-sh-train (bust penalty grader), concurrency 16, after OPSD or when 6 GPUs free.
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
