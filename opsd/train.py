@@ -85,7 +85,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--dataset", required=True, help="hinted dataset from build_dataset.py")
     p.add_argument("--model", default="Qwen/Qwen3.6-35B-A3B", help="base model (arena entries are this model or fine-tunes of it)")
     p.add_argument("--from-checkpoint", help="start the student from this checkpoint (ckpt_...) instead of the base weights")
-    p.add_argument("--non-preemptible", action="store_true", help="don't let the scheduler interrupt this run for other jobs")
+    p.add_argument("--non-preemptible", action="store_true", help="NOT supported by AC2 on launch (PermissionDenied); use `ac2 train resume --non-preemptible` instead")
     p.add_argument("--dry-run", action="store_true", help="print the settings and configuration, submit nothing")
     g = p.add_argument_group("set by default (the OPSD recipe); change them with these flags")
     g.add_argument("--steps", type=int, default=20, help="training steps (default 20)")

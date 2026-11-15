@@ -242,3 +242,4 @@ Submission name for every model: **Alea iacta est** (user's request).
 ## 08:21: v10-s9 LIVE in arena (Chrome session submitted 08:18, infer_f617937bbaa3). Team rank #5, rating 1155,
 490 ranked matches. v4 (infer_496116c2999d) total as Alea iacta est: 203 games, place 3.34, bust 3%, EV +7.7.
 Fallback = opsd4-s30. v10-s19 evals running: sh-select eval_07d2401a69d8, games12-control eval_db4368501a27.
+08:24: RL v3 = GRPO from v10-s9 (ckpt_0a19c764c8d4) on pokerbots-rl2, train_29d356cee24f (preemptible: SDK rejects preemptible=False at launch; if stopped -> `ac2 train resume <id> --non-preemptible`). Auto: pipeline_rl3.sh -> pipeline_ckpt.sh -> rl3-s30 + evals. Goal: more chips (v10 VPIP 8%) at v10 survival.
