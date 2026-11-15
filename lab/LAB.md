@@ -290,3 +290,4 @@ teammates' pbspot runs hold. Also 12-hand games are too short to test shover/fad
 (ckpt every 2; if stopped with a ckpt: `ac2 train resume <id> --non-preemptible`). Live entry still teammate's
 "talk round step 20 (any-talk penalty)" (infer_a5aaffeb4304): 53 games, place 3.21, 10 wins, 6 lasts, bust 5.7%, EV +22.2
 -- best of all pineapple entries so far (v10-s9 3.39, solver-GRPO 3.41, v4 3.37). Team #8, rating 1123. HOLD stays.
+12:50: team #3, rating 1173 (684 matches). Talk round s20 finished at 69 games: place 3.07, 15 wins, 7 lasts, bust 5.8%, EV +22.5 (best pineapple entry). Teammate swapped live entry again to vals-hackathon/ho-7620e6-step20 (infer_1daa9f6ac6d3, deployed 12:30; no games yet). RL v3 train_8d97d5324ce9 preempted (4th time) at 12:44 by pbspot15, no ckpt.
