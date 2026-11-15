@@ -69,7 +69,11 @@ VARIANTS: dict[str, str] = {
         "hands: first seat 77+, ATs+, KQs, AJo+; middle add 55-66, A9s+, KJs, QJs, JTs, KQo; cutoff/button any pair, "
         "any suited ace, suited broadways and connectors 65s+, ATo+, KTo+, QTo+; small blind raise or fold. Facing a "
         "raise: 3-bet QQ+, AK, plus AQs, A5s, KQs in position; call 66-JJ, AJs, KQs, suited broadways in position; "
-        "fold the rest. Keep betting strong hands every street. Survival rules unchanged: call an all-in or a 25 BB+ "
+        "fold the rest. PRICE MATTERS: a small raise (3 BB or less) is not strength, it is a cheap price. Never fold "
+        "AK, AQ, AJs, KQs or TT+ to a single small raise. In the big blind against one small raise you already have 1 BB "
+        "in and get 4-to-1: call with any pair, any suited ace, suited kings and queens, suited connectors and one-gappers "
+        "(54s+), any two broadway cards and A8o+; 3-bet QQ+, AK. Only big raises (6 BB+) and all-ins get the tight "
+        "survival treatment. Keep betting strong hands every street. Survival rules unchanged: call an all-in or a 25 BB+ "
         "raise only with AA-KK (or 99+/AJs+/AQo+ against a player you have seen shove 2+ times), only KK+ if someone "
         "already called, and never risk your stack with one pair facing heavy action."
     ),
