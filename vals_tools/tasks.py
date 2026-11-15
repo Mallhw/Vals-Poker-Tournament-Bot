@@ -46,9 +46,12 @@ class Opponents:
     reasoning_effort: str | None = "medium"
     timeout_seconds: int = 60
     thinking: bool | None = None  # Qwen-style thinking switch for the opponents; None follows the table's setting
+    scripted: tuple[tuple[str, str], ...] = ()  # training harness only: ((seat, archetype), ...) e.g. (("2", "shover"),)
 
     def env_params(self) -> dict[str, Any]:
         params: dict[str, Any] = {"opponent_model": self.model, "opponent_timeout_seconds": self.timeout_seconds}
+        if self.scripted:
+            params["scripted_seats"] = dict(self.scripted)
         if self.api == "responses":
             params["opponent_api"] = "responses"
         if self.reasoning_effort:

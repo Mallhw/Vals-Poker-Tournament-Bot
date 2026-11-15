@@ -42,13 +42,19 @@ def main() -> None:
         default="table",
         help="Qwen thinking for the opponent seats; 'off' makes a Qwen opponent much faster (default: the table's)",
     )
+    parser.add_argument(
+        "--scripted-seats",
+        default="",
+        help="training harness only: seats played by scripted bots, e.g. '2:shover,4:maniac' (never the policy seat)",
+    )
     parser.add_argument("--seats", type=int, default=SEATS)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     effort = None if args.opponent_effort == "none" else args.opponent_effort
     thinking = {"on": True, "off": False, "table": None}[args.opponent_thinking]
-    opponents = Opponents(args.opponent_model, args.opponent_api, effort, thinking=thinking)
+    scripted = tuple(tuple(x.split(":", 1)) for x in args.scripted_seats.split(",") if x)
+    opponents = Opponents(args.opponent_model, args.opponent_api, effort, thinking=thinking, scripted=scripted)
     built = datasets(args.prefix, opponents, args.seats)
     if args.dry_run:
         for name, tasks in built.items():

@@ -32,6 +32,7 @@ import httpx
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
+from .engine import ScriptedPlayer
 from .completions import (
     DEFAULT_DECISION_TIMEOUT_SECONDS,
     GATEWAY_URL,
@@ -261,8 +262,13 @@ def create_app(
                     if params.get("opponent_model")
                     else policy_cleanup
                 )
+                # Training-only: `scripted_seats` = {"3": "shover", ...} puts the engine's scripted players in those
+                # seats (e.g. a frequent all-in shover like the arena's house bots). Never a policy seat.
+                scripted = {int(k): v for k, v in (params.get("scripted_seats") or {}).items() if int(k) not in policy}
                 players = [
-                    ModelSeat(
+                    ScriptedPlayer(f"seat{i}", scripted[i], int(params["seed"]))
+                    if i in scripted
+                    else ModelSeat(
                         f"seat{i}",
                         policy_complete if i in policy else opponent_complete,
                         rollout.rules,
