@@ -107,6 +107,10 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 (flag site_unavailable). While it's down the Chrome submitter can't verify the live entry — treat opsd4-s30 as live.
 
 ## AUTO-SUBMIT (since 02:35)
+**HOLD (09:30 Nov 15): DO NOT SUBMIT. A teammate submitted their own model (vals-hackathon/ho-ee668d-step10,
+infer_7fe0e70e868b) as the team's live entry between 09:08 and 09:27. Overriding a teammate's submission is a team
+decision for the user, not automation. The Chrome submitter must skip while the live entry is not one of ours
+(vals-hackathon-matt). Lift only on the user's word.**
 A separate Chrome-enabled session ("chrome browser tools check") runs at :13 every hour: if "BEST CHECKED CANDIDATE"
 differs from the live arena entry, it submits it as "Alea iacta est" and appends a SUBMITTED line here. So the LIVE
 ENTRY CAN CHANGE ANY HOUR: before deleting or evaluating ANY deployment, read the live one with
@@ -246,3 +250,10 @@ Fallback = opsd4-s30. v10-s19 evals running: sh-select eval_07d2401a69d8, games1
 08:35 v10-s19 RESULT -> DROP, keep v10-s9: sh-select score 9.069 (v10-s9 9.106), busts 2.0/100 (0.6), junk call-offs 1.2 (0.4),
 fmt err 3.7% (3.4%); games12 paired 36: chips 199 vs 201, busts 0 vs 1, place 2.94 vs 3.00, fallbacks 2.9% vs 1.1%.
 More OPSD steps on v10 = no gain. Deleted v10-s19 deployment (freed GPU for RL v3 train_29d356cee24f).
+
+## 09:30 check-in: LIVE ENTRY IS NOW A TEAMMATE'S MODEL (vals-hackathon/ho-ee668d-step10, infer_7fe0e70e868b, submitted
+09:08-09:27). Auto-submit on HOLD (see AUTO-SUBMIT; Chrome session confirmed it skips). Team #9, rating 1115, 531 matches.
+v10-s9 arena (30 games as Alea iacta est): place 3.40, bust 6.7%, EV -8.6 bb/100, VPIP 11/PFR 10, fallbacks 1.4%
+(v4: 203 games place 3.34, bust 3%, EV +7.7) -> slightly worse but within noise at 30 games; v10-s9 stays our best
+checked candidate (deployed, infer_f617937bbaa3). RL v3 train_29d356cee24f was preempted at 08:36 before any checkpoint
+(no resume possible); relaunched as train_674b9d7e683a with --checkpoint-every 5 (resume with --non-preemptible if stopped).

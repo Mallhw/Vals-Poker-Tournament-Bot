@@ -7,7 +7,7 @@ KEY="$(/usr/bin/python3 -I -c 'import json,os;print(json.load(open(os.path.expan
 export UV_INDEX_AC2_USERNAME=__token__ UV_INDEX_AC2_PASSWORD="$KEY"
 log(){ echo "$(date +%H:%M) $*"; }
 cd $HOME/Worker/projects/vals-poker-matt
-OUT=$(uv run python rl/train.py --project vals-hackathon-matt --prefix pokerbots-rl2 --from-checkpoint ckpt_0a19c764c8d4 --steps 30 --no-eval --concurrency 16 --checkpoint-every 10 2>&1 | tail -1)
+OUT=$(uv run python rl/train.py --project vals-hackathon-matt --prefix pokerbots-rl2 --from-checkpoint ckpt_0a19c764c8d4 --steps 30 --no-eval --concurrency 16 --checkpoint-every 5 2>&1 | tail -1)
 log "RL v3 from v10-s9: $OUT"
 TID=$(echo "$OUT" | grep -oE 'train_[0-9a-f]+' | head -1)
 [ -n "$TID" ] || exit 1
