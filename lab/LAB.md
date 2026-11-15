@@ -215,7 +215,7 @@ to add chips without losing survival.
 - Decide in the morning: best of rl-s10 (live "butter"), rl-s40, v6-s20 by sh-select score/busts + games12 place.
 
 ## Candidate to submit
-**BEST CHECKED CANDIDATE (06:30): vals-hackathon-matt/v10-s9 (infer of deployment "v10-s9"; OPSD v10 "Vals + notes"
+**BEST CHECKED CANDIDATE (06:30): vals-hackathon-matt/v10-s9 (infer_f617937bbaa3; OPSD v10 "Vals + notes"
 step 9, ckpt_0a19c764c8d4)** — sh-select: score 9.106 vs v4 9.003, busts 0.6/100 vs 4.6, junk call-offs 0.4 vs 4.8,
 fmt 3.4% (= v4); games12 (no hint): busts 1/36, place = control, chips lower (205 vs 231); play_local 0/5 failed.
 Very tight (VPIP 8%): survival-first, like Vals/Alice. Submit as "Alea iacta est". Revert to v4 (opsd4-s30, keep
