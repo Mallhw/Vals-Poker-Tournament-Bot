@@ -118,7 +118,9 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
    chips lost, and one concrete change per leak (prompt/hint text, training data, reward, opponent mix).
 3. TEST: prompt-level first (games12 variant via system_hint on harness2, same 36 games, policy = a copy of the
    current best, max-parallel 8); training-level (OPSD with the winning hint; RL with fixed tables) only for winners.
-4. DECIDE (keep / revert / explore): adopt a change only if it beats the current best on the sims AND doesn't raise
+4. DECIDE (keep / revert / explore): games12 place needs 100+ games to separate variants (CI +-0.6 at 18-36), so judge
+   sims by CHIPS + BUSTS (+ sh-select score), place only as tiebreak; compare PAIRED on games all variants completed.
+   Adopt a change only if it beats the current best on the sims AND doesn't raise
    busts; in the arena, judge an entry after >=20 games on busts + EV + place. If a live entry is worse than the
    previous one after 20+ games, REVERT the candidate to the previous one. If 2 iterations in a row fail on a
    feature, explore a different feature. Priority (user): opponent notes / modeling.
@@ -159,6 +161,11 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
 - 02:55 PREFLOP OVER-FOLDING: v4 folds 90% to raises <=3BB (same as to all-ins), BB folds 85% vs small raises,
   folded AK/KQs/99 cheaply. Price-blind; survival rules over-generalized. v8 now includes price-aware preflop + BB
   defense. If v8 wins: fold its text into the next OPSD hint; consider RL tasks weighted toward small-raise spots.
+
+- 03:00 v5 RESULT: strict evidence-based notes were WORSE (paired 18 games: place +0.44 vs control, flagged the
+  shover in 3/36 games). Simple notes best on chips (+46%) and busts (1 vs 3). NEXT HINT (v9) if v6 underperforms:
+  v4 + SIMPLE notes block (games12 'notes' text) + endgame + v8 price-aware preflop; OPSD from v4 with
+  --include-cleanup on fresh games12-control traces.
 
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
