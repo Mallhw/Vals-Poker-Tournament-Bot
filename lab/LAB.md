@@ -98,6 +98,10 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
 ## Candidate to submit
+**BEST CHECKED CANDIDATE (01:45): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
+ckpt_52d6b4b511f4). sh-select 500 hands: score 9.397 vs v4 9.003, busts 4.4 vs 4.6, weak call-offs 3.4 vs 4.8,
+fmt err 0.89% vs 3.2%, EV +1.32 vs +0.09 BB/hand (paired diff +1.23 +-1.33). play_local 17 decisions, 0 failed.
+Submit as "Alea iacta est". Caveat: VPIP 11% (tight). Keep rl-s10 deployed; once submitted it becomes LIVE (never eval it).
 **LIVE since ~00:08 Nov 15: vals-hackathon-matt/opsd4-s30 (infer_496116c2999d, OPSD v4 step 29) — submitted by the
 user/teammate. NEVER delete it and NEVER eval it directly** (its sh-select eval eval_8c0e96ff4dad was stopped the
 moment it went live; no arena games overlapped). To eval v4 s30, deploy a second copy of ckpt_db759b762b5d.
