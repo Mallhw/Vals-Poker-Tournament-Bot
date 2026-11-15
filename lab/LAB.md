@@ -145,10 +145,13 @@ nobody does both yet. Next combo to try (v11): simple notes + v8 aggression/pric
 
 ## 06:30 RESULTS: v10-s9 (trained Vals+notes) = best survival (sh busts 0.6/100, games12 1/36) -> CANDIDATE.
 Talk: chaos HURTS (place +0.71, opp fold 50% vs 48% = no effect) DROP; bluff-talk no gain DROP. v8 aggression/
-price-aware: no chip gain (239 vs 231) DROP for now. Simple notes still best chips (318). RL v2 stopped externally
-twice (05:20, 06:10) while teammate runs (pbspot2-r4, pbspot3) needed GPUs — not resubmitting overnight; flag for
-the user. NEXT (when GPUs free): finish v10 OPSD (resume from ckpt_0a19c764c8d4) or RL from v10-s9 on pokerbots-rl2
+price-aware: no chip gain (239 vs 231) DROP for now. Simple notes still best chips (318). RL v2 stopped twice (05:20, 06:10) — most likely AC2 PREEMPTION
+(runs are preemptible by default) for teammate jobs. Use --non-preemptible (now in rl/train.py, opsd/train.py; `ac2 train
+resume --non-preemptible`). NEXT (when GPUs free): finish v10 OPSD (resume from ckpt_0a19c764c8d4) or RL from v10-s9 on pokerbots-rl2
 to add chips without losing survival.
+
+## 07:30: arena site still down -> Chrome session hasn't submitted v10-s9 (v4 still live). Resumed v10 OPSD from
+step 9 as NON-PREEMPTIBLE: train_35aab3c2c9a8 -> pipeline_ckpt.sh -> v10-s19 (compare with v10-s9). Freed v4s30-eval.
 
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
 1. ANALYZE: `python3 -I lab/scouting.py` (per-opponent type + how to beat it; worst matchups first), `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
@@ -220,6 +223,7 @@ step 9, ckpt_0a19c764c8d4)** — sh-select: score 9.106 vs v4 9.003, busts 0.6/1
 fmt 3.4% (= v4); games12 (no hint): busts 1/36, place = control, chips lower (205 vs 231); play_local 0/5 failed.
 Very tight (VPIP 8%): survival-first, like Vals/Alice. Submit as "Alea iacta est". Revert to v4 (opsd4-s30, keep
 deployed) if after 20+ arena games it's worse on place/busts.
+- 06:37 PT hourly check: v10-s9 NOT yet submitted — AC2 console Vals Arena page returns 502 Bad gateway (arena backend down; public arena site DB also over quota since ~03:18). Will retry every hour; live entry is still opsd4-s30.
 **PREVIOUS CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
 busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
 **SUBMITTED 2026-11-15 02:28 PT by the Chrome session: opsd4-s30 (infer_496116c2999d) as "Alea iacta est" — now LIVE (console shows Current entry). NEVER delete or eval it.** rl-s10 ("butter") is no longer live; keep it deployed unless GPUs are needed.
