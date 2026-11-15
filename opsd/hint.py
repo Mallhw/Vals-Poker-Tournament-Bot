@@ -119,4 +119,4 @@ HINTS = {
 
 7. Table talk: say nothing about your cards.""",
 }
-HINT = HINTS["v3"]
+HINT = HINTS["v4"]
