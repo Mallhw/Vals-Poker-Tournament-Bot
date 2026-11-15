@@ -16,3 +16,5 @@ log "harness2 restarted: $(curl -s -m 5 http://127.0.0.1:8785/health)"
 cd $HOME/Worker/projects/vals-poker-matt2
 uv run python lab/make_games.py --project vals-hackathon-matt2 --opponent-model vals-hackathon-matt/base --games 36 --hands 12 --variants chaos bluff-talk 2>&1 | tail -2
 for v in chaos bluff-talk; do log "games12-$v eval: $(uv run python -m vals_tools.eval --project vals-hackathon-matt2 --dataset games12-$v --deployment vals-hackathon-matt/v4s30-eval --max-parallel 8 2>&1 | tail -1)"; done
+uv run python lab/make_games.py --project vals-hackathon-matt2 --opponent-model vals-hackathon-matt/base --games 36 --hands 12 --variants v8 2>&1 | tail -1
+log "games12-v8 eval: $(uv run python -m vals_tools.eval --project vals-hackathon-matt2 --dataset games12-v8 --deployment vals-hackathon-matt/v4s30-eval --max-parallel 8 2>&1 | tail -1)"

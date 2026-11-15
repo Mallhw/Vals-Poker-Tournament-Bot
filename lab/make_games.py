@@ -64,6 +64,15 @@ VARIANTS: dict[str, str] = {
         "nobody else has called; calling-station -> value-bet big, never bluff. If another player already called an "
         "all-in, call only with KK+."
     ),
+    "v8": (
+        "Play like the strongest team here: more pots, same survival discipline. Open-raise about a quarter of your "
+        "hands: first seat 77+, ATs+, KQs, AJo+; middle add 55-66, A9s+, KJs, QJs, JTs, KQo; cutoff/button any pair, "
+        "any suited ace, suited broadways and connectors 65s+, ATo+, KTo+, QTo+; small blind raise or fold. Facing a "
+        "raise: 3-bet QQ+, AK, plus AQs, A5s, KQs in position; call 66-JJ, AJs, KQs, suited broadways in position; "
+        "fold the rest. Keep betting strong hands every street. Survival rules unchanged: call an all-in or a 25 BB+ "
+        "raise only with AA-KK (or 99+/AJs+/AQo+ against a player you have seen shove 2+ times), only KK+ if someone "
+        "already called, and never risk your stack with one pair facing heavy action."
+    ),
     "endgame": (
         "End of game: final rank is by chips among players still seated, and every busted player ranks below them. "
         "In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are "
