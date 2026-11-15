@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 00:44:09",
-  "rank": 8.0,
-  "rating": 1121.0,
-  "bb100": -2.3,
-  "matches": 195.0,
+  "time": "2026-11-15 01:27:15",
+  "rank": 7.0,
+  "rating": 1102.0,
+  "bb100": -2.5,
+  "matches": 215.0,
   "deployment": "infer_496116c2999d"
  },
- "new_matches": 13,
+ "new_matches": 10,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -62,17 +62,17 @@
    "fallback_rate": 0.0054
   },
   "opsd4-s30 (infer_496116c2999d)": {
-   "games": 23,
-   "mean_place": 3.43,
-   "wins": 1,
-   "lasts": 0,
-   "bust_rate": 0.087,
-   "bb100": 9.1,
-   "ev_bb100": 24.8,
-   "vpip": 0.141,
-   "pfr": 0.096,
-   "bigcalls100": 0.31,
-   "fallback_rate": 0.0122
+   "games": 43,
+   "mean_place": 3.44,
+   "wins": 3,
+   "lasts": 3,
+   "bust_rate": 0.116,
+   "bb100": 2.9,
+   "ev_bb100": 29.9,
+   "vpip": 0.145,
+   "pfr": 0.099,
+   "bigcalls100": 0.42,
+   "fallback_rate": 0.0189
   }
  },
  "busts": [
@@ -681,6 +681,29 @@
    ]
   },
   {
+   "match": "m_20261115t082817_1064a7",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 3,
+   "hole": [
+    "As",
+    "Th"
+   ],
+   "chen": 6,
+   "actions": [
+    "raise",
+    "call",
+    "check",
+    "bet"
+   ],
+   "board": [
+    "5c",
+    "Kh",
+    "4h",
+    "6d",
+    "2d"
+   ]
+  },
+  {
    "match": "m_20261115t083120_bf9dfd",
    "entry": "opsd4-s30 (infer_496116c2999d)",
    "hand": 8,
@@ -700,8 +723,48 @@
     "5c",
     "3h"
    ]
+  },
+  {
+   "match": "m_20261115t090728_de564f",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 7,
+   "hole": [
+    "Qs",
+    "As"
+   ],
+   "chen": 11,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "3c",
+    "5h",
+    "6c",
+    "4c",
+    "9h"
+   ]
+  },
+  {
+   "match": "m_20261115t091734_031585",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 14,
+   "hole": [
+    "Ah",
+    "2s"
+   ],
+   "chen": 5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "3c",
+    "Jh",
+    "Kh",
+    "Ks",
+    "5s"
+   ]
   }
  ],
- "weak_busts": 18,
- "total_busts": 29
+ "weak_busts": 20,
+ "total_busts": 32
 }

@@ -26,6 +26,12 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   `uv run python -m vals_tools.deploy --project vals-hackathon-matt --name base --model Qwen/Qwen3.6-35B-A3B`
   (its readiness probe is buggy — check `ac2 -p vals-hackathon-matt inference list` for "ready" instead).
 
+- BEFORE DELETING ANY DEPLOYMENT, check the "Deployments in use" list below: evals call deployments by name and
+  the CLI can't show which eval uses which. 01:30: deleting v4s30-eval broke the 5 feature evals for ~15 min
+  (fixed by redeploying the same name; lab/games.py drops games with relay/HTTP errors).
+- Deployments in use (keep updated): opsd4-s30 = LIVE arena entry; base = opponent for sh/games12 datasets;
+  v4s30-eval (infer_ac58d18d0a7d) = policy for games12-* feature evals (until they finish); rl-s10 = eval_ecbb6ba6dfb7.
+
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
 - `python3 -I lab/arena.py` — pull arena matches, per-entry metrics, rank/rating history.
 - `uv run --project harness python lab/leaks.py --eval <eval_id>` — leak report from local game logs.
