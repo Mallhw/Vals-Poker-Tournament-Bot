@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 02:00:02",
-  "rank": 9.0,
-  "rating": 1082.0,
-  "bb100": -1.4,
-  "matches": 244.0,
+  "time": "2026-11-15 02:26:11",
+  "rank": 11.0,
+  "rating": 1045.0,
+  "bb100": -5.7,
+  "matches": 263.0,
   "deployment": "infer_96d341a589e2"
  },
- "new_matches": 29,
+ "new_matches": 19,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -62,30 +62,30 @@
    "fallback_rate": 0.0054
   },
   "opsd4-s30 (infer_496116c2999d)": {
-   "games": 67,
-   "mean_place": 3.46,
+   "games": 69,
+   "mean_place": 3.48,
    "wins": 8,
    "lasts": 7,
-   "bust_rate": 0.104,
-   "bb100": 13.2,
-   "ev_bb100": 30.1,
-   "vpip": 0.144,
-   "pfr": 0.096,
-   "bigcalls100": 0.54,
-   "fallback_rate": 0.0184
+   "bust_rate": 0.101,
+   "bb100": 12.3,
+   "ev_bb100": 28.6,
+   "vpip": 0.141,
+   "pfr": 0.095,
+   "bigcalls100": 0.52,
+   "fallback_rate": 0.0179
   },
   "butter (infer_96d341a589e2)": {
-   "games": 5,
-   "mean_place": 3.4,
+   "games": 22,
+   "mean_place": 3.64,
    "wins": 0,
-   "lasts": 1,
-   "bust_rate": 0.2,
-   "bb100": -108.2,
-   "ev_bb100": 87.9,
-   "vpip": 0.151,
-   "pfr": 0.103,
-   "bigcalls100": 0.68,
-   "fallback_rate": 0.0113
+   "lasts": 4,
+   "bust_rate": 0.227,
+   "bb100": -77.9,
+   "ev_bb100": 21.8,
+   "vpip": 0.149,
+   "pfr": 0.096,
+   "bigcalls100": 1.01,
+   "fallback_rate": 0.0093
   }
  },
  "busts": [
@@ -838,8 +838,95 @@
     "3d",
     "6c"
    ]
+  },
+  {
+   "match": "m_20261115t095616_8ab294",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 11,
+   "hole": [
+    "6s",
+    "Td"
+   ],
+   "chen": 1,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "4c",
+    "4d",
+    "5h",
+    "3h",
+    "Qs"
+   ]
+  },
+  {
+   "match": "m_20261115t100005_0c64ec",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 25,
+   "hole": [
+    "As",
+    "Ah"
+   ],
+   "chen": 20,
+   "actions": [
+    "raise",
+    "call",
+    "bet",
+    "call",
+    "bet"
+   ],
+   "board": [
+    "Jd",
+    "Kh",
+    "9c",
+    "Th",
+    "5s"
+   ]
+  },
+  {
+   "match": "m_20261115t100049_a07061",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 16,
+   "hole": [
+    "7d",
+    "7s"
+   ],
+   "chen": 7.0,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "8d",
+    "Kc",
+    "Kh",
+    "8h",
+    "6s"
+   ]
+  },
+  {
+   "match": "m_20261115t100941_74d3c6",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 8,
+   "hole": [
+    "Td",
+    "Qd"
+   ],
+   "chen": 8,
+   "actions": [
+    "call",
+    "bet",
+    "call",
+    "call"
+   ],
+   "board": [
+    "Th",
+    "4d",
+    "Kh",
+    "6d",
+    "As"
+   ]
   }
  ],
- "weak_busts": 21,
- "total_busts": 35
+ "weak_busts": 23,
+ "total_busts": 39
 }

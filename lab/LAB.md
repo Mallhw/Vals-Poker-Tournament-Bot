@@ -103,6 +103,31 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
+## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
+1. ANALYZE: `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
+   --entry <live submission name>` (chips/folds/showdowns vs each opponent), bust hands of the live entry, and the sims
+   (lab/leaks.py on sh-select evals; lab/games.py on games12 evals: place, chips, busts, notes accuracy).
+2. OPINION + HYPOTHESES: write 2-3 lines in "Iteration log" below: what is the live model doing wrong, ranked by
+   chips lost, and one concrete change per leak (prompt/hint text, training data, reward, opponent mix).
+3. TEST: prompt-level first (games12 variant via system_hint on harness2, same 36 games, policy = a copy of the
+   current best, max-parallel 8); training-level (OPSD with the winning hint; RL with fixed tables) only for winners.
+4. DECIDE (keep / revert / explore): adopt a change only if it beats the current best on the sims AND doesn't raise
+   busts; in the arena, judge an entry after >=20 games on busts + EV + place. If a live entry is worse than the
+   previous one after 20+ games, REVERT the candidate to the previous one. If 2 iterations in a row fail on a
+   feature, explore a different feature. Priority (user): opponent notes / modeling.
+5. RECORD: experiments.jsonl + Iteration log; set "BEST CHECKED CANDIDATE" (the Chrome session submits it as
+   "Alea iacta est" when it differs from the live entry).
+
+## Iteration log
+- 02:30 #1 ANALYSIS: butter (RL s10) after 22 arena games: bust 23% (5) vs v4 10%, 0 wins, place 3.64 vs 3.48,
+  EV +22 vs +29. Busts: JJ called a shove 4-way, T6o short-stack call, 77 vs Bob, QTs flop raise war, AA<KK.
+  CAUSE: RL bot tables had 2 any-two shovers -> learned to call shoves wide; bust penalty too small vs bots.
+  vs opponents (105 games): win vs passive (Martingale +400, Stan +400, Evaluators +218, LoRA +132); lose to aggressive
+  (Carlos -188, we fold 16 vs 4; Accord -141 12 vs 2; Vals -109; Friends -124).
+  DECISION: REVERT candidate to v4 (opsd4-s30). NEXT: (a) notes v7 = notes + consult-the-notes-when-facing-a-bet +
+  defend vs identified maniacs/aggressors; (b) RL v2 on realistic tables (1 shover, LLM opponents, multiway shoves,
+  bust_penalty 3) from the best OPSD ckpt; (c) v6 (notes+endgame OPSD) results from pipeline_v6.
+
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
   not available on the OPSD cluster). lab/pipeline_v6.sh (log ~/Worker/logs/pipeline_v6.log) then deploys v6-s20,
@@ -111,6 +136,8 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Decide in the morning: best of rl-s10 (live "butter"), rl-s40, v6-s20 by sh-select score/busts + games12 place.
 
 ## Candidate to submit
+**BEST CHECKED CANDIDATE (02:30, REVERT): vals-hackathon-matt/opsd4-s30 (v4, infer_496116c2999d)** — butter (rl-s10)
+busts 2x more in the arena (23% vs 10% after 22 games, RL overfit to bot tables). Submit as "Alea iacta est".
 **LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
 opsd4-s30 (v4, infer_496116c2999d; 67 games: place 3.46, bust 10%, EV +30 bb/100) stays deployed.
 **BEST CHECKED CANDIDATE (01:45): vals-hackathon-matt/rl-s10** (infer_96d341a589e2; GRPO from v4 s29, step 10,
