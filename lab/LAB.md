@@ -6,7 +6,11 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 ## Rules
 - Use project `vals-hackathon-matt` (prj_face168dc6d7) for my runs/evals; my deployments: `vals-hackathon-matt/base`.
 - May delete teammates' deployments only when clearly idle (no eval/run using them). Never stop teammates' runs.
-  Never touch the live arena entry. Arena submission is console-only (user/teammate); keep the best checked
+  Never touch the live arena entry — check `python3 -I lab/arena.py` status "deployment" before deleting anything
+  (as of 21:00 it is infer_c5af0a968fd3 = vals-hackathon/ho-af0ee9-step10; the old "👀" entry infer_2ff17466cceb is
+  superseded but keep it unless GPUs are needed, since teammates may switch back).
+- Dashboard: http://matthewli.org/pokerbot-lab/ (repo Mallhw/pokerbot-lab). Refresh: `python3 -I lab/arena.py &&
+  python3 -I lab/publish.py`. Arena submission is console-only (user/teammate); keep the best checked
   candidate deployed and say which in this file.
 - Harness on Otzi: launchd `com.mallhw.vals-harness` (127.0.0.1:8775), connector `com.mallhw.vals-connector`.
   Restart harness only when no eval/run is using it (kills in-flight games):
