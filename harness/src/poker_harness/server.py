@@ -142,6 +142,36 @@ def _with_system_hint(complete, hint: str):
     return hinted
 
 
+def _with_policy_talk(complete, lines: list[str], rate: float, seed: int):
+    """Experiment only: set the `say` of the policy's submit_action to a random line from `lines` with probability
+    `rate`, to measure how table talk moves the opponents. The policy model never sees this happen."""
+    import dataclasses
+    import random as _random
+
+    rng = _random.Random(f"talk:{seed}")
+
+    async def talking(messages: list[dict[str, Any]]):
+        out = await complete(messages)
+        if out.tool_arguments is None or not lines or rng.random() >= rate:
+            return out
+        args = out.tool_arguments
+        try:
+            data = json.loads(args) if isinstance(args, str) else dict(args)
+        except (ValueError, TypeError):
+            return out
+        if not isinstance(data, dict):
+            return out
+        data["say"] = rng.choice(lines)
+        new_args = json.dumps(data)
+        calls = [
+            {**c, "function": {**c["function"], "arguments": new_args}} if c.get("function", {}).get("name") == "submit_action" else c
+            for c in out.tool_calls
+        ]
+        return dataclasses.replace(out, tool_arguments=new_args, tool_calls=calls)
+
+    return talking
+
+
 def _size(log: dict[str, Any]) -> int:
     return len(json.dumps(log, separators=(",", ":")))
 
@@ -278,6 +308,13 @@ def create_app(
                 if params.get("system_hint"):
                     policy_complete = _with_system_hint(policy_complete, str(params["system_hint"]))
                     policy_cleanup = _with_system_hint(policy_cleanup, str(params["system_hint"]))
+                # Experiment only: `policy_talk` = {"lines": [...], "rate": 0.7} injects table talk on the policy's
+                # actions (decisions only, not the cleanup turn) to measure its effect on the opponents.
+                if isinstance(params.get("policy_talk"), dict):
+                    t = params["policy_talk"]
+                    policy_complete = _with_policy_talk(
+                        policy_complete, list(t.get("lines") or []), float(t.get("rate", 0.7)), int(params["seed"])
+                    )
                 # Training-only: `scripted_seats` = {"3": "shover", ...} puts the engine's scripted players in those
                 # seats (e.g. a frequent all-in shover like the arena's house bots). Never a policy seat.
                 scripted = {int(k): v for k, v in (params.get("scripted_seats") or {}).items() if int(k) not in policy}

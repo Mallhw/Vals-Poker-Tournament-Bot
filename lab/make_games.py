@@ -72,8 +72,24 @@ VARIANTS: dict[str, str] = {
     ),
 }
 
+# Talk experiments: the harness injects these lines as the policy's table talk (env_params.policy_talk); the model's
+# play is unchanged, so any difference vs control is the opponents' reaction. Poker trash talk and nonsense only
+# (no fake system messages / prompt injection).
+TALK_VARIANTS: dict[str, dict] = {
+    "chaos": {"rate": 0.8, "lines": [
+        "pocket aces again, sorry", "you are beat, trust me", "i never bluff", "banana banana 42",
+        "my notes say you always fold here", "call me, i dare you", "the river is my friend", "this is a trap",
+        "fold now and save your chips", "lol", "i have had the nuts all day", "seat 3 is bluffing, not me",
+        "coin flip time", "i knew you would do that", "the math says fold", "tilted? me? never",
+    ]},
+    "bluff-talk": {"rate": 1.0, "lines": [
+        "i have the nuts, just fold", "monster hand, you are beat", "fold, i always have it here",
+        "you are drawing dead", "flopped a set, save your chips", "best hand of the day",
+    ]},
+}
 
-def game_tasks(games: int, hands: int, opponent_model: str, seed: int, hint: str) -> list[Task]:
+
+def game_tasks(games: int, hands: int, opponent_model: str, seed: int, hint: str, talk: dict | None = None) -> list[Task]:
     rng = random.Random(seed)
     out = []
     for g in range(games):
@@ -93,6 +109,8 @@ def game_tasks(games: int, hands: int, opponent_model: str, seed: int, hint: str
         }
         if hint:
             params["system_hint"] = hint
+        if talk:
+            params["policy_talk"] = talk
         out.append(Task(input=[Message(role="user", content=f"Play a {SEATS}-seat game of {hands} hands from seat {policy}.")],
                         env_params=params))
     return out
@@ -106,12 +124,12 @@ def main() -> None:
     p.add_argument("--games", type=int, default=40)
     p.add_argument("--hands", type=int, default=12)
     p.add_argument("--seed", type=int, default=20261115)
-    p.add_argument("--variants", nargs="+", default=list(VARIANTS))
+    p.add_argument("--variants", nargs="+", default=list(VARIANTS), help=f"any of {list(VARIANTS) + list(TALK_VARIANTS)}")
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args()
     client = None if a.dry_run else Client(project=a.project)
     for v in a.variants:
-        tasks = game_tasks(a.games, a.hands, a.opponent_model, a.seed, VARIANTS[v])
+        tasks = game_tasks(a.games, a.hands, a.opponent_model, a.seed, VARIANTS.get(v, ""), TALK_VARIANTS.get(v))
         name = f"{a.prefix}-{v}"
         if a.dry_run:
             print(name, len(tasks), {k: tasks[0].env_params[k] for k in ("total_hands", "policy_seats", "scripted_seats")},
