@@ -56,4 +56,5 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 5. Deploy best checkpoints (in vals-hackathon-matt), leaks.py + paired score vs base on sh-select; best = candidate.
 
 ## Candidate to submit
+Submission name for every model: **Alea iacta est** (user's request).
 - none of mine yet (arena entry = teammate's ho-af0ee9-step10).
