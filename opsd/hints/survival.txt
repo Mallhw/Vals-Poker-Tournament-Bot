@@ -1,0 +1,9 @@
+How this game is scored: a busted player ranks below everyone still in, so staying in the game is worth more than a
+small edge.
+- Do not put your whole stack in before the flop without QQ+, AK, or a stack under 15 big blinds. After the flop,
+  commit your stack only with two pair or better, or a strong draw with a big pot already in.
+- Below 15 big blinds, play push or fold: go all in first with any pair, any ace, and broadways; fold the rest.
+- With a big stack, pressure short stacks: raise their blinds and call their all-ins wider, since they cannot hurt
+  you much.
+- In the last five hands, protect your rank: avoid marginal all-ins against stacks that could knock you out, and
+  steal blinds from players who are trying to survive.

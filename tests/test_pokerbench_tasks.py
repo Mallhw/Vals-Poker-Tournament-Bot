@@ -63,3 +63,56 @@ def test_tools_that_differ_from_the_recorded_ones_are_refused() -> None:
         pb.hinted_task(RECORD | {"tools": TOOLS[:1]})
     with pytest.raises(ValueError):
         pb.build([RECORD], "dpo")
+
+
+THINKING = "Pot odds and a dry board: a small bet takes it down often."
+REPLY = RECORD | {
+    "model": "vals-hackathon/base",
+    "sample": 0,
+    "reply": {
+        "reasoning": THINKING,
+        "text": "",
+        "tool_calls": [{"id": "r1", "type": "function", "function": {"name": "submit_action", "arguments": '{"action": "check"}'}}],
+        "out_tokens": 40,
+        "reasoning_tokens": 30,
+        "truncated": False,
+    },
+    "clean": True,
+    "error": None,
+    "decision": {"action": "check"},
+    "agrees": False,
+}
+
+
+def test_an_offline_task_replays_the_reply_with_the_solver_play_for_the_teacher() -> None:
+    from ac2.runtime import Reasoning
+
+    task = pb.offline_task(REPLY)
+    assert HintedTask.model_validate(task.model_dump(mode="json")) == task
+    prompt = pb.to_items(RECORD["messages"])
+    (selection,) = task.opsd_hint_selections
+    assert task.input[: len(prompt)] == prompt and selection.rollout_prefix_len == len(prompt)
+    reasoning, call = task.input[len(prompt) :]
+    assert isinstance(reasoning, Reasoning) and reasoning.content == THINKING
+    assert isinstance(call, FunctionCall) and json.loads(call.arguments) == {"action": "check"}
+    assert "bet to 8" in selection.hint and "bet to 8" not in json.dumps(task.model_dump(mode="json")["input"])
+    assert task.env_params["reply"] == {"model": "vals-hackathon/base", "sample": 0, "decision": {"action": "check"}, "agrees": False}
+
+
+def test_reply_modes_keep_clean_replies_and_rft_only_those_that_agree() -> None:
+    agreeing = REPLY | {"agrees": True, "decision": {"action": "bet", "amount": 8}}
+    unclean = REPLY | {"clean": False, "error": "reply hit the token cap", "decision": None}
+    replies = [REPLY, agreeing, unclean]
+    assert len(pb.build(replies, "offline")) == 2
+    (rft,) = pb.build(replies, "rft")
+    assert Task.model_validate(rft.model_dump(mode="json")) == rft and rft.env_params["reply"]["agrees"]
+    with pytest.raises(SystemExit, match="needs replies"):
+        pb.build([RECORD], "offline")
+
+
+def test_max_tokens_drops_longer_replies_in_the_reply_modes() -> None:
+    long = REPLY | {"agrees": True, "reply": REPLY["reply"] | {"out_tokens": 2500}}
+    short = REPLY | {"agrees": True, "reply": REPLY["reply"] | {"out_tokens": 1800}}
+    assert len(pb.build([long, short], "rft")) == 2
+    (kept,) = pb.build([long, short], "rft", max_tokens=2000)
+    assert kept.env_params["reply"]["agrees"] and len(pb.build([long, short], "offline", max_tokens=2000)) == 1

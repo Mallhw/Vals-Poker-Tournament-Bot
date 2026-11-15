@@ -76,6 +76,7 @@ model.
 | `submit_fields` | action, amount, p_win, read | Fields of the `submit_action` tool |
 | `ev_labels`, `ev_runouts` | false, 32 | All-in EV labels for grading |
 | `table_talk` | false | Optional sanitized `say` line |
+| `enforced_max_completion_tokens` | none | Training only: a tighter per-decision output cap for the policy seats than the prompt states (it still says the table's cap). Longer replies count as cut off and score 0 |
 | `system_hint` | none | Testing only: text appended to the policy seats' system prompt, as OPSD's teacher sees it (opponents never see it; the arena never sets it). The grader reports its hash as `hint` |
 
 ## Table talk

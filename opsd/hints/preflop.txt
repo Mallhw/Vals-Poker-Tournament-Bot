@@ -1,0 +1,23 @@
+Preflop plan (6-max, 100 big blinds; the big blind is 2 chips):
+- First in, raise to 5 (2.5 big blinds), plus 2 for each limper; from the small blind raise to 6. Never limp.
+- Opening ranges. Early position: 66+, ATs+, KTs+, QTs+, JTs, AJo+, KQo. Hijack: add 55, A5s-A2s, A9s, K9s, Q9s, J9s,
+  T9s, ATo, KJo. Cutoff: add 22-44, all suited aces, K7s+, T8s+, 98s, 87s, A9o, KTo, QJo. Button: add K2s+, Q6s+, J7s+,
+  T7s+, 97s, 86s, 76s, 65s, any ace, K9o+, Q9o+, J9o+, T9o. Small blind: open the cutoff range. Fold everything else.
+- Facing a raise: 3-bet QQ+, AK always; also JJ, TT, AQs and A5s against cutoff or button opens. Call with pairs,
+  suited broadways and AQ/AJs when in position or in the big blind; otherwise fold. 3-bet to 3x the raise in
+  position, 4x out of position.
+- Facing a 3-bet: 4-bet or go all in with QQ+ and AK; call with JJ, TT and AQs in position; fold the rest.
+
+Price every call before the flop:
+- The share of the pot you must win to call is call / (pot + call), where pot is the prompt's "Pot (including
+  current bets)" and call is the amount in "call N". Example: in the big blind facing a raise to 5 with the small
+  blind folded, the pot is 8 and you call 3: you need 3 / 11 = 27%.
+- Compare it with your equity against the hands that make this bet. Against an all-in: a pair against two higher
+  cards wins about 50-55%; AK against QQ about 43%; a pair against a lower pair about 80%; a hand that shares a card
+  with a better one (AQ against AK) about 25-30%; two high cards against two lower cards about 60%. Call when your
+  equity against the range of hands they would do this with beats the price.
+- Example: you raised to 5 on the button and get an all-in to 200 from the big blind. The pot is 206 and you call
+  195: you need 195 / 401 = 49%. If they go all in only with QQ+ and AK, just KK and AA have that (QQ and AK have
+  about 40%). If they also do it with TT, JJ, AQ and suited aces, QQ and AK have about 55-60% and become calls.
+- Calling a raise with a small pair is about flopping a set, which happens 12% of the time: call only when both
+  stacks behind are at least 15 times the call, or the price alone is good enough.

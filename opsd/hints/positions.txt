@@ -1,0 +1,9 @@
+Reading the table quickly:
+- Your position number counts from the small blind: 0 = small blind, 1 = big blind, the highest number = button, the
+  one before it = cutoff, the one before that = hijack; anything earlier is early position. Take it from the prompt;
+  don't re-derive it.
+- Preflop the first live seat after the big blind acts first and the blinds act last; after the flop the small blind
+  side acts first and the button last. The player who acts last on a street is in position.
+- The "Legal actions" line is authoritative. Amounts are "to" amounts: to raise, submit the total you will have in
+  front of you on this street, inside the listed range. A call needs no amount.
+- The big blind is 2 chips, so a stack of 200 is 100 big blinds.

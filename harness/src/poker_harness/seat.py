@@ -85,6 +85,14 @@ class Completion:
     # is often all reasoning and no text.
 
 
+def over_cap(reply: Completion, cap: int | None) -> None:
+    """Mark a reply longer than the seat's output cap as cut off, even when the server returned it whole. At the event
+    the server enforces the cap, so this changes nothing there; a training seat with a tighter enforced cap
+    (`env_params.enforced_max_completion_tokens`) is then bound by it whatever the serving engine does."""
+    if cap and (reply.out_tokens or 0) > cap:
+        reply.truncated = True
+
+
 def logged_text(reply: Completion, limit: int = 2000) -> str:
     """The end of everything the model wrote this turn, reasoning first, as the log keeps it."""
     return "\n\n".join(part for part in (reply.reasoning, reply.text) if part.strip())[-limit:]
@@ -104,6 +112,7 @@ class ModelSeat:
     timeout_seconds: float | None = None
     cleanup_complete: Complete | None = None  # the after-hand turn's caller (its own token cap); default `complete`
     system_hint: str = ""  # a hint under test, after the system prompt (`HINT_SEPARATOR`); "" keeps the official one
+    enforced_cap: int | None = None  # training only: a tighter output cap than the prompt states; None keeps the table's
     turn: int = field(default=0, init=False)
     messages: list[Message] = field(default_factory=list, init=False)
     _hand: int | None = field(default=None, init=False)
@@ -194,6 +203,8 @@ class ModelSeat:
             reply, error = await self._ask(messages), None
         except Exception as exc:  # noqa: BLE001 - any failure checks or folds and is recorded, never stops the table
             reply, error = Completion(text=""), f"{type(exc).__name__}: {str(exc)[:300]}"
+        cap = self.enforced_cap or self.rules.max_completion_tokens
+        over_cap(reply, cap)
         if not error:
             assistant: Message = {"role": "assistant", "content": reply.text}
             if reply.tool_calls:
@@ -205,7 +216,6 @@ class ModelSeat:
         if error:
             decision, parse_error = Decision("fold"), None
         elif reply.truncated:  # the cap is a hard limit: a cut reply never counts, whatever it holds
-            cap = self.rules.max_completion_tokens
             decision, parse_error = Decision("fold"), f"reply hit the {cap or 'output'}-token cap"
         elif self.rules.scratchpad and any(_tool_name(c) == UPDATE_SCRATCHPAD for c in reply.tool_calls):
             decision, parse_error = Decision("fold"), "update_scratchpad called during the hand"
@@ -296,7 +306,9 @@ class ModelSeat:
         try:
             pending = complete(list(self.messages))
             reply = await (asyncio.wait_for(pending, self.timeout_seconds) if self.timeout_seconds else pending)
-            return (reply if isinstance(reply, Completion) else Completion(text=reply)), None
+            reply = reply if isinstance(reply, Completion) else Completion(text=reply)
+            over_cap(reply, self.rules.cleanup_max_completion_tokens or self.rules.max_completion_tokens)
+            return reply, None
         except Exception as exc:  # noqa: BLE001 - a failed cleanup leaves the scratchpad unchanged
             return Completion(text=""), f"{type(exc).__name__}: {str(exc)[:300]}"
 

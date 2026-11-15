@@ -47,3 +47,15 @@ def test_scores_pair_by_deal_across_datasets_and_by_task_otherwise() -> None:
     legacy = {"a1": row(1.0), "a2": row(-2.0)}  # scores from before the grader named the deal
     out = summarize({"a1": row(2.0, "11:seat2"), "a2": row(0.0, "12:seat3")}, legacy)["vs_base"]
     assert out["paired_by"] == "task" and out["paired_hands"] == 2 and out["diff"] == pytest.approx(1.5)
+
+
+def test_a_capped_train_split_holds_the_policy_seat_to_the_cap_on_the_same_deals() -> None:
+    spec = importlib.util.spec_from_file_location("make_dataset", ROOT / "rl" / "make_dataset.py")
+    make_dataset = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(make_dataset)
+    ((name, capped),) = make_dataset.capped_train("pokerbots", OPPONENT, 3000).items()
+    plain = hand_tasks(*SPLITS["train"], OPPONENT)
+    assert name == "pokerbots-cap3000-train" and len(capped) == len(plain) == SPLITS["train"][0]
+    for p, c in zip(plain, capped):
+        assert c.env_params == {**p.env_params, "enforced_max_completion_tokens": 3000}
+        assert c.content_hash != p.content_hash

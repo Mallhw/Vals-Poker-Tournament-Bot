@@ -9,6 +9,14 @@ grader (harness/src/poker_harness/grading.py) scores each hand by its EV in big 
     uv run python rl/make_dataset.py --opponent-model vals-hackathon/opponent --opponent-api responses --opponent-effort medium
 
 By default the opponents are `vals-hackathon/ac-vals-model`, the model every team org starts with.
+
+`--enforced-cap N` makes only a training split, <prefix>-cap<N>-train, whose policy seat must finish every decision in
+N output tokens (the harness's `enforced_max_completion_tokens`; the prompt still states the event's 5,000). Longer
+replies score 0 like any format error, so GRPO learns a margin below the event's cap. Train on it with the plain
+select split as the in-run eval, which keeps the event's rules:
+
+    uv run python rl/make_dataset.py --enforced-cap 3000
+    uv run python rl/train.py --prefix pokerbots-cap3000 --eval-dataset pokerbots-select --dry-run
 """
 
 from __future__ import annotations
@@ -20,7 +28,17 @@ from pathlib import Path
 from ac2.sdk import Client
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from vals_tools.tasks import SEATS, Opponents, datasets  # noqa: E402
+from ac2.runtime import Task  # noqa: E402
+
+from vals_tools.tasks import SEATS, SPLITS, Opponents, datasets, hand_tasks  # noqa: E402
+
+
+def capped_train(prefix: str, opponents: Opponents, cap: int, seats: int = SEATS) -> dict[str, list[Task]]:
+    """The train split's deals with the policy seat held to `cap` output tokens per decision."""
+    tasks = hand_tasks(*SPLITS["train"], opponents, seats)
+    # Built anew, not copied, so each task's content hash covers the cap.
+    capped = [Task(input=t.input, env_params={**(t.env_params or {}), "enforced_max_completion_tokens": cap}) for t in tasks]
+    return {f"{prefix}-cap{cap}-train": capped}
 
 
 def main() -> None:
@@ -37,11 +55,20 @@ def main() -> None:
     )
     parser.add_argument("--opponent-effort", default="none", help="reasoning effort for the opponents, e.g. medium")
     parser.add_argument("--seats", type=int, default=SEATS)
+    parser.add_argument(
+        "--enforced-cap", type=int, help="only a train split whose policy seat must finish each decision in N tokens"
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    if args.enforced_cap is not None and not 0 < args.enforced_cap < 5000:
+        parser.error("--enforced-cap must be between 1 and 4999 (the event's cap is 5000)")
 
     effort = None if args.opponent_effort == "none" else args.opponent_effort
-    built = datasets(args.prefix, Opponents(args.opponent_model, args.opponent_api, effort), args.seats)
+    opponents = Opponents(args.opponent_model, args.opponent_api, effort)
+    if args.enforced_cap:
+        built = capped_train(args.prefix, opponents, args.enforced_cap, args.seats)
+    else:
+        built = datasets(args.prefix, opponents, args.seats)
     if args.dry_run:
         for name, tasks in built.items():
             print(name, len(tasks), tasks[0].env_params)

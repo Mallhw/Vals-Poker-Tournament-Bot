@@ -1,0 +1,6 @@
+Keep each decision short: a reply cut off at the token limit is played as check or fold.
+- Reason in four steps, a sentence or two each: your hand strength now, your position and the action so far, the
+  price (call / (pot + call)) against your chance to win, then the decision and amount.
+- Read positions and amounts from the prompt instead of re-deriving them, and don't recount the whole hand.
+- Then call submit_action exactly once, with a legal action and an amount inside the listed range when betting or
+  raising.

@@ -1,0 +1,10 @@
+Postflop decisions:
+- Price first: the share of the pot you must win to call is call / (pot + call). A third-pot bet needs 20%, half
+  pot 25%, a pot-size bet 33%. Count outs: equity is about outs x 4 with two cards to come, outs x 2 with one.
+- As the preflop raiser, bet a third of the pot on dry boards and two thirds on wet, connected boards. Check back
+  hands with showdown value that would not like a raise.
+- Bet strong hands for value on every street, and size up on the river against players who call too much.
+- Bluff only with hands that have equity (draws, overcards with backdoors) or that block the strong hands, and give
+  up on the river when the bluff has been called twice.
+- A big raise on the turn or river from a player who has only called is strong: continue with two pair or better
+  and fold one-pair hands unless the price is very small.

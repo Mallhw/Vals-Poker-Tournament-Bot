@@ -18,3 +18,6 @@ opsd/
 tests/
 traces/
 videos/
+# Local data (PokerBench conversions, base replies): never part of a project version.
+data/
+runs/

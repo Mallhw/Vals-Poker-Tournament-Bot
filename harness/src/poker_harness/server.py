@@ -11,6 +11,10 @@ sanitized and shown to the other seats.
 `env_params.system_hint` (training and testing only; the arena never sets it) appends a hint to the policy seats'
 system prompt, as OPSD's teacher sees it, so a prompt can be tested before it is distilled. Opponents never see it.
 
+`env_params.enforced_max_completion_tokens` (training only) gives the policy seats a tighter output cap than the
+prompt states: their replies are requested with it and any longer reply is played as cut off (a format error, scored
+0), so training teaches a margin below the event's cap while the prompt stays the event's.
+
 A server keeps its tables in memory, so scale out by sharding (`shard_router.py` sends every call for a rollout to
 the same server), not with `uvicorn --workers`.
 
@@ -239,6 +243,7 @@ def create_app(
             seats = int(params.get("seats", 10))
             policy = {int(i) for i in params.get("policy_seats", range(seats))}
             hint = params.get("system_hint") or ""  # checked to be a string in `submit`
+            enforced = int(params.get("enforced_max_completion_tokens") or 0) or None  # checked in `submit`
             if params.get("opponent_model") and not opponent_key and len(policy) < seats:
                 raise RuntimeError("opponent seats need POKER_OPPONENT_API_KEY or AC2_API_KEY in the harness environment")
             decision_timeout = float(params.get("decision_timeout_seconds", DEFAULT_DECISION_TIMEOUT_SECONDS))
@@ -247,7 +252,10 @@ def create_app(
                 httpx.AsyncClient(timeout=timeout, transport=relay_transport) as relay_client,
                 httpx.AsyncClient(timeout=timeout, transport=opponent_transport) as opponent_client,
             ):
-                policy_complete = relay_completion(relay_client, request.ac_api_url, request.ac_api_key, params)
+                # A training-only tighter cap: asked of the server for the policy seats and enforced by their seats,
+                # while the prompt still states the table's cap.
+                policy_params = params | {"max_completion_tokens": enforced} if enforced else params
+                policy_complete = relay_completion(relay_client, request.ac_api_url, request.ac_api_key, policy_params)
                 opponent_api = responses_completion if params.get("opponent_api") == "responses" else relay_completion
                 opponent_complete = (
                     opponent_api(opponent_client, opponent_url, opponent_key or "", opponent_params(params))
@@ -274,6 +282,7 @@ def create_app(
                         timeout_seconds=decision_timeout if i in policy else opponent_timeout,
                         cleanup_complete=policy_cleanup if i in policy else opponent_cleanup,
                         system_hint=hint if i in policy else "",
+                        enforced_cap=enforced if i in policy else None,
                     )
                     for i in range(seats)
                 ]
@@ -321,6 +330,9 @@ def create_app(
             raise HTTPException(status_code=422, detail="env_params.seed is required")
         if not isinstance(params.get("system_hint", ""), str):
             raise HTTPException(status_code=422, detail="env_params.system_hint must be a string")
+        enforced = params.get("enforced_max_completion_tokens")
+        if enforced is not None and (not isinstance(enforced, int) or isinstance(enforced, bool) or enforced < 1):
+            raise HTTPException(status_code=422, detail="env_params.enforced_max_completion_tokens must be a positive integer")
         rollout = Rollout(id=rollout_id, rules=table_rules(params))
         rollouts[rollout_id] = rollout
         rollout.task = asyncio.create_task(run_table(rollout, request))
