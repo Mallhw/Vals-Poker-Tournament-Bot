@@ -1,13 +1,13 @@
 {
  "status": {
-  "time": "2026-11-15 02:41:24",
+  "time": "2026-11-15 02:59:58",
   "rank": 11.0,
-  "rating": 1077.0,
-  "bb100": -4.2,
-  "matches": 275.0,
+  "rating": 1071.0,
+  "bb100": -4.5,
+  "matches": 290.0,
   "deployment": "infer_496116c2999d"
  },
- "new_matches": 11,
+ "new_matches": 14,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,
@@ -75,17 +75,30 @@
    "fallback_rate": 0.0179
   },
   "butter (infer_96d341a589e2)": {
-   "games": 34,
-   "mean_place": 3.5,
+   "games": 35,
+   "mean_place": 3.54,
    "wins": 1,
    "lasts": 4,
-   "bust_rate": 0.147,
-   "bb100": -39.4,
-   "ev_bb100": 23.5,
-   "vpip": 0.142,
-   "pfr": 0.091,
-   "bigcalls100": 0.63,
-   "fallback_rate": 0.0065
+   "bust_rate": 0.143,
+   "bb100": -39.2,
+   "ev_bb100": 21.8,
+   "vpip": 0.139,
+   "pfr": 0.089,
+   "bigcalls100": 0.61,
+   "fallback_rate": 0.0064
+  },
+  "Alea iacta est (infer_496116c2999d)": {
+   "games": 13,
+   "mean_place": 3.38,
+   "wins": 0,
+   "lasts": 2,
+   "bust_rate": 0.077,
+   "bb100": -4.5,
+   "ev_bb100": 10.3,
+   "vpip": 0.154,
+   "pfr": 0.115,
+   "bigcalls100": 0.26,
+   "fallback_rate": 0.0125
   }
  },
  "busts": [
@@ -925,8 +938,28 @@
     "6d",
     "As"
    ]
+  },
+  {
+   "match": "m_20261115t103112_aba2ac",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 22,
+   "hole": [
+    "2h",
+    "Ac"
+   ],
+   "chen": 5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "8c",
+    "8s",
+    "4d",
+    "Kh",
+    "7c"
+   ]
   }
  ],
- "weak_busts": 23,
- "total_busts": 39
+ "weak_busts": 24,
+ "total_busts": 40
 }

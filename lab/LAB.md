@@ -110,6 +110,28 @@ ENTRY CAN CHANGE ANY HOUR: before deleting or evaluating ANY deployment, read th
 `python3 -I -c "import sys; sys.path.insert(0,'lab'); import arena; print(arena.team_status()['deployment'])"` and treat
 both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly one BEST CHECKED CANDIDATE line.
 
+## IDEA BACKLOG (user 03:05: "play like Vals but with notes; keep putting suggestions, see what sticks, keep going")
+Each check-in: if harness2 has < 3 evals running, launch the next untested idea as a games12 variant (system_hint
+on the current best policy copy, 36 games, max-parallel 8); if GPUs allow (4 for OPSD, 6 for RL), train the current
+best hint. Judge on chips + busts (paired, lab/games.py), sh-select score/busts for trained models; keep winners,
+drop losers, write one line per result below. Status: [ ] todo, [~] running, [x] kept, [-] dropped.
+- [~] v10 "Vals + notes" (opsd/hint.py HINTS['v10']): OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
+      prompt test games12-v10 eval_5949fdd91dba.
+- [~] v6 notes+endgame trained (pipeline_v6 -> v6-s20). [~] v7 notes-at-decision eval_10bc6af2a4e4.
+- [ ] talk: chaos + bluff-talk (pipeline_talk.sh, after v7). [ ] v8 Accord-style + price-aware preflop (after talk).
+- [ ] RL v2 realistic tables (pokerbots-rl2, bust_penalty 3) from the best OPSD ckpt (v10 or v6) when 6 GPUs free.
+- [ ] Exploit Accord specifically (we fold 63 vs 25): 3-bet its opens wider in position (AJs+, KQs, 99+, A5s),
+      call its c-bets with any pair; profile it via notes (aggressive/TAG).
+- [ ] Small c-bet test: after raising preflop bet 1/3 pot on dry flops (LLMs fold to any bet ~50-60%).
+- [ ] Bigger value bets vs calling stations (Stan, Martingale): 3/4-pot to pot on every street with top pair+.
+- [ ] Button steal frequency: raise ~45% on the button when folded to (LLM blinds fold 80-90%).
+- [ ] Cleanup-turn discipline: notes update in <= 150 words (avoid 10k-token cleanup timeouts / fallbacks).
+- [ ] RL on multi-hand games (6-hand tasks, max_response_len ~48k) so scratchpad use is rewarded directly.
+- [ ] More OPSD data/epochs for the winning hint (2 epochs, add sh-select + games12 traces of the best model).
+- [ ] Endgame variants: chip-leader protection vs short-stack accumulation in last 6 hands.
+- [-] v5 strict-evidence notes (worse: place +0.44, shover flagged 3/36). [-] short reasoning. [-] model-chosen talk
+      (barely talked). [-] RL on 2-shover bot tables (butter: arena busts 22%).
+
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
 1. ANALYZE: `python3 -I lab/scouting.py` (per-opponent type + how to beat it; worst matchups first), `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
    --entry <live submission name>` (chips/folds/showdowns vs each opponent), bust hands of the live entry, and the sims

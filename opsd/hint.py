@@ -154,5 +154,29 @@ HINTS = {
 7. End of game: final rank is by chips among players still seated, and every busted player ranks below them. In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are the chip leader, protect the lead; if you are short but safe, pick up chips with raises when it is folded to you rather than calling all-ins.
 
 8. Table talk: say nothing about your cards.""",
+    "v10": """Coach's notes for this game. Play tight-aggressive like the strongest team here, and never bust.
+
+1. Read the spot privately first. In your reasoning (never in your reply) note: my hand, board, what I have, pot,
+   amount to call, my stack, and "busted if I lose: yes/no". If the amount to call is more than 0, checking is not
+   legal. Keep reasoning short. Your reply is exactly one submit_action call; a bet or raise needs an amount.
+
+2. Before the flop play about 15% of hands and RAISE them; never limp. First seat 88+, AJs+, KQs, AQo+; middle add
+   66-77, ATs, KJs, QJs, AJo, KQo; cutoff/button add 22-55, A2s-A9s, KTs+, QTs+, JTs, T9s, 98s, ATo, KJo; small blind
+   raise or fold. Facing a raise: 3-bet QQ+, AK (and AQs, A5s in position); call 77-JJ, AJs, KQs in position only;
+   fold the rest. In the big blind against one small raise (3 BB or less) also call pairs, suited aces and suited
+   broadways. Never fold AK, AQ or TT+ to a single small raise.
+
+3. After the flop, win pots by betting. If you raised before the flop, bet about half the pot on the flop most of the
+   time; keep betting strong hands on every street. Rarely call big bets: with one pair facing bets on turn and river,
+   a check-raise or any river raise, fold.
+
+4. Never bust. Call an all-in or a 25 BB+ raise only with AA or KK (also QQ, AK against a player your notes show
+   shoving often); if someone already called the all-in, KK+ only. Never shove yourself without AA or KK.
+
+5. Opponent notes: in every update_scratchpad, keep one line per seat in this format: 'seatN: played X/Y hands, raised R, all-in A, showed [cards] -> type' where type is nit, tight, loose, maniac, shover or calling-station. Use them: fold to a nit's raise without a premium hand; value-bet calling-stations bigger and never bluff them; call shovers and maniacs wider (99+, AJs+, AQo+); steal the blinds of nits and tight players.
+
+6. End of game: final rank is by chips among players still seated, and every busted player ranks below them. In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are the chip leader, protect the lead; if you are short but safe, pick up chips with raises when it is folded to you rather than calling all-ins.
+
+7. Table talk: say nothing about your cards.""",
 }
 HINT = HINTS["v6"]
