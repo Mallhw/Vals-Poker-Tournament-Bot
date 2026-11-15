@@ -103,6 +103,9 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
+## NOTE (03:27): pokerbots.ac can be DOWN ("database is unavailable"); lab/arena.py then reuses the last known status
+(flag site_unavailable). While it's down the Chrome submitter can't verify the live entry — treat opsd4-s30 as live.
+
 ## AUTO-SUBMIT (since 02:35)
 A separate Chrome-enabled session ("chrome browser tools check") runs at :13 every hour: if "BEST CHECKED CANDIDATE"
 differs from the live arena entry, it submits it as "Alea iacta est" and appends a SUBMITTED line here. So the LIVE
@@ -116,7 +119,7 @@ on the current best policy copy, 36 games, max-parallel 8); if GPUs allow (4 for
 best hint. Judge on chips + busts (paired, lab/games.py), sh-select score/busts for trained models; keep winners,
 drop losers, write one line per result below. Status: [ ] todo, [~] running, [x] kept, [-] dropped.
 - [~] v10 "Vals + notes" (opsd/hint.py HINTS['v10']): OPSD train_6558f04b6d10 (pipeline_ckpt.sh -> v10-s20) +
-      prompt test games12-v10 eval_5949fdd91dba.
+      prompt test games12-v10 eval_d2411489bbab (first try failed on AC2: no space left).
 - [~] v6 notes+endgame trained -> v6-s20 (infer_60c930ca75cb): sh-select eval_efddd596cc0f, games12 eval_80f62e7eb7eb; play_local 1 unreadable reply. [~] v7 notes-at-decision eval_10bc6af2a4e4.
 - [ ] talk: chaos + bluff-talk (pipeline_talk.sh, after v7). [ ] v8 Accord-style + price-aware preflop (after talk).
 - [ ] RL v2 realistic tables (pokerbots-rl2, bust_penalty 3) from the best OPSD ckpt (v10 or v6) when 6 GPUs free.

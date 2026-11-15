@@ -1,13 +1,14 @@
 {
  "status": {
-  "time": "2026-11-15 02:59:58",
+  "time": "2026-11-15 03:27:33",
   "rank": 11.0,
   "rating": 1071.0,
   "bb100": -4.5,
   "matches": 290.0,
-  "deployment": "infer_496116c2999d"
+  "deployment": "infer_496116c2999d",
+  "site_unavailable": true
  },
- "new_matches": 14,
+ "new_matches": 0,
  "entries": {
   "base (infer_66b2ff75a081)": {
    "games": 40,

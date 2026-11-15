@@ -129,14 +129,37 @@ def analyze(files: list[Path]) -> dict:
     return {"entries": entries, "busts": busts, "weak_busts": len(weak), "total_busts": len(busts)}
 
 
+def last_status() -> dict:
+    hist = DATA / "arena_history.jsonl"
+    if hist.exists():
+        for line in reversed(hist.read_text().splitlines()):
+            try:
+                st = json.loads(line)
+            except ValueError:
+                continue
+            if st.get("deployment"):
+                return st
+    return {}
+
+
 def main() -> None:
-    new = fetch_new()
-    status = team_status()
+    try:
+        new = fetch_new()
+    except Exception as exc:  # noqa: BLE001 - the arena site can be down; keep going on local data
+        print(f"arena fetch failed: {exc}")
+        new = 0
+    try:
+        status = team_status()
+    except Exception:  # noqa: BLE001
+        status = {}
+    if not status.get("deployment"):  # site down (e.g. "database is unavailable"): keep the last known status
+        status = {**last_status(), "time": time.strftime("%Y-%m-%d %H:%M:%S"), "site_unavailable": True}
     summary = {"status": status, "new_matches": new, **analyze(list(MATCHES.glob("*.json")))}
     DATA.mkdir(parents=True, exist_ok=True)
     (DATA / "arena_summary.json").write_text(json.dumps(summary, indent=1))
-    with open(DATA / "arena_history.jsonl", "a") as f:
-        f.write(json.dumps(status) + "\n")
+    if not status.get("site_unavailable"):
+        with open(DATA / "arena_history.jsonl", "a") as f:
+            f.write(json.dumps(status) + "\n")
     if "--json" in sys.argv:
         print(json.dumps(summary, indent=1))
         return
