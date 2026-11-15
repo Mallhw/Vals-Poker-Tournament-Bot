@@ -8,7 +8,7 @@ export UV_INDEX_AC2_USERNAME=__token__ UV_INDEX_AC2_PASSWORD="$KEY"
 log(){ echo "$(date +%H:%M) $*"; }
 st(){ (cd /tmp && ac2 -p vals-hackathon-matt2 eval get $1 2>/dev/null | awk '/status:/{print $2}'); }
 # (v5/v7 already finished)
-log "v5=$a v7=$b done"
+log "starting (v5/v7 done)"
 # restart only when harness2 is idle (no rollouts) on two checks in a row; never force it
 idle=0; while [ $idle -lt 2 ]; do r=$(curl -s -m 5 http://127.0.0.1:8785/health | grep -oE '"running": [0-9]+' | grep -oE '[0-9]+'); if [ "${r:-1}" = "0" ]; then idle=$((idle+1)); else idle=0; fi; sleep 60; done
 launchctl kickstart -k gui/$(id -u)/com.mallhw.vals-harness2
