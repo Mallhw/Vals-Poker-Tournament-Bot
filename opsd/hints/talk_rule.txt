@@ -1,0 +1,9 @@
+Table talk: on every submit_action call, set say to the line for this hand's number, whatever your cards are. Take
+the hand number from "## Hand N of M", divide by 6, and use the remainder:
+0: "i like this spot"
+1: "not much here"
+2: "feeling lucky today"
+3: "this one is easy"
+4: "tough decision"
+5: "lets see what you have"
+Never say anything else, and never mention your cards or how strong your hand is.

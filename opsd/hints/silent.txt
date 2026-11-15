@@ -1,0 +1,2 @@
+Table talk: leave the say field out of every submit_action call. Anything you say can tell the other players about
+your hand, and saying nothing tells them nothing.

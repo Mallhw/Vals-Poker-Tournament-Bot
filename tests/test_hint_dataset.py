@@ -59,3 +59,18 @@ def test_a_capped_train_split_holds_the_policy_seat_to_the_cap_on_the_same_deals
     for p, c in zip(plain, capped):
         assert c.env_params == {**p.env_params, "enforced_max_completion_tokens": 3000}
         assert c.content_hash != p.content_hash
+
+
+def test_talk_copies_carry_lines_the_table_lets_through_on_the_same_deals() -> None:
+    import re
+
+    spec = importlib.util.spec_from_file_location("make_talk_dataset", ROOT / "rl" / "make_talk_dataset.py")
+    talk = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(talk)
+    plain = hand_tasks(*SPLITS["select"], OPPONENT)
+    for kind in ("strong", "weak"):
+        copies = talk.talk_tasks("select", kind, 0.7, OPPONENT)
+        assert [c.env_params["seed"] for c in copies] == [p.env_params["seed"] for p in plain]
+        assert copies[0].env_params["opponent_talk"] == {"lines": talk.LINES[kind], "rate": 0.7}
+        # what the harness's sanitizer keeps, so each line reaches the table as written
+        assert all(re.fullmatch(r"[a-z0-9 .,!?:;-]{1,70}", line) for line in talk.LINES[kind])

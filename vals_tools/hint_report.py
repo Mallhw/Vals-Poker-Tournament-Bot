@@ -9,7 +9,9 @@ seat's behavior:
 - failed decisions (format errors) and how many were replies cut at the token cap; output tokens per decision;
 - preflop: VPIP (voluntarily put chips in) and PFR (raised), per hand dealt;
 - facing a bet (something to call): how often it folds, calls or raises;
-- able to check: how often it bets instead.
+- able to check: how often it bets instead;
+- table talk: how often it talks itself, and how it answers bets after another player spoke this hand (t-fold,
+  t-call, t-raise), which is where scripted talk (rl/make_talk_dataset.py) would move it if talk moves it.
 
 And from AC2's scores, BB per hand and the paired difference from the `--base` label (default `plain`), deal by deal,
 with a 95% interval. Run it any time: an eval still running reports the hands played so far.
@@ -42,6 +44,15 @@ def policy_stats(logs: list[dict[str, Any]]) -> dict[str, Any]:
     ]
     facing = Counter(a["action"]["type"] for a in clean if a["call_amount"] > 0)
     free = Counter(a["action"]["type"] for a in clean if a["call_amount"] == 0)
+    # Facing a bet after someone else spoke this hand: where talk would move the decision, if it does.
+    after_talk = Counter(
+        a["action"]["type"]
+        for log in logs
+        for h in log["hands"]
+        for i, a in enumerate(h["actions"])
+        if a["model_response"].get("model_name") == POLICY and not a["model_response"].get("format_error")
+        and a["call_amount"] > 0 and any(b.get("say") and b["player"] != a["player"] for b in h["actions"][:i])
+    )
     share = lambda part, whole: round(part / whole, 3) if whole else None  # noqa: E731
     return {
         "games": len(logs),
@@ -58,6 +69,11 @@ def policy_stats(logs: list[dict[str, Any]]) -> dict[str, Any]:
         "facing_raise": share(facing["raise"] + facing["bet"], sum(facing.values())),
         "can_check": sum(free.values()),
         "bets_when_can_check": share(free["bet"] + free["raise"], sum(free.values())),
+        "talk_rate": share(sum(bool(a.get("say")) for a in decisions), len(decisions)),
+        "after_talk_facing": sum(after_talk.values()),
+        "after_talk_fold": share(after_talk["fold"], sum(after_talk.values())),
+        "after_talk_call": share(after_talk["call"], sum(after_talk.values())),
+        "after_talk_raise": share(after_talk["raise"] + after_talk["bet"], sum(after_talk.values())),
     }
 
 
@@ -82,6 +98,8 @@ def table(report: dict[str, dict[str, Any]]) -> str:
     columns = [("games", "games"), ("failed", "failed"), ("cut_at_cap", "cut"), ("tokens_median", "tok med"),
                ("tokens_p90", "tok p90"), ("vpip", "VPIP"), ("pfr", "PFR"), ("facing_fold", "fold"),
                ("facing_call", "call"), ("facing_raise", "raise"), ("bets_when_can_check", "bet/chk"),
+               ("talk_rate", "talks"), ("after_talk_facing", "n talk"), ("after_talk_fold", "t-fold"),
+               ("after_talk_call", "t-call"), ("after_talk_raise", "t-raise"),
                ("bb_per_hand", "BB/hand"), ("vs_base", "vs base (95%)")]
     rows = [[label] + [cell(r.get(key), key in PERCENT) for key, _ in columns] for label, r in report.items()]
     head = ["eval"] + [name for _, name in columns]
@@ -90,7 +108,8 @@ def table(report: dict[str, dict[str, Any]]) -> str:
     return "\n".join([fmt(head), *map(fmt, rows)])
 
 
-PERCENT = {"failed", "cut_at_cap", "vpip", "pfr", "facing_fold", "facing_call", "facing_raise", "bets_when_can_check"}
+PERCENT = {"failed", "cut_at_cap", "vpip", "pfr", "facing_fold", "facing_call", "facing_raise", "bets_when_can_check",
+           "talk_rate", "after_talk_fold", "after_talk_call", "after_talk_raise"}
 
 
 def cell(value: Any, percent: bool = False) -> str:

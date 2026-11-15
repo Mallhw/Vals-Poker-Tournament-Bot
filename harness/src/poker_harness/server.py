@@ -15,6 +15,10 @@ system prompt, as OPSD's teacher sees it, so a prompt can be tested before it is
 prompt states: their replies are requested with it and any longer reply is played as cut off (a format error, scored
 0), so training teaches a margin below the event's cap while the prompt stays the event's.
 
+`env_params.opponent_talk` (testing only), `{"lines": [...], "rate": 0.7}`, makes every opponent seat say one of
+`lines` on `rate` of its actions in place of its own talk (silent otherwise), drawn per seat and spot from the deal's
+seed: the talk carries nothing about their cards, so any change in the policy's play measures how much talk moves it.
+
 A server keeps its tables in memory, so scale out by sharding (`shard_router.py` sends every call for a rollout to
 the same server), not with `uvicorn --workers`.
 
@@ -244,6 +248,8 @@ def create_app(
             policy = {int(i) for i in params.get("policy_seats", range(seats))}
             hint = params.get("system_hint") or ""  # checked to be a string in `submit`
             enforced = int(params.get("enforced_max_completion_tokens") or 0) or None  # checked in `submit`
+            talk = params.get("opponent_talk") or {}  # checked in `submit`
+            talk_lines, talk_rate = tuple(talk.get("lines") or ()), float(talk.get("rate", 0.0))
             if params.get("opponent_model") and not opponent_key and len(policy) < seats:
                 raise RuntimeError("opponent seats need POKER_OPPONENT_API_KEY or AC2_API_KEY in the harness environment")
             decision_timeout = float(params.get("decision_timeout_seconds", DEFAULT_DECISION_TIMEOUT_SECONDS))
@@ -283,6 +289,9 @@ def create_app(
                         cleanup_complete=policy_cleanup if i in policy else opponent_cleanup,
                         system_hint=hint if i in policy else "",
                         enforced_cap=enforced if i in policy else None,
+                        talk_lines=() if i in policy else talk_lines,
+                        talk_rate=talk_rate,
+                        talk_seed=int(params["seed"]),
                     )
                     for i in range(seats)
                 ]
@@ -330,6 +339,19 @@ def create_app(
             raise HTTPException(status_code=422, detail="env_params.seed is required")
         if not isinstance(params.get("system_hint", ""), str):
             raise HTTPException(status_code=422, detail="env_params.system_hint must be a string")
+        talk = params.get("opponent_talk")
+        if talk is not None and not (
+            isinstance(talk, dict)
+            and isinstance(talk.get("lines"), list)
+            and talk["lines"]
+            and all(isinstance(line, str) and line for line in talk["lines"])
+            and isinstance(talk.get("rate"), int | float)
+            and not isinstance(talk.get("rate"), bool)
+            and 0 <= talk["rate"] <= 1
+        ):
+            raise HTTPException(
+                status_code=422, detail='env_params.opponent_talk must be {"lines": [non-empty strings], "rate": 0-1}'
+            )
         enforced = params.get("enforced_max_completion_tokens")
         if enforced is not None and (not isinstance(enforced, int) or isinstance(enforced, bool) or enforced < 1):
             raise HTTPException(status_code=422, detail="env_params.enforced_max_completion_tokens must be a positive integer")

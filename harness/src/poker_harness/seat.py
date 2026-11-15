@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import random
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
@@ -36,6 +37,7 @@ from .prompts import (
     hand_over_lines,
     parse_decision,
     parse_tool_call,
+    sanitize_talk,
     scratchpad_block,
     scratchpad_rejection,
     system_prompt,
@@ -113,6 +115,11 @@ class ModelSeat:
     cleanup_complete: Complete | None = None  # the after-hand turn's caller (its own token cap); default `complete`
     system_hint: str = ""  # a hint under test, after the system prompt (`HINT_SEPARATOR`); "" keeps the official one
     enforced_cap: int | None = None  # training only: a tighter output cap than the prompt states; None keeps the table's
+    # Testing only (`env_params.opponent_talk`): scripted table talk said in place of the seat's own, `talk_rate` of the
+    # time, picked by a seeded draw per seat and spot so every replay of a deal hears the same lines in the same spots.
+    talk_lines: tuple[str, ...] = ()
+    talk_rate: float = 0.0
+    talk_seed: int = 0
     turn: int = field(default=0, init=False)
     messages: list[Message] = field(default_factory=list, init=False)
     _hand: int | None = field(default=None, init=False)
@@ -250,6 +257,11 @@ class ModelSeat:
             if self.rules.strict_actions:  # the official rules' forced default action
                 response.update(afk=True, afk_reason=error)
             decision = Decision("check" if ctx.legal.can_check else "fold")
+        if self.talk_lines:  # scripted talk replaces whatever the seat said, uncorrelated with its cards
+            draw = random.Random(f"{self.talk_seed}:{self.name}:{ctx.hand_number}:{len(ctx.hand_actions)}")
+            line = draw.choice(self.talk_lines) if draw.random() < self.talk_rate else ""
+            response["say"] = sanitize_talk(line)
+            response.pop("say_raw", None)
         if self.rules.scratchpad:  # the model's own text may quote its scratchpad: keep it in the private section
             response["private"] = {k: response.pop(k) for k in PRIVATE_RESPONSE_KEYS if k in response}
         decision.model_response = response

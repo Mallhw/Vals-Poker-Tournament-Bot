@@ -77,6 +77,7 @@ model.
 | `ev_labels`, `ev_runouts` | false, 32 | All-in EV labels for grading |
 | `table_talk` | false | Optional sanitized `say` line |
 | `enforced_max_completion_tokens` | none | Training only: a tighter per-decision output cap for the policy seats than the prompt states (it still says the table's cap). Longer replies count as cut off and score 0 |
+| `opponent_talk` | none | Testing only: `{"lines": [...], "rate": 0.7}`. Opponent seats say one of `lines` on `rate` of their actions instead of their own talk (silent otherwise), drawn from the deal's seed, so talk is unrelated to their cards |
 | `system_hint` | none | Testing only: text appended to the policy seats' system prompt, as OPSD's teacher sees it (opponents never see it; the arena never sets it). The grader reports its hash as `hint` |
 
 ## Table talk

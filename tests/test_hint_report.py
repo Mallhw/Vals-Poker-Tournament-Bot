@@ -50,3 +50,18 @@ def test_ids_file_and_table(tmp_path) -> None:
               "calling": {"games": 9, "vs_base": {"diff": 0.42, "ci95": 0.8, "paired_hands": 9}}}
     text = hr.table(report)
     assert "50%" in text and "-0.31" in text and "+0.42 ±0.80 (n=9)" in text
+
+
+def test_talk_rate_and_answers_to_bets_after_talk() -> None:
+    def say(a: dict, line: str) -> dict:
+        return a | {"say": line}
+
+    logs = [
+        game([say(act("preflop", "raise", 4, OTHER, "seat1"), "i have the nuts, just fold"), act("preflop", "fold", 4)]),
+        game([act("preflop", "raise", 4, OTHER, "seat1"), act("preflop", "call", 4)]),  # nobody spoke: not counted
+        game([say(act("preflop", "raise", 2), "nice hand"), say(act("flop", "bet", 6, OTHER, "seat1"), "bluff"),
+              act("flop", "call", 6)]),
+    ]
+    s = hr.policy_stats(logs)
+    assert s["talk_rate"] == 0.25 and s["after_talk_facing"] == 2
+    assert s["after_talk_fold"] == 0.5 and s["after_talk_call"] == 0.5 and s["after_talk_raise"] == 0.0
