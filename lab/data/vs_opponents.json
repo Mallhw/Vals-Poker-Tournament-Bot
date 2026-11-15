@@ -1,142 +1,178 @@
 {
  "entry": null,
- "since": "2026-11-15T07:50",
- "games": 105,
+ "since": null,
+ "games": 264,
  "opponents": {
-  "Chatty Carlos": {
-   "pots": 30,
-   "net_bb": -188.0,
-   "net_bb_per_pot": -6.27,
-   "we_fold_to_them": 16,
-   "they_fold_to_us": 4,
-   "showdowns": 6,
-   "sd_won": 2
-  },
   "Accord": {
-   "pots": 20,
-   "net_bb": -141.0,
-   "net_bb_per_pot": -7.05,
-   "we_fold_to_them": 12,
-   "they_fold_to_us": 2,
-   "showdowns": 2,
-   "sd_won": 2
+   "pots": 141,
+   "net_bb": -561.0,
+   "net_bb_per_pot": -3.98,
+   "we_fold_to_them": 63,
+   "they_fold_to_us": 25,
+   "showdowns": 22,
+   "sd_won": 12
   },
-  "Friends": {
-   "pots": 25,
-   "net_bb": -124.0,
-   "net_bb_per_pot": -4.96,
-   "we_fold_to_them": 11,
-   "they_fold_to_us": 7,
-   "showdowns": 3,
-   "sd_won": 2
-  },
-  "Vals": {
-   "pots": 22,
-   "net_bb": -108.5,
-   "net_bb_per_pot": -4.93,
-   "we_fold_to_them": 12,
-   "they_fold_to_us": 3,
-   "showdowns": 3,
-   "sd_won": 0
+  "The Evaluators": {
+   "pots": 222,
+   "net_bb": -324.0,
+   "net_bb_per_pot": -1.46,
+   "we_fold_to_them": 62,
+   "they_fold_to_us": 51,
+   "showdowns": 46,
+   "sd_won": 16
   },
   "\ud83e\udd75\ud83e\udd75\ud83e\udd75": {
-   "pots": 10,
-   "net_bb": -95.5,
-   "net_bb_per_pot": -9.55,
-   "we_fold_to_them": 3,
-   "they_fold_to_us": 3,
-   "showdowns": 2,
-   "sd_won": 1
+   "pots": 57,
+   "net_bb": -280.5,
+   "net_bb_per_pot": -4.92,
+   "we_fold_to_them": 16,
+   "they_fold_to_us": 19,
+   "showdowns": 10,
+   "sd_won": 5
   },
   "Professor Pete": {
-   "pots": 21,
-   "net_bb": -70.0,
-   "net_bb_per_pot": -3.33,
-   "we_fold_to_them": 7,
-   "they_fold_to_us": 8,
-   "showdowns": 2,
-   "sd_won": 0
+   "pots": 75,
+   "net_bb": -167.0,
+   "net_bb_per_pot": -2.23,
+   "we_fold_to_them": 25,
+   "they_fold_to_us": 19,
+   "showdowns": 11,
+   "sd_won": 2
   },
   "Bob the Buster": {
-   "pots": 19,
-   "net_bb": -60.0,
-   "net_bb_per_pot": -3.16,
-   "we_fold_to_them": 5,
+   "pots": 48,
+   "net_bb": -121.0,
+   "net_bb_per_pot": -2.52,
+   "we_fold_to_them": 9,
    "they_fold_to_us": 0,
-   "showdowns": 14,
-   "sd_won": 8
+   "showdowns": 39,
+   "sd_won": 20
+  },
+  "Chatty Carlos": {
+   "pots": 116,
+   "net_bb": -97.5,
+   "net_bb_per_pot": -0.84,
+   "we_fold_to_them": 49,
+   "they_fold_to_us": 21,
+   "showdowns": 17,
+   "sd_won": 6
+  },
+  "Friends": {
+   "pots": 165,
+   "net_bb": -51.0,
+   "net_bb_per_pot": -0.31,
+   "we_fold_to_them": 51,
+   "they_fold_to_us": 39,
+   "showdowns": 28,
+   "sd_won": 13
+  },
+  "Tilted Tim": {
+   "pots": 70,
+   "net_bb": -49.0,
+   "net_bb_per_pot": -0.7,
+   "we_fold_to_them": 26,
+   "they_fold_to_us": 20,
+   "showdowns": 9,
+   "sd_won": 3
+  },
+  "Vals": {
+   "pots": 61,
+   "net_bb": -35.0,
+   "net_bb_per_pot": -0.57,
+   "we_fold_to_them": 26,
+   "they_fold_to_us": 13,
+   "showdowns": 7,
+   "sd_won": 3
+  },
+  "Anxious Alice": {
+   "pots": 15,
+   "net_bb": -34.5,
+   "net_bb_per_pot": -2.3,
+   "we_fold_to_them": 11,
+   "they_fold_to_us": 2,
+   "showdowns": 1,
+   "sd_won": 0
+  },
+  "House nit": {
+   "pots": 2,
+   "net_bb": -11.0,
+   "net_bb_per_pot": -5.5,
+   "we_fold_to_them": 2,
+   "they_fold_to_us": 0,
+   "showdowns": 0,
+   "sd_won": 0
+  },
+  "House maniac": {
+   "pots": 1,
+   "net_bb": -7.0,
+   "net_bb_per_pot": -7.0,
+   "we_fold_to_them": 1,
+   "they_fold_to_us": 0,
+   "showdowns": 0,
+   "sd_won": 0
   },
   "Lincoln": {
-   "pots": 33,
-   "net_bb": 21.0,
-   "net_bb_per_pot": 0.64,
-   "we_fold_to_them": 10,
+   "pots": 34,
+   "net_bb": 20.0,
+   "net_bb_per_pot": 0.59,
+   "we_fold_to_them": 11,
    "they_fold_to_us": 12,
    "showdowns": 9,
    "sd_won": 4
   },
-  "Anxious Alice": {
-   "pots": 2,
-   "net_bb": 23.5,
-   "net_bb_per_pot": 11.75,
+  "House random": {
+   "pots": 6,
+   "net_bb": 62.5,
+   "net_bb_per_pot": 10.42,
    "we_fold_to_them": 1,
-   "they_fold_to_us": 1,
-   "showdowns": 0,
-   "sd_won": 0
-  },
-  "Tilted Tim": {
-   "pots": 17,
-   "net_bb": 73.5,
-   "net_bb_per_pot": 4.32,
-   "we_fold_to_them": 6,
-   "they_fold_to_us": 5,
-   "showdowns": 4,
+   "they_fold_to_us": 2,
+   "showdowns": 1,
    "sd_won": 1
   },
-  "Spark": {
-   "pots": 33,
-   "net_bb": 107.5,
-   "net_bb_per_pot": 3.26,
-   "we_fold_to_them": 11,
-   "they_fold_to_us": 6,
-   "showdowns": 6,
-   "sd_won": 5
+  "House calling station": {
+   "pots": 7,
+   "net_bb": 76.0,
+   "net_bb_per_pot": 10.86,
+   "we_fold_to_them": 0,
+   "they_fold_to_us": 0,
+   "showdowns": 1,
+   "sd_won": 1
   },
   "LoRA": {
-   "pots": 65,
-   "net_bb": 132.0,
-   "net_bb_per_pot": 2.03,
-   "we_fold_to_them": 18,
-   "they_fold_to_us": 29,
-   "showdowns": 6,
-   "sd_won": 3
-  },
-  "The Evaluators": {
-   "pots": 62,
-   "net_bb": 218.0,
-   "net_bb_per_pot": 3.52,
-   "we_fold_to_them": 11,
-   "they_fold_to_us": 17,
-   "showdowns": 16,
-   "sd_won": 5
-  },
-  "Stubborn Stan": {
-   "pots": 41,
-   "net_bb": 400.0,
-   "net_bb_per_pot": 9.76,
-   "we_fold_to_them": 2,
-   "they_fold_to_us": 2,
-   "showdowns": 11,
-   "sd_won": 5
+   "pots": 236,
+   "net_bb": 273.0,
+   "net_bb_per_pot": 1.16,
+   "we_fold_to_them": 80,
+   "they_fold_to_us": 60,
+   "showdowns": 34,
+   "sd_won": 18
   },
   "Martingale": {
-   "pots": 70,
-   "net_bb": 400.0,
-   "net_bb_per_pot": 5.71,
-   "we_fold_to_them": 16,
-   "they_fold_to_us": 34,
-   "showdowns": 9,
-   "sd_won": 2
+   "pots": 299,
+   "net_bb": 524.5,
+   "net_bb_per_pot": 1.75,
+   "we_fold_to_them": 82,
+   "they_fold_to_us": 107,
+   "showdowns": 47,
+   "sd_won": 23
+  },
+  "Spark": {
+   "pots": 218,
+   "net_bb": 602.5,
+   "net_bb_per_pot": 2.76,
+   "we_fold_to_them": 77,
+   "they_fold_to_us": 58,
+   "showdowns": 28,
+   "sd_won": 17
+  },
+  "Stubborn Stan": {
+   "pots": 128,
+   "net_bb": 1224.0,
+   "net_bb_per_pot": 9.56,
+   "we_fold_to_them": 3,
+   "they_fold_to_us": 7,
+   "showdowns": 32,
+   "sd_won": 14
   }
  }
 }

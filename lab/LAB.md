@@ -111,7 +111,7 @@ ENTRY CAN CHANGE ANY HOUR: before deleting or evaluating ANY deployment, read th
 both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly one BEST CHECKED CANDIDATE line.
 
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
-1. ANALYZE: `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
+1. ANALYZE: `python3 -I lab/scouting.py` (per-opponent type + how to beat it; worst matchups first), `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
    --entry <live submission name>` (chips/folds/showdowns vs each opponent), bust hands of the live entry, and the sims
    (lab/leaks.py on sh-select evals; lab/games.py on games12 evals: place, chips, busts, notes accuracy).
 2. OPINION + HYPOTHESES: write 2-3 lines in "Iteration log" below: what is the live model doing wrong, ranked by
@@ -142,6 +142,11 @@ both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly 
   `rl/train.py --prefix pokerbots-rl2 --from-checkpoint <v6 ckpt if it beats v4, else ckpt_db759b762b5d>
   --steps 30 --no-eval --concurrency 16 --checkpoint-every 10`. Free GPUs for it: v6 training ends (4) + delete
   rl-s40 after its eval + rl-s10 (butter, retired; NOT live — re-check arena status first).
+
+- 02:40: TALK experiments (user asked): harness2 `policy_talk` injects table talk on the policy's actions; variants
+  games12-chaos (random trash talk/nonsense, 80%) and games12-bluff-talk (strength claims, 100%) launch automatically
+  after v5+v7 finish (pipeline_talk.sh). Judge by games.py (opp fold after talk vs silent, place, chips). If it helps,
+  train the model to talk (OPSD with a talk hint); otherwise drop. SCOUTING: lab/scouting.py each check-in.
 
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt

@@ -73,6 +73,16 @@ def main() -> None:
     summary.update({"experiments": exps[-60:], "replays": replays})
     (out / "summary.json").write_text(json.dumps(summary, indent=1))
     (out / "history.json").write_text(json.dumps(history))
+    sc = DATA / "scouting.html"
+    if sc.exists():
+        (SITE / "scouting.html").write_text(sc.read_text())
+    idx = SITE / "index.html"
+    t = idx.read_text()
+    if "scouting.html" not in t:
+        t = t.replace("Vals × Applied Compute poker arena: 6-max no-limit hold'em, 30-hand elimination games.",
+                      "Vals × Applied Compute poker arena: 6-max no-limit hold'em, 30-hand elimination games. "
+                      "<a href=\"scouting.html\">Scouting reports on every opponent →</a>")
+        idx.write_text(t)
     git("add", "-A")
     if git("status", "--porcelain").strip():
         subprocess.run(["git", "-C", str(SITE), "-c", "user.name=Mallhw",
