@@ -118,5 +118,41 @@ HINTS = {
    showed 33, Q7o = frequent shover"). Track your stack and hands left.
 
 7. Table talk: say nothing about your cards.""",
+    "v6": """Coach's notes for this game. Follow them.
+
+1. Read the spot privately first. In your reasoning (never in your reply) note: my hand, board, what I have, pot,
+   amount to call, my stack, and "busted if I lose: yes/no". If the amount to call is more than 0, checking is not
+   legal: choose fold, call or raise. Keep reasoning short. Your reply is exactly one submit_action call. A bet or
+   raise needs an amount (the total you bet to); fold, check and call take none.
+
+2. Survive. Busting ranks you below every player still seated, and folding every hand costs only ~15 chips a game,
+   so a short stack is never desperate. Any call or shove that can bust you needs about 15-20 points MORE equity
+   than the pot odds say. In the last few hands, if you are not last in chips, take no marginal all-ins.
+
+3. Facing an all-in or a raise of 25 BB+ before the flop (you would put in 40%+ of your stack):
+   - unknown or tight player (most bots that shove big have it): call with AA, KK only.
+   - a player your notes show shoving very often (e.g. 3+ shoves, showed weak hands): 99+, AJs+, AQo+.
+   - someone has already called the shove: KK+ only.
+   - short (20-40 BB): QQ+, AK vs tight; TT+, AQ+ vs a frequent shover.
+   Offsuit junk (T9o, J8o, Q8o, K6o, 96o) and weak aces never call off, whoever shoved.
+
+4. Before the flop raise or fold; flat-call rarely, and NEVER limp (just call the big blind when nobody has raised):
+   raise it or fold it. Open to 2.5 BB: first seat 66+, ATs+, KJs+, QJs, AQo+;
+   middle seat add 55, A9s, A5s, KTs, QTs, JTs, AJo, KQo. When it is folded to you in the cutoff, button or small
+   blind, RAISE a wide range: any pair, any ace, suited kings and queens, suited connectors 54s+, KTo+, QJo, JTo
+   (button: also K9o, Q9o, T9o). Most bots fold their blinds too often, so these steals win chips without risking
+   your stack. Facing a raise: 3-bet QQ+, AK; call JJ-77, AQs, AJs, KQs only in position; fold the rest. Facing a
+   3-bet: continue with QQ+, AK. Don't open-shove 20 BB+.
+
+5. After the flop, stop paying off. One pair facing big bets on turn and river, a check-raise, or any river raise:
+   fold. Two pair or a set facing a river raise when the board has four to a straight, four of a suit, or a pair:
+   call small at most, never re-raise. Other bots rarely bluff big: treat their big bets and raises as strong.
+   Value-bet your strong hands bigger (2/3 to full pot) on every street; continuation-bet small on dry flops after you raised; bluff rarely, they call too much.
+
+6. Opponent tracking (scratchpad, every hand): keep exact running counts per seat, one line each: 'seatN: H hands, played P, raised R, all-ins A, river bets B, showed [cards]'. Update the numbers every hand; use the space, you have 5000 characters. Label a seat only with evidence: shover = 2+ preflop all-ins; nit = played under 1 in 8 hands after 8+ hands; maniac = raised 3+ of their first 8 hands; calling-station = calls often but almost never bets or raises; tight-aggressive = plays few but always raises. Counter-play: shover -> call all-ins with 99+, AJs+, AQo+, fold the rest; nit -> steal their blinds, fold to their bets and raises without a premium hand; maniac -> call and re-raise wider, let them bluff, their big river bets are often bluffs; calling-station -> bet big for value every street, never bluff; tight-aggressive -> respect their raises, steal when they are not in the pot. Most AI players here fold to a raise 70-90% of the time: when it is folded to you in the cutoff, button or small blind, raise more often.
+
+7. End of game: final rank is by chips among players still seated, and every busted player ranks below them. In the last 6 hands: if you are not the shortest stack, avoid all-ins without a premium hand; if you are the chip leader, protect the lead; if you are short but safe, pick up chips with raises when it is folded to you rather than calling all-ins.
+
+8. Table talk: say nothing about your cards.""",
 }
-HINT = HINTS["v4"]
+HINT = HINTS["v6"]

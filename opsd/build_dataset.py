@@ -40,7 +40,7 @@ SCRATCHPAD = "update_scratchpad"
 TOOLS = [Tool.model_validate(tool).model_dump() for tool in json.loads((Path(__file__).parent / "tools.json").read_text())]
 
 
-def decision_tasks(trace: dict, hint: str, max_tokens: int) -> tuple[list[HintedTask], dict[str, int]]:
+def decision_tasks(trace: dict, hint: str, max_tokens: int, include_cleanup: bool = False) -> tuple[list[HintedTask], dict[str, int]]:
     """One task per clean policy decision in a trace, with counts of what was kept and why the rest was skipped."""
     spans = sorted(
         (s for s in trace["spans"] if s["name"] == "get_completion" and s["status"] == "OK"),
@@ -52,10 +52,11 @@ def decision_tasks(trace: dict, hint: str, max_tokens: int) -> tuple[list[Hinted
         prompt = ITEMS.validate_json(span["input"])
         reply = ITEMS.validate_json(span["output"])
         calls = [item for item in reply if isinstance(item, FunctionCall)]
-        if calls and calls[0].name == SCRATCHPAD:  # the after-hand cleanup turn, not a poker decision
+        if calls and calls[0].name == SCRATCHPAD:  # the after-hand cleanup turn (where the notes are written)
             stats["cleanup"] += 1
-            continue
-        if len(calls) != 1 or calls[0].name != SUBMIT:
+            if not include_cleanup or len(calls) != 1:
+                continue
+        elif len(calls) != 1 or calls[0].name != SUBMIT:
             stats["format"] += 1
             continue
         if int(span.get("tokens_out") or 0) >= max_tokens:
@@ -85,17 +86,20 @@ def main() -> None:
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--max-tokens", type=int, default=5_000, help="replies this long count as truncated (the event's cap)")
     parser.add_argument("--traces", type=Path, help="reuse a downloaded trace export")
+    parser.add_argument("--traces-project", help="project the eval ran in, if not --project (where the dataset goes)")
+    parser.add_argument("--include-cleanup", action="store_true",
+                        help="also distill the after-hand update_scratchpad turns (for note-taking hints)")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     path = args.traces or Path(f"traces/{args.eval}.jsonl")
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-        Client(project=args.project).traces.download(args.eval, path)
+        Client(project=args.traces_project or args.project).traces.download(args.eval, path)
     tasks, totals = [], {"decisions": 0, "kept": 0, "cleanup": 0, "format": 0, "truncated": 0}
     with path.open() as lines:
         for line in lines:
-            built, stats = decision_tasks(json.loads(line), HINT, args.max_tokens)
+            built, stats = decision_tasks(json.loads(line), HINT, args.max_tokens, args.include_cleanup)
             tasks.extend(built)
             totals = {k: totals[k] + stats[k] for k in totals}
     random.Random(0).shuffle(tasks)

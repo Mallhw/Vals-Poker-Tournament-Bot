@@ -103,6 +103,13 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
+## Overnight chain (02:15)
+- OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
+  not available on the OPSD cluster). lab/pipeline_v6.sh (log ~/Worker/logs/pipeline_v6.log) then deploys v6-s20,
+  play_local, evals sh-select (compare rl-s10 9.397) and games12-control in matt2 (compare control v4 2.96 place).
+- RL finished (40 steps, reward plateau ~9.5-9.8). rl-s40 deployed + sh-select eval to compare with rl-s10.
+- Decide in the morning: best of rl-s10 (live "butter"), rl-s40, v6-s20 by sh-select score/busts + games12 place.
+
 ## Candidate to submit
 **LIVE since ~01:55: rl-s10 (infer_96d341a589e2) submitted as "butter". NEVER delete or eval it.** Fallback:
 opsd4-s30 (v4, infer_496116c2999d; 67 games: place 3.46, bust 10%, EV +30 bb/100) stays deployed.
