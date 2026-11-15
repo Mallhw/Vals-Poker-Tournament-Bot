@@ -184,3 +184,20 @@ aggressive or tricky players who fight back against steals. Its busts come early
    costs nothing), and practise spots against re-stealers (🥵🥵🥵, LoRA, Spark), e.g. 4-bet or fold, not call.
 3. Retire v10-s9 as a candidate: everything the talk model does differently (steal, 3-bet, defend) is what v10-s9
    is missing.
+
+## 9. Update 14:30 PT: final round s20 collapsed; talk round s20 is back
+
+final round s20 (small-pot reward) after 60 games: mean place **3.78**, 15 last places, but only 2 busts.
+
+| final round s20 | games | mean place | last places | busts | net BB/game | VPIP / PFR | failed moves |
+|---|---|---|---|---|---|---|---|
+| first 27 (12:42-13:12) | 27 | 3.04 | 3 | 0 | +25.3 | 20.9% / 16.9% | 0.7% |
+| next 33 (13:13-13:47) | 33 | **4.39** | **12** | 2 | -13.7 | 20.5% / 16.7% | 0.6% |
+
+Same style, same failure rate, similar opponents. 10 of the 12 late last places were **fades, not busts**: the
+small-pot reward seems to teach it to avoid big pots, so when it falls behind it never wins a big pot back. The
+early 3.04 was probably partly luck (it also busted 0 times in 27 games). Team rating fell 1191 -> 1059 (#2 -> #12).
+
+The live entry is back to talk round s20 (16 more games, mean place 3.06; 92 total at ~2.95). **Keep it.**
+For the next round: train from talk round s20, and don't reward small pots; reward finishing position (e.g. our
+`bust_penalty` plus a penalty for ending as the shortest stack).
