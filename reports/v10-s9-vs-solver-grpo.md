@@ -142,3 +142,45 @@ no limp-calls, no multiway all-ins).
 ---
 *Method: `lab/compare.py` on the `matt-project` branch (reads the public match JSONs). Bust hands from the match
 logs. Opponent nets split each pot's result evenly among the opponents who put chips in.*
+
+---
+
+## 8. Update 13:30 PT: the talk and final-round models (team now #2, rating 1191)
+
+| | **talk round s20** (any-talk penalty) | **final round s20** (small-pot reward, live) | solver-GRPO r4 s10 | v10-s9 |
+|---|---|---|---|---|
+| Games | 76 | 27 | 76 | 38 |
+| **Mean place** | **2.93** | 3.19 | 3.41 | 3.39 |
+| Win / top-2 / last | **26%** / 42% / **9%** | 26% / **44%** / 15% | 18% / 33% / 17% | 16% / 26% / 16% |
+| Bust rate | 5.3% | **3.7%** | 10.5% | 5.3% |
+| EV bb/100 | +28.7 | **+67.4** | +17.0 | -2.1 |
+| VPIP / PFR | 27.5% / **21.2%** | 21.0% / 16.7% | 21.4% / 10.9% | 10.8% / 9.7% |
+| Limps/cold calls (VPIP−PFR) | **6.3%** | 4.3% | 10.5% | 1.1% |
+| 3-bet facing a raise | **8.5%** | 6.8% | 3.9% | 2.5% |
+| Fold to a raise | 78% | 85% | 82% | 96% |
+| Steal when folded to (CO/BTN/SB) | **47%** | 32% | 23% | 20% |
+| Flop c-bet | 74% | 64% | 63% | 86% |
+| Won at showdown | 66% | **77%** | 68% | 50% |
+| Bob all-ins called / faced | 6/29 (+191) | 3/16 (+189) | 15/63 (+1,426) | 0/16 |
+| Failed moves | 1.2% | 0.7% | 4.6% | 1.6% |
+
+**Why the talk model is the best entry so far:** it plays the "Accord style" (the strongest LLM team) that we
+tried and failed to get from prompting alone (v8): raise-first instead of limping, 3-bets twice as often as
+solver-GRPO, steals the blinds almost half the time, and keeps pressure with c-bets. It finishes last only 9% of
+the time, which fixes the fading leak from section 5: by stealing blinds it never drifts to the shortest stack.
+And it calls Bob far more selectively than solver-GRPO (6 of 29 vs 15 of 63), so it busts half as often.
+
+**It beats** Lincoln (+222 BB), Accord (+212), Martingale (+133), Stan (+91), Bob (+80).
+**It loses to** 🥵🥵🥵 (-141), LoRA (-87), Spark (-55), Chatty Carlos (-50), Professor Pete (-47); these are
+aggressive or tricky players who fight back against steals. Its busts come early (average hand 7.5 of 30).
+
+**final round s20** is tighter (VPIP 21%) and wins more of its showdowns (77%). Early numbers are excellent, but
+27 games is too few to say it beats the talk model (place 95% interval ±0.6).
+
+**Suggestions for the next round:**
+1. Keep the talk-round s20 deployment (`infer_a5aaffeb4304`) as the fallback; don't delete it. If final round s20
+   is above ~3.2 mean place after 40+ games, switch back.
+2. Next training round from the talk model: add a penalty for early busts (its busts come at hand ~7, when a fold
+   costs nothing), and practise spots against re-stealers (🥵🥵🥵, LoRA, Spark), e.g. 4-bet or fold, not call.
+3. Retire v10-s9 as a candidate: everything the talk model does differently (steal, 3-bet, defend) is what v10-s9
+   is missing.
