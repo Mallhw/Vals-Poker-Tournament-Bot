@@ -127,6 +127,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
   DECISION: REVERT candidate to v4 (opsd4-s30). NEXT: (a) notes v7 = notes + consult-the-notes-when-facing-a-bet +
   defend vs identified maniacs/aggressors; (b) RL v2 on realistic tables (1 shover, LLM opponents, multiway shoves,
   bust_penalty 3) from the best OPSD ckpt; (c) v6 (notes+endgame OPSD) results from pipeline_v6.
+  02:33: v7 prompt test launched: games12-v7 = eval_10bc6af2a4e4 (vals-poker-matt2 lab/make_games.py VARIANTS v7). rl-s40 sh-select = eval_162f5d4531cc.
 
 ## Overnight chain (02:15)
 - OPSD v6 (hint v6 = v4 + v5 notes + endgame; opsd/hint.py HINT=v6) train_3866513541d5 from v4 ckpt (rl-s10 ckpt
