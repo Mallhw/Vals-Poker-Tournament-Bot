@@ -29,7 +29,7 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - BEFORE DELETING ANY DEPLOYMENT, check the "Deployments in use" list below: evals call deployments by name and
   the CLI can't show which eval uses which. 01:30: deleting v4s30-eval broke the 5 feature evals for ~15 min
   (fixed by redeploying the same name; lab/games.py drops games with relay/HTTP errors).
-- Deployments in use (keep updated): v10-s9 = LIVE arena entry ("Alea iacta est", since 08:18 Nov 15); opsd4-s30 = previous entry/fallback; rl-s10 = older entry ("butter"); base = opponent for sh/games12 datasets;
+- Deployments in use (keep updated; v10-s19 deleted 08:35): v10-s9 = LIVE arena entry ("Alea iacta est", since 08:18 Nov 15); opsd4-s30 = previous entry/fallback; rl-s10 = older entry ("butter"); base = opponent for sh/games12 datasets;
   v4s30-eval (infer_ac58d18d0a7d) = policy for games12-* feature evals (until they finish); rl-s10 = eval_ecbb6ba6dfb7.
 
 ## Tools (run from ~/Worker/projects/vals-poker-matt)
@@ -243,3 +243,6 @@ Submission name for every model: **Alea iacta est** (user's request).
 490 ranked matches. v4 (infer_496116c2999d) total as Alea iacta est: 203 games, place 3.34, bust 3%, EV +7.7.
 Fallback = opsd4-s30. v10-s19 evals running: sh-select eval_07d2401a69d8, games12-control eval_db4368501a27.
 08:24: RL v3 = GRPO from v10-s9 (ckpt_0a19c764c8d4) on pokerbots-rl2, train_29d356cee24f (preemptible: SDK rejects preemptible=False at launch; if stopped -> `ac2 train resume <id> --non-preemptible`). Auto: pipeline_rl3.sh -> pipeline_ckpt.sh -> rl3-s30 + evals. Goal: more chips (v10 VPIP 8%) at v10 survival.
+08:35 v10-s19 RESULT -> DROP, keep v10-s9: sh-select score 9.069 (v10-s9 9.106), busts 2.0/100 (0.6), junk call-offs 1.2 (0.4),
+fmt err 3.7% (3.4%); games12 paired 36: chips 199 vs 201, busts 0 vs 1, place 2.94 vs 3.00, fallbacks 2.9% vs 1.1%.
+More OPSD steps on v10 = no gain. Deleted v10-s19 deployment (freed GPU for RL v3 train_29d356cee24f).
