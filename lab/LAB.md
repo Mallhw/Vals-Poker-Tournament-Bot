@@ -103,6 +103,13 @@ Owner: Matt. Run autonomously overnight 2026-11-14/15 by Claude (hourly check-in
 - Token-cap forced folds are rare in the arena (v4 s29: 0.28% of decisions; base ~0.5%); ~2.2% on shover tables.
 - v4 s29 full sh-select benchmark (copy, 16 parallel): eval_44490d61c2c5.
 
+## AUTO-SUBMIT (since 02:35)
+A separate Chrome-enabled session ("chrome browser tools check") runs at :13 every hour: if "BEST CHECKED CANDIDATE"
+differs from the live arena entry, it submits it as "Alea iacta est" and appends a SUBMITTED line here. So the LIVE
+ENTRY CAN CHANGE ANY HOUR: before deleting or evaluating ANY deployment, read the live one with
+`python3 -I -c "import sys; sys.path.insert(0,'lab'); import arena; print(arena.team_status()['deployment'])"` and treat
+both the live entry and the BEST CHECKED CANDIDATE as untouchable. Keep exactly one BEST CHECKED CANDIDATE line.
+
 ## ITERATION PROTOCOL (user, 02:30 Nov 15 — run every check-in, no human in loop)
 1. ANALYZE: `python3 -I lab/arena.py` (per-entry: place, busts, EV, VPIP/PFR, fallbacks), `python3 -I lab/vs_opponents.py
    --entry <live submission name>` (chips/folds/showdowns vs each opponent), bust hands of the live entry, and the sims
