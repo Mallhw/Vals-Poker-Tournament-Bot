@@ -12,6 +12,7 @@ Train Qwen3.6-35B-A3B to play 6-player poker, then enter it in the arena.
 |---|---|
 | `harness/` | Poker server that plays the games and scores them. Runs on your machine. |
 | `rl/` | Makes the datasets and starts training. |
+| `opsd/` | Teaches the model a written strategy hint (`hint.py`) without needing it in the prompt. |
 | `vals_tools/` | Deploy a model, evaluate it, check your setup. |
 | `src/pokerbots/` | Empty on purpose (AC2 needs it). |
 
@@ -45,6 +46,19 @@ Check it: `uv run python -m vals_tools.doctor --datasets --harness http://127.0.
 uv run python rl/train.py --steps 5     # quick test first
 uv run python rl/train.py               # real run
 ac2 train checkpoints <train_id>        # list saved checkpoints
+```
+
+## Teach it the strategy hint (OPSD)
+`opsd/hint.py` holds strategy notes aimed at the bot's arena leaks (busting, calling too much, loose early opens).
+Try it locally first (any OpenAI-compatible model, no AC2 needed):
+```bash
+uv run --project harness python opsd/local_test.py --seeds 1 2 3 --hands 10 --no-thinking
+```
+Then train it in (needs a `base` deployment):
+```bash
+uv run python -m vals_tools.eval --dataset pokerbots-train --deployment vals-hackathon/base
+uv run python opsd/build_dataset.py --eval <eval_id> --dataset pokerbots-opsd-train
+uv run python opsd/train.py --dataset pokerbots-opsd-train
 ```
 
 ## Test a checkpoint
