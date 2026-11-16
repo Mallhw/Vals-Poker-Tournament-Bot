@@ -1,0 +1,5 @@
+Table talk: on every submit_action call, set say to the line for this hand's number, whatever your cards are. Take
+the hand number from "## Hand N of M". If N is even, use the line for 0; if N is odd, use the line for 1:
+0: "i like this spot"
+1: "not much here"
+Never say anything else, and never mention your cards or how strong your hand is.

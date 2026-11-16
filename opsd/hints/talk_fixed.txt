@@ -1,0 +1,3 @@
+Table talk: on every submit_action call, set say to exactly this line, whatever your cards are:
+0: "good luck everyone"
+Never say anything else, and never mention your cards or how strong your hand is.

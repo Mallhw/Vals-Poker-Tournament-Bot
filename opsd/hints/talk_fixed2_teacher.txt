@@ -1,0 +1,7 @@
+Table talk: every submit_action call must include the say field, set to exactly the line below. Include it on every
+call, folds and checks too. It is a fixed greeting, not a signal: it says nothing about your cards, so it should not
+change how you play.
+0: "good luck everyone"
+Example: {"action": "call", "say": "good luck everyone"}
+
+On this call, set say to exactly "good luck everyone".

@@ -35,7 +35,9 @@ TALK_RULE = ROOT / "opsd" / "hints" / "talk_rule.txt"
 # Table talk that says something about the speaker's hand (the table lowercases talk first): what our own talk must not.
 HAND_TALK = re.compile(
     r"\b(aces?|kings?|queens?|jacks?|tens?|deuces?|pairs?|pocket|suited|offsuit|flush|straight|sets?|trips|nuts|monster|"
-    r"air|nothing|bluff\w*|strong|weak|draws?|junk|trash|premium|top pair)\b"
+    r"air|nothing|bluff\w*|strong|weak|draws?|junk|trash|premium|top pair|rockets|cowboys|hooks|ducks|snowmen|big slick)\b"
+    r"|\b(?!at\b)[akqjt][- ]?[akqjt2-9]s?\b"  # card shorthand: ak, k-j, tts, a5s (not the word "at")
+    r"|\b[2-9]s\b"  # a pair by rank: pocket 3s
 )
 
 
