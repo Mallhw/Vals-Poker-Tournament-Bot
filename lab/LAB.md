@@ -309,3 +309,4 @@ LoRA 1007, The Evaluators 948, Benji's Test Team 899. Our rating fell 1191 -> 10
 18:30 check-in: arena idle, no new matches; standings unchanged (1059, 8th/11 teams).
 19:30 check-in: arena idle, no new matches; unchanged (1059, 8th/11 teams).
 20:30 check-in: arena idle, no new matches; unchanged (1059, 8th/11 teams).
+21:30 check-in: arena idle, no new matches; unchanged (1059, 8th/11 teams).
