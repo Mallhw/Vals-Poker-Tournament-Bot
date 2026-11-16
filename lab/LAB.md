@@ -304,3 +304,4 @@ teams, rating 1059, 767 matches, bb/100 +7.4, EV +11.8 (live entry talk round s2
 Teams: 1 Accord 1238, Lincoln 1147, Friends 1109, Vals 1100, Martingale 1076, Spark 1068, 🥵🥵🥵 1061, pineapple 1059,
 LoRA 1007, The Evaluators 948, Benji's Test Team 899. Our rating fell 1191 -> 1059 in the last hour before the freeze
 (final round s20 collapse). Unknown whether ranked resumes or an official tournament follows -- check the organizers.
+16:30 check-in: arena idle (ranked frozen since ~14:07, last exhibition ~15:39). Standings unchanged: pineapple 8th of 11 teams, 1059. GPUs free but NOT training: nowhere to submit until organizers say what's next (asked user). Live entry: talk round s20 (infer_a5aaffeb4304).
