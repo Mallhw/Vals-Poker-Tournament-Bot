@@ -96,3 +96,13 @@ def test_spots_are_sampled_per_file_and_street(tmp_path) -> None:
     assert len(pr.sample_records([path], 3, 0, None)) == 3
     assert {r["street"] for r in pr.sample_records([path], None, 0, {"flop", "turn"})} == {"flop", "turn"}
     assert pr.sample_records([path], 4, 1, None) == pr.sample_records([path], 4, 1, None)
+
+
+def test_a_hint_is_appended_to_the_system_message_as_opsds_teacher_reads_it(spot) -> None:
+    template = pr.opsd_hint_template()
+    assert template.startswith("Reference play for this exact spot") and "{solver_text}" in template
+    hinted = pr.with_hint(spot, template)
+    system = hinted["messages"][0]["content"]
+    assert system == spot["messages"][0]["content"] + "\n\n" + template.format(solver_text="raise to 4")
+    assert hinted["messages"][1:] == spot["messages"][1:] and hinted["hint"] in system
+    assert "raise to 4" not in spot["messages"][0]["content"]  # the original record is untouched

@@ -25,6 +25,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from ac2.sdk import Client, TrainingCustomHarnessConfig
+from ac2.sdk.model import ModelConfig
 from ac2.sdk.run_config import (
     EvalConfig,
     EvalDatasetConfig,
@@ -65,7 +66,8 @@ def run_config(args: argparse.Namespace, name: str) -> RunConfig:
     )
     launch = _set(tensorboard_enabled=args.tensorboard or None)  # AC2 places the run; teams can't pick a cluster
     return RunConfig(
-        model=args.model,
+        # A checkpoint warm-starts the run from its weights (AC2 infers the catalog model it was trained from).
+        model=ModelConfig(checkpoint=args.checkpoint) if args.checkpoint else args.model,
         name=name,
         description=f"GRPO on {args.prefix}-train through the self-hosted poker harness, harness-side grading.",
         tags={"benchmark": "pokerbots", "method": "grpo", "dataset": f"{args.prefix}-train"},
@@ -107,6 +109,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--project", default="vals-hackathon")
     p.add_argument("--prefix", default="pokerbots", help="dataset prefix from rl/make_dataset.py")
     p.add_argument("--model", default="Qwen/Qwen3.6-35B-A3B", help="base model (arena entries are this model or fine-tunes of it)")
+    p.add_argument("--checkpoint", help="warm-start from this checkpoint (ckpt_...) instead of the base model")
+    p.add_argument("--name", help="run name (default pokerbots-grpo-<time>)")
     p.add_argument("--dry-run", action="store_true", help="print the settings and configuration, submit nothing")
     g = p.add_argument_group("set by default (the GRPO recipe); change them with these flags")
     g.add_argument("--steps", type=int, default=60, help="training steps (default 60)")
@@ -140,7 +144,7 @@ def parser() -> argparse.ArgumentParser:
 
 
 def explicit_settings(p: argparse.ArgumentParser, args: argparse.Namespace) -> dict[str, Any]:
-    skip = {"project", "dry_run", "help"} | (
+    skip = {"project", "dry_run", "help", "name"} | (
         {"eval_every", "eval_dataset", "eval_concurrency", "eval_replicas"} if args.no_eval else set()
     )
     return {
@@ -152,7 +156,7 @@ def explicit_settings(p: argparse.ArgumentParser, args: argparse.Namespace) -> d
 
 def gpu_estimate(args: argparse.Namespace) -> str:
     """GPUs this run holds while it trains, from AC2's per-model defaults (docs: Training configuration)."""
-    if args.model != "Qwen/Qwen3.6-35B-A3B":
+    if args.model != "Qwen/Qwen3.6-35B-A3B" and not args.checkpoint:
         return "GPUs: see AC2's Training configuration docs (Default GPUs) for this model"
     inference = 2 * (args.inference_replicas or 4)
     evals = 0 if args.no_eval else 2 * (args.eval_replicas or 4)
@@ -162,7 +166,7 @@ def gpu_estimate(args: argparse.Namespace) -> str:
 def main() -> None:
     p = parser()
     args = p.parse_args()
-    name = f"pokerbots-grpo-{datetime.now(UTC):%Y%m%d-%H%M%S}"
+    name = args.name or f"pokerbots-grpo-{datetime.now(UTC):%Y%m%d-%H%M%S}"
     config = run_config(args, name)
     if args.dry_run:
         print("This launch sets (everything else is AC2's default):")

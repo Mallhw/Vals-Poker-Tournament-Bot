@@ -4,6 +4,7 @@
     uv run python play_local.py --model vals-hackathon/entry --opponents bots   # vs scripted bots (no opponent calls)
     uv run python play_local.py --model vals-hackathon/entry --hands 6          # a shorter game
     uv run python play_local.py --model vals-hackathon/base --hint-file ../opsd/hint.py --compare --opponents bots
+    uv run python play_local.py --model vals-hackathon/base --opponents league --league-file league.json --hands 6
 
 `--hint-file` (a text file, or a .py file defining HINT, such as ../opsd/hint.py) appends that hint to seat 0's
 system prompt, as OPSD's teacher sees it; `--compare` plays the same seed without the hint and then with it. One game
@@ -43,6 +44,7 @@ from poker_harness.completions import (
 )
 from poker_harness.engine import ScriptedPlayer
 from poker_harness.game import play_session
+from poker_harness.league import League, check_noise, draw, lineup_log, lineup_player, with_noise
 from poker_harness.prompts import talk_fields
 from poker_harness.seat import ModelSeat
 
@@ -91,7 +93,19 @@ async def play(args: argparse.Namespace, seed: int, hint: str = "") -> dict:
                 system_hint=hint,
             )
         ]
-        for i in range(1, rules.seats):
+        if args.opponents == "league":  # a self-play league lineup (league.py), drawn for seat 0 on this seed
+            data = League(args.league_file).current()
+            lineup = {"version": data["version"], "seats": draw(data["entries"], seed, [0], rules.seats, data["version"]),
+                      "noise": check_noise(data.get("noise"))}
+            players += [
+                lineup_player(i, lineup["seats"][i], rules=rules, params=params, key=f"{seed}:[0]:{i}",
+                              make_complete=lambda api, p: relay_completion(client, GATEWAY_URL, key, p))
+                for i in range(1, rules.seats)
+            ]
+            players = with_noise(players, lineup["seats"], lineup["noise"], f"{seed}:[0]")
+            for i, spec in sorted(lineup["seats"].items()):
+                print(f"seat{i}: {spec['id'] if 'id' in spec else spec}", flush=True)
+        for i in range(1, rules.seats) if args.opponents != "league" else ():
             if args.opponents == "bots":
                 players.append(ScriptedPlayer(f"seat{i}", random.Random(seed + i).choice(["random", "calling_station"]), seed))
             else:
@@ -106,15 +120,19 @@ async def play(args: argparse.Namespace, seed: int, hint: str = "") -> dict:
                     )
                 )
         game_id = f"local-{seed}-hint" if hint else f"local-{seed}"
-        return await play_session(game_id, seed, players, rules, on_hand=lambda log: print(
+        log = await play_session(game_id, seed, players, rules, on_hand=lambda log: print(
             f"hand {len(log['hands'])} done", flush=True
         ))
+        if args.opponents == "league":
+            log["lineup"] = lineup_log(lineup, lineup["seats"], players)
+        return log
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--model", required=True, help="your deployment, <project>/<name>")
-    parser.add_argument("--opponents", choices=["house", "bots"], default="house")
+    parser.add_argument("--opponents", choices=["house", "bots", "league"], default="house")
+    parser.add_argument("--league-file", type=Path, help="with --opponents league: the league file (see league.py)")
     parser.add_argument("--opponent-model", default=HOUSE_MODEL, help="model for the other seats with --opponents house")
     parser.add_argument("--hands", type=int, help="hands in the game (default: the event's 30)")
     parser.add_argument("--seed", type=int)
@@ -124,6 +142,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.compare and not args.hint_file:
         parser.error("--compare needs --hint-file")
+    if (args.opponents == "league") != bool(args.league_file):
+        parser.error("--opponents league and --league-file go together")
 
     hint = read_hint(args.hint_file) if args.hint_file else ""
     seed = args.seed if args.seed is not None else random.getrandbits(48)

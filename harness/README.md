@@ -27,7 +27,9 @@ AC2_API_KEY=<key> SHARDS=4 uv run ./run_sharded.sh                              
 | `POKER_OPPONENT_BASE_URL` | the AC2 gateway | Any OpenAI-compatible base URL for opponent seats |
 | `POKER_OPPONENT_API_KEY` | `AC2_API_KEY` | Key for `POKER_OPPONENT_BASE_URL` |
 | `POKER_HARNESS_TOKEN` | none | If set, every request must send `Authorization: Bearer <token>` |
-| `POKER_HARNESS_RUNS` | `runs` | Where each finished table's game log is written |
+| `POKER_HARNESS_RUNS` | `runs` | Where each finished table's game log is written (failed tables: `failed/`) |
+| `POKER_LEAGUE_FILE` | none | Self-play only: the league file `opponent_league` tables draw opponents from (`league.py`) |
+| `POKER_LEAGUE_PINS`, `POKER_LEAGUE_PIN_SECONDS` | beside the league file, 1200 | Where each task's drawn lineup is pinned, and for how long |
 
 **Scaling.** A server keeps its tables in memory, so every call for a rollout must reach the process that ran its
 `submit`; `uvicorn --workers` breaks that. When one event loop saturates, shard instead:
@@ -79,6 +81,22 @@ model.
 | `enforced_max_completion_tokens` | none | Training only: a tighter per-decision output cap for the policy seats than the prompt states (it still says the table's cap). Longer replies count as cut off and score 0 |
 | `opponent_talk` | none | Testing only: `{"lines": [...], "rate": 0.7}`. Opponent seats say one of `lines` on `rate` of their actions instead of their own talk (silent otherwise), drawn from the deal's seed, so talk is unrelated to their cards |
 | `system_hint` | none | Testing only: text appended to the policy seats' system prompt, as OPSD's teacher sees it (opponents never see it; the arena never sets it). The grader reports its hash as `hint` |
+| `opponent_league` | false | Self-play training only: draw each opponent seat from `POKER_LEAGUE_FILE` (frozen checkpoints, persona-prompted models, style bots), with seeded noise on their decisions. The lineup is pinned per task and logged as `lineup` |
+| `opponent_seats`, `opponent_noise` | none | The same per-seat opponents given directly: `{"1": {"bot": "nit"}, "2": {"model": "p/m", "persona": "trappy"}}` |
+
+## Self-play opponents
+
+`league.py` draws the opponents; the seats it can fill are model seats (`model`, optionally `persona`: a play style
+from `personas.py` appended to that opponent's system prompt) and style bots (`bot`):
+
+- our presets (`engine/style_bot.py`): `nit`, `tag`, `lag`, `station`, `loose_passive`, `maniac`. Preflop by Chen
+  score and position, postflop by Monte Carlo equity against random hands (their own fast evaluator).
+- bots adapted from public repos (`engine/adapted_bots.py`; their rules reimplemented, no code copied):
+  `hybrid_tag`, `hybrid_lag`, `tag_punisher`, `wide_defender`, `yosief`, `range_gto`.
+
+Bots never see other players' cards. `engine/noise.py` perturbs league opponents slightly: bets and raises scaled by
+0.75-1.33x, and a 3% chance of a neighboring reasonable action (never a fold when a check is free), seeded so every
+replay of a deal gets the same noise. `vals_tools/ladder.py` writes the league file during an overnight run.
 
 ## Table talk
 

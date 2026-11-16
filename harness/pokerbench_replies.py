@@ -15,6 +15,9 @@ model's own reasoning that reached the solver's play. The agreement rate also sh
     AC2_API_KEY=... uv run python pokerbench_replies.py ../data/pokerbench/preflop_train.jsonl \
         --out ../data/pokerbench/replies.jsonl --count 1500 --concurrency 8
 
+`--hint-template` (with `{solver_text}`, or `opsd` for the hint `opsd/pokerbench_tasks.py` trains with) appends the
+solver's play to the system message exactly as OPSD's teacher reads it, to measure how often the teacher follows it.
+
 Spots are sampled at random per input file (`--count`, `--seed`); `--samples K` asks for K replies per spot. The
 output is appended line by line and a rerun skips replies already there, so an interrupted run resumes. A request
 that fails outright is not written (a rerun retries it). Mind the load: the deployment may also be your arena entry.
@@ -23,25 +26,39 @@ that fails outright is not written (a rerun retries it). Mind the load: the depl
 from __future__ import annotations
 
 import argparse
+import ast
 import asyncio
 import json
 import os
 import random
 import time
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import httpx
 
+from poker_harness import solver_spot
 from poker_harness.completions import GATEWAY_URL, relay_completion
-from poker_harness.engine import Decision, LegalActions
-from poker_harness.engine.table import resolve
-from poker_harness.prompts import SUBMIT_ACTION, parse_tool_call
-from poker_harness.seat import Completion, invalid_action
-from pokerbench_convert import PARAMS
+from poker_harness.prompts import HINT_SEPARATOR
+from poker_harness.seat import Completion
+from pokerbench_convert import PARAMS, REPO
 
-AMOUNT_TOLERANCE = 0.25  # a bet or raise agrees within 25% of the solver's amount (or 2 chips)
+
+def opsd_hint_template(tasks_file: Path = REPO / "opsd" / "pokerbench_tasks.py") -> str:
+    """`HINT_TEMPLATE` from opsd/pokerbench_tasks.py, read without importing it (that module needs the ac2 SDK)."""
+    for node in ast.parse(tasks_file.read_text()).body:
+        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "HINT_TEMPLATE" for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise RuntimeError(f"no HINT_TEMPLATE in {tasks_file}")
+
+
+def with_hint(record: dict[str, Any], template: str) -> dict[str, Any]:
+    """The spot with the solver's play appended to its system message, as OPSD's hint mutation does for the teacher."""
+    hint = template.format(solver_text=record["solver_text"])
+    system, *rest = record["messages"]
+    if system["role"] != "system":
+        raise ValueError(f"{record['source']} does not start with a system message")
+    return record | {"messages": [system | {"content": system["content"] + HINT_SEPARATOR + hint}, *rest], "hint": hint}
 
 
 def reply_key(record: dict[str, Any], sample: int) -> str:
@@ -49,28 +66,9 @@ def reply_key(record: dict[str, Any], sample: int) -> str:
 
 
 def judge(record: dict[str, Any], reply: Completion) -> dict[str, Any]:
-    """Whether the reply is clean under the event's strict rules, what it plays, and whether that is the solver's."""
-    legal = LegalActions(**record["legal"])
-    submits = [c for c in reply.tool_calls if c["function"]["name"] == SUBMIT_ACTION]
-    error = None
-    if reply.truncated:
-        error = "reply hit the token cap"
-    elif len(submits) != 1 or len(reply.tool_calls) != 1:
-        error = f"{len(submits)} submit_action calls and {len(reply.tool_calls) - len(submits)} other calls"
-    if error:
-        return {"clean": False, "error": error, "decision": None, "agrees": False}
-    decision, error = parse_tool_call(submits[0]["function"]["arguments"], talk=True)
-    error = error or invalid_action(decision, SimpleNamespace(legal=legal))
-    if error:
-        return {"clean": False, "error": error, "decision": None, "agrees": False}
-    mine, _ = resolve(decision, legal)
-    label = record["label"]
-    solver, _ = resolve(Decision(label["action"], label.get("amount")), legal)
-    agrees = mine.type == solver.type
-    if agrees and solver.amount is not None:
-        agrees = abs(mine.amount - solver.amount) <= max(2, AMOUNT_TOLERANCE * solver.amount)
-    played = {"action": mine.type, **({"amount": mine.amount} if mine.amount is not None else {})}
-    return {"clean": True, "error": None, "decision": played, "agrees": agrees}
+    """Whether the reply is clean under the event's strict rules, what it plays, and whether that is the solver's: the
+    same judgment the harness's solver-spot rollouts are rewarded on (`poker_harness.solver_spot.judge`)."""
+    return solver_spot.judge(record, reply)
 
 
 def reply_record(record: dict[str, Any], sample: int, model: str, reply: Completion) -> dict[str, Any]:
@@ -155,12 +153,19 @@ def main() -> None:
     parser.add_argument("--samples", type=int, default=1, help="replies per spot (more gives rejection sampling more)")
     parser.add_argument("--concurrency", type=int, default=8, help="requests at once (the arena may share this deployment)")
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--hint-template",
+        help="append the solver's play to the system message: a template with {solver_text}, or 'opsd' for the OPSD one",
+    )
     args = parser.parse_args()
     key = os.environ.get("AC2_API_KEY")
     if not key:
         raise SystemExit("export AC2_API_KEY first")
     streets = set(args.streets.split(",")) if args.streets else None
     records = sample_records(args.jsonl, args.count, args.seed, streets)
+    if args.hint_template:
+        template = opsd_hint_template() if args.hint_template == "opsd" else args.hint_template
+        records = [with_hint(r, template) for r in records]
     stats = asyncio.run(collect(records, args.out, args.model, key, args.samples, args.concurrency))
     print(json.dumps(stats))
 

@@ -19,6 +19,14 @@ prompt states: their replies are requested with it and any longer reply is playe
 `lines` on `rate` of its actions in place of its own talk (silent otherwise), drawn per seat and spot from the deal's
 seed: the talk carries nothing about their cards, so any change in the policy's play measures how much talk moves it.
 
+`env_params.opponent_league: true` (self-play training only) draws each opponent seat from the league file at
+`POKER_LEAGUE_FILE` (`league.py`): frozen checkpoints, persona-prompted models and style bots, with small seeded noise
+on their decisions. `env_params.opponent_seats` gives such per-seat opponents directly. The lineup is logged as
+`log["lineup"]`.
+
+`env_params.pokerbench_spot` (training on solver spots) makes the rollout a single PokerBench decision instead of a
+table: the policy gets the spot's exact conversation once and is graded against the solver's play (`solver_spot.py`).
+
 A server keeps its tables in memory, so scale out by sharding (`shard_router.py` sends every call for a rollout to
 the same server), not with `uvicorn --workers`.
 
@@ -58,8 +66,18 @@ from .ev import label_ev
 from .game import play_session
 from .grading import GradingError, bounded, check_grader_params, failure_score, grade_log
 from .labels import label_folds
+from .league import (
+    League,
+    LeagueError,
+    explicit_lineup,
+    league_from_env,
+    lineup_log,
+    lineup_player,
+    with_noise,
+)
 from .prompts import TableRules, talk_fields
 from .seat import ModelSeat
+from .solver_spot import SPOT_KEY, check_spot, grade_spot, play_spot
 
 logger = logging.getLogger("poker_harness.server")
 
@@ -209,6 +227,7 @@ def create_app(
     relay_transport: httpx.AsyncBaseTransport | None = None,
     runs_dir: Path | None = None,
     opponent_transport: httpx.AsyncBaseTransport | None = None,
+    league: League | None = None,
 ) -> FastAPI:
     """`relay_transport` and `opponent_transport` replace the network for tests; `runs_dir` keeps every game log.
 
@@ -220,6 +239,7 @@ def create_app(
     opponent_key = os.environ.get("POKER_OPPONENT_API_KEY") or os.environ.get("AC2_API_KEY")
     opponent_url = os.environ.get("POKER_OPPONENT_BASE_URL", GATEWAY_URL)
     runs = runs_dir or Path(os.environ.get("POKER_HARNESS_RUNS", "runs"))
+    league = league or league_from_env()
     rollouts: dict[str, Rollout] = {}
     gradings: dict[str, Grading] = {}
     pools: list[ProcessPoolExecutor] = []
@@ -238,10 +258,37 @@ def create_app(
         if token and authorization != f"Bearer {token}":
             raise HTTPException(status_code=401, detail="invalid harness token")
 
+    def save_log(rollout: Rollout, request: SubmitRequest) -> None:
+        # The relay URL names the AC2 job the hand belongs to; keep it so concurrent runs can be told apart.
+        job = re.search(r"/(job_[0-9a-f]+)/", request.ac_api_url)
+        rollout.log["relay_job_id"] = job[1] if job else None
+        runs.mkdir(parents=True, exist_ok=True)
+        (runs / f"{rollout.id}.json").write_text(json.dumps(rollout.log, indent=1))
+
+    async def run_spot(rollout: Rollout, request: SubmitRequest, params: dict[str, Any]) -> None:
+        """One PokerBench decision for the policy, judged against the solver (`solver_spot.py`)."""
+        rollout.status = "running"
+        try:
+            enforced = int(params.get("enforced_max_completion_tokens") or 0) or None
+            policy_params = params | {"max_completion_tokens": enforced} if enforced else params
+            async with httpx.AsyncClient(timeout=timeout, transport=relay_transport) as relay_client:
+                complete = relay_completion(relay_client, request.ac_api_url, request.ac_api_key, policy_params)
+                rollout.policy_seats = ["hero"]
+                cap = enforced or rollout.rules.max_completion_tokens
+                rollout.log = await play_spot(rollout.id, int(params["seed"]), params[SPOT_KEY], complete, cap)
+            save_log(rollout, request)
+            rollout.status = "completed"
+        except Exception as exc:  # reported to AC2 as a failed rollout, which scores 0
+            logger.exception("rollout %s failed", rollout.id)
+            rollout.status, rollout.error = "failed", f"{type(exc).__name__}: {str(exc)[:500]}"
+
     async def run_table(rollout: Rollout, request: SubmitRequest) -> None:
         params = with_preset(request.task.env_params or {})  # `preset: "event"` applies the event rules
         if rollout.rules.table_talk:  # every seat's tool gains `say`
             params = params | {"submit_fields": talk_fields(params.get("submit_fields"))}
+        if SPOT_KEY in params:  # a single solver spot, not a table
+            await run_spot(rollout, request, params)
+            return
         rollout.status = "running"
         try:
             seats = int(params.get("seats", 10))
@@ -250,7 +297,18 @@ def create_app(
             enforced = int(params.get("enforced_max_completion_tokens") or 0) or None  # checked in `submit`
             talk = params.get("opponent_talk") or {}  # checked in `submit`
             talk_lines, talk_rate = tuple(talk.get("lines") or ()), float(talk.get("rate", 0.0))
-            if params.get("opponent_model") and not opponent_key and len(policy) < seats:
+            seed = int(params["seed"])
+            if params.get("opponent_league"):  # self-play training: per-seat opponents from the league file
+                if league is None:
+                    raise RuntimeError("opponent_league needs POKER_LEAGUE_FILE in the harness environment")
+                lineup = league.lineup(seed, sorted(policy), seats)
+            else:
+                lineup = explicit_lineup(params)  # env_params.opponent_seats, or None
+            lineup_seats = {i: spec for i, spec in (lineup or {}).get("seats", {}).items() if i not in policy}
+            needs_key = any("model" in spec for spec in lineup_seats.values()) or (
+                params.get("opponent_model") and len(policy) + len(lineup_seats) < seats
+            )
+            if needs_key and not opponent_key:
                 raise RuntimeError("opponent seats need POKER_OPPONENT_API_KEY or AC2_API_KEY in the harness environment")
             decision_timeout = float(params.get("decision_timeout_seconds", DEFAULT_DECISION_TIMEOUT_SECONDS))
             opponent_timeout = float(params.get("opponent_timeout_seconds", decision_timeout))
@@ -279,8 +337,25 @@ def create_app(
                     if params.get("opponent_model")
                     else policy_cleanup
                 )
-                players = [
-                    ModelSeat(
+                def make_complete(api: str, completion_params: dict[str, Any]) -> Any:
+                    call = responses_completion if api == "responses" else relay_completion
+                    return call(opponent_client, opponent_url, opponent_key or "", completion_params)
+
+                table_key = f"{seed}:{sorted(policy)}"  # seeds each league seat's bot and noise, the same every replay
+                players: list[Any] = [
+                    lineup_player(
+                        i,
+                        lineup_seats[i],
+                        rules=rollout.rules,
+                        params=params,
+                        key=f"{table_key}:{i}",
+                        make_complete=make_complete,
+                        timeout_seconds=opponent_timeout,
+                        talk_lines=talk_lines,
+                        talk_rate=talk_rate,
+                    )
+                    if i in lineup_seats
+                    else ModelSeat(
                         f"seat{i}",
                         policy_complete if i in policy else opponent_complete,
                         rollout.rules,
@@ -291,14 +366,18 @@ def create_app(
                         enforced_cap=enforced if i in policy else None,
                         talk_lines=() if i in policy else talk_lines,
                         talk_rate=talk_rate,
-                        talk_seed=int(params["seed"]),
+                        talk_seed=seed,
                     )
                     for i in range(seats)
                 ]
+                if lineup is not None:  # league opponents only; the policy seat is never perturbed
+                    players = with_noise(players, lineup_seats, lineup.get("noise") or {}, table_key)
                 rollout.policy_seats = [f"seat{i}" for i in sorted(policy)]
-                rollout.log = await play_session(rollout.id, int(params["seed"]), players, rollout.rules)
+                rollout.log = await play_session(rollout.id, seed, players, rollout.rules)
                 if hint:  # so a hinted game can be told apart from a plain one (the grader reports its hash)
                     rollout.log["system_hint"] = hint
+                if lineup is not None:
+                    rollout.log["lineup"] = lineup_log(lineup, lineup_seats, players)
                 label_folds(rollout.log, set(rollout.policy_seats))
                 if params.get("ev_labels"):  # all-in EV for the policy seats, scored by grading.py
                     rollout.log = await asyncio.get_running_loop().run_in_executor(
@@ -319,6 +398,13 @@ def create_app(
         except Exception as exc:  # reported to AC2 as a failed rollout
             logger.exception("rollout %s failed", rollout.id)
             rollout.status, rollout.error = "failed", f"{type(exc).__name__}: {str(exc)[:500]}"
+            try:  # a record of the failure beside the game logs, which self-play's watchdog counts
+                (runs / "failed").mkdir(parents=True, exist_ok=True)
+                league_table = bool((request.task.env_params or {}).get("opponent_league"))
+                record = {"rollout_id": rollout.id, "error": rollout.error, "opponent_league": league_table}
+                (runs / "failed" / f"{rollout.id}.json").write_text(json.dumps(record))
+            except OSError:
+                pass
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
@@ -355,6 +441,14 @@ def create_app(
         enforced = params.get("enforced_max_completion_tokens")
         if enforced is not None and (not isinstance(enforced, int) or isinstance(enforced, bool) or enforced < 1):
             raise HTTPException(status_code=422, detail="env_params.enforced_max_completion_tokens must be a positive integer")
+        if SPOT_KEY in params and (problem := check_spot(params[SPOT_KEY])):
+            raise HTTPException(status_code=422, detail=f"env_params.{SPOT_KEY} {problem}")
+        if not isinstance(params.get("opponent_league", False), bool):
+            raise HTTPException(status_code=422, detail="env_params.opponent_league must be true or false")
+        try:
+            explicit_lineup(params)  # env_params.opponent_seats and opponent_noise, when set
+        except LeagueError as exc:
+            raise HTTPException(status_code=422, detail=f"env_params: {exc}") from exc
         rollout = Rollout(id=rollout_id, rules=table_rules(params))
         rollouts[rollout_id] = rollout
         rollout.task = asyncio.create_task(run_table(rollout, request))
@@ -406,6 +500,8 @@ def create_app(
                     await asyncio.shield(rollout.task)
                 if rollout.status != "completed" or not rollout.log:
                     grading.score = failure_score(f"The table ended {rollout.status}: {rollout.error}")
+                elif rollout.log.get("kind") == "solver_spot":
+                    grading.score = bounded(grade_spot(rollout.log))
                 else:
                     grading.score = bounded(grade_log(rollout.log, rollout.policy_seats, params))
             grading.status = "completed"
