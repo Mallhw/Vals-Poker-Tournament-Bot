@@ -32,6 +32,7 @@ import httpx
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
+from .engine import ScriptedPlayer
 from .completions import (
     DEFAULT_DECISION_TIMEOUT_SECONDS,
     GATEWAY_URL,
@@ -128,6 +129,47 @@ ESSENTIAL_RESPONSE = (
     "out_tokens",
     "reasoning_tokens",
 )
+
+
+def _with_system_hint(complete, hint: str):
+    """Wrap a `complete(messages)` so the system message gets `hint` appended (training/eval only)."""
+
+    async def hinted(messages: list[dict[str, Any]]):
+        if messages and messages[0].get("role") == "system":
+            messages = [{**messages[0], "content": f"{messages[0]['content']}\n\n{hint}"}, *messages[1:]]
+        return await complete(messages)
+
+    return hinted
+
+
+def _with_policy_talk(complete, lines: list[str], rate: float, seed: int):
+    """Experiment only: set the `say` of the policy's submit_action to a random line from `lines` with probability
+    `rate`, to measure how table talk moves the opponents. The policy model never sees this happen."""
+    import dataclasses
+    import random as _random
+
+    rng = _random.Random(f"talk:{seed}")
+
+    async def talking(messages: list[dict[str, Any]]):
+        out = await complete(messages)
+        if out.tool_arguments is None or not lines or rng.random() >= rate:
+            return out
+        args = out.tool_arguments
+        try:
+            data = json.loads(args) if isinstance(args, str) else dict(args)
+        except (ValueError, TypeError):
+            return out
+        if not isinstance(data, dict):
+            return out
+        data["say"] = rng.choice(lines)
+        new_args = json.dumps(data)
+        calls = [
+            {**c, "function": {**c["function"], "arguments": new_args}} if c.get("function", {}).get("name") == "submit_action" else c
+            for c in out.tool_calls
+        ]
+        return dataclasses.replace(out, tool_arguments=new_args, tool_calls=calls)
+
+    return talking
 
 
 def _size(log: dict[str, Any]) -> int:
@@ -261,8 +303,25 @@ def create_app(
                     if params.get("opponent_model")
                     else policy_cleanup
                 )
+                # Training/eval only: `system_hint` is appended to the policy seats' system prompt (A/B-test
+                # prompt ideas before distilling them). Opponents never see it. The arena's harness has no such key.
+                if params.get("system_hint"):
+                    policy_complete = _with_system_hint(policy_complete, str(params["system_hint"]))
+                    policy_cleanup = _with_system_hint(policy_cleanup, str(params["system_hint"]))
+                # Experiment only: `policy_talk` = {"lines": [...], "rate": 0.7} injects table talk on the policy's
+                # actions (decisions only, not the cleanup turn) to measure its effect on the opponents.
+                if isinstance(params.get("policy_talk"), dict):
+                    t = params["policy_talk"]
+                    policy_complete = _with_policy_talk(
+                        policy_complete, list(t.get("lines") or []), float(t.get("rate", 0.7)), int(params["seed"])
+                    )
+                # Training-only: `scripted_seats` = {"3": "shover", ...} puts the engine's scripted players in those
+                # seats (e.g. a frequent all-in shover like the arena's house bots). Never a policy seat.
+                scripted = {int(k): v for k, v in (params.get("scripted_seats") or {}).items() if int(k) not in policy}
                 players = [
-                    ModelSeat(
+                    ScriptedPlayer(f"seat{i}", scripted[i], int(params["seed"]))
+                    if i in scripted
+                    else ModelSeat(
                         f"seat{i}",
                         policy_complete if i in policy else opponent_complete,
                         rollout.rules,

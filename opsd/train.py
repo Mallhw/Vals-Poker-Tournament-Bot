@@ -23,6 +23,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from ac2.sdk import Client
+from ac2.sdk.model import ModelConfig
 from ac2.sdk.run_config import (
     EvalConfig,
     ExperimentConfig,
@@ -45,9 +46,9 @@ def _set(**values: Any) -> dict[str, Any]:
 
 
 def run_config(args: argparse.Namespace, name: str) -> RunConfig:
-    launch = _set(tensorboard_enabled=args.tensorboard or None)  # AC2 places the run; teams can't pick a cluster
+    launch = _set(tensorboard_enabled=args.tensorboard or None, preemptible=False if args.non_preemptible else None)  # AC2 places the run; teams can't pick a cluster
     return RunConfig(
-        model=args.model,
+        model=ModelConfig(checkpoint=args.from_checkpoint) if args.from_checkpoint else args.model,
         name=name,
         description=f"Offline OPSD of a prompted strategy hint into {args.model} (student without the hint), "
         f"{args.dataset}.",
@@ -83,6 +84,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--project", default="vals-hackathon")
     p.add_argument("--dataset", required=True, help="hinted dataset from build_dataset.py")
     p.add_argument("--model", default="Qwen/Qwen3.6-35B-A3B", help="base model (arena entries are this model or fine-tunes of it)")
+    p.add_argument("--from-checkpoint", help="start the student from this checkpoint (ckpt_...) instead of the base weights")
+    p.add_argument("--non-preemptible", action="store_true", help="NOT supported by AC2 on launch (PermissionDenied); use `ac2 train resume --non-preemptible` instead")
     p.add_argument("--dry-run", action="store_true", help="print the settings and configuration, submit nothing")
     g = p.add_argument_group("set by default (the OPSD recipe); change them with these flags")
     g.add_argument("--steps", type=int, default=20, help="training steps (default 20)")

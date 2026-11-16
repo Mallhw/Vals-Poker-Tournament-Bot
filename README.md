@@ -2,6 +2,12 @@
 
 Train Qwen3.6-35B-A3B to play 6-player poker, then enter it in the arena.
 
+Team **pineapple**'s code from the Applied Compute × Vals Pokerbots hackathon (Nov 2026). Peak **#2** on the
+ranked ladder (rating 1191); finished **8th of 11 teams**. Start with **[SUMMARY.md](SUMMARY.md)** for results
+and lessons, [`reports/`](reports/) for model comparisons, and [`lab/LAB.md`](lab/LAB.md) for the full
+experiment notebook. Built on [Applied-Compute/pokerbots-starter](https://github.com/Applied-Compute/pokerbots-starter).
+Trained weights are not included (they lived on AC2).
+
 ## The game
 - 6 players, 30 hands, 200 chips each. Most chips at the end wins.
 - Each turn the model makes **one** `submit_action` call. A bad move = check/fold.
@@ -15,6 +21,8 @@ Train Qwen3.6-35B-A3B to play 6-player poker, then enter it in the arena.
 | `opsd/` | Teaches the model a written strategy hint (`hint.py`) without needing it in the prompt. |
 | `vals_tools/` | Deploy a model, evaluate it, check your setup. |
 | `src/pokerbots/` | Empty on purpose (AC2 needs it). |
+| `lab/` | Our experiment framework: arena tracking, entry comparison, leak analysis, opponent scouting, paired prompt tests, pipelines. |
+| `reports/` | Write-ups comparing our arena entries. |
 
 ## Setup (once)
 ```bash

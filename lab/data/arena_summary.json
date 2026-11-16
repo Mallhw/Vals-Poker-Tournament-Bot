@@ -1,0 +1,1307 @@
+{
+ "status": {
+  "time": "2026-11-15 10:05:05",
+  "rank": 10.0,
+  "rating": 1094.0,
+  "bb100": 0.3,
+  "matches": 570.0,
+  "deployment": "infer_7fe0e70e868b"
+ },
+ "new_matches": 39,
+ "entries": {
+  "base (infer_66b2ff75a081)": {
+   "games": 40,
+   "mean_place": 3.33,
+   "wins": 10,
+   "lasts": 4,
+   "bust_rate": 0.225,
+   "bb100": 65.5,
+   "ev_bb100": 20.3,
+   "vpip": 0.392,
+   "pfr": 0.187,
+   "bigcalls100": 1.57,
+   "fallback_rate": 0.0149
+  },
+  "\ud83d\udc40 (infer_2ff17466cceb)": {
+   "games": 30,
+   "mean_place": 4.17,
+   "wins": 5,
+   "lasts": 11,
+   "bust_rate": 0.4,
+   "bb100": -145.7,
+   "ev_bb100": -87.6,
+   "vpip": 0.349,
+   "pfr": 0.161,
+   "bigcalls100": 0.9,
+   "fallback_rate": 0.0137
+  },
+  "Alea iacta est (infer_c5af0a968fd3)": {
+   "games": 10,
+   "mean_place": 3.4,
+   "wins": 2,
+   "lasts": 1,
+   "bust_rate": 0.3,
+   "bb100": -20.6,
+   "ev_bb100": 62.5,
+   "vpip": 0.185,
+   "pfr": 0.073,
+   "bigcalls100": 1.72,
+   "fallback_rate": 0.3108
+  },
+  "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)": {
+   "games": 92,
+   "mean_place": 3.65,
+   "wins": 11,
+   "lasts": 11,
+   "bust_rate": 0.033,
+   "bb100": 4.8,
+   "ev_bb100": 8.7,
+   "vpip": 0.22,
+   "pfr": 0.094,
+   "bigcalls100": 0.33,
+   "fallback_rate": 0.0054
+  },
+  "opsd4-s30 (infer_496116c2999d)": {
+   "games": 69,
+   "mean_place": 3.48,
+   "wins": 8,
+   "lasts": 7,
+   "bust_rate": 0.101,
+   "bb100": 12.3,
+   "ev_bb100": 28.6,
+   "vpip": 0.141,
+   "pfr": 0.095,
+   "bigcalls100": 0.52,
+   "fallback_rate": 0.0179
+  },
+  "butter (infer_96d341a589e2)": {
+   "games": 35,
+   "mean_place": 3.54,
+   "wins": 1,
+   "lasts": 4,
+   "bust_rate": 0.143,
+   "bb100": -39.2,
+   "ev_bb100": 21.8,
+   "vpip": 0.139,
+   "pfr": 0.089,
+   "bigcalls100": 0.61,
+   "fallback_rate": 0.0064
+  },
+  "Alea iacta est (infer_496116c2999d)": {
+   "games": 225,
+   "mean_place": 3.33,
+   "wins": 26,
+   "lasts": 30,
+   "bust_rate": 0.031,
+   "bb100": 3.1,
+   "ev_bb100": 6.0,
+   "vpip": 0.152,
+   "pfr": 0.1,
+   "bigcalls100": 0.15,
+   "fallback_rate": 0.0182
+  },
+  "Alea iacta est (infer_f617937bbaa3)": {
+   "games": 38,
+   "mean_place": 3.39,
+   "wins": 6,
+   "lasts": 6,
+   "bust_rate": 0.053,
+   "bb100": -12.2,
+   "ev_bb100": -2.1,
+   "vpip": 0.108,
+   "pfr": 0.097,
+   "bigcalls100": 0.18,
+   "fallback_rate": 0.0158
+  },
+  "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)": {
+   "games": 31,
+   "mean_place": 3.45,
+   "wins": 5,
+   "lasts": 3,
+   "bust_rate": 0.226,
+   "bb100": 36.3,
+   "ev_bb100": 11.8,
+   "vpip": 0.227,
+   "pfr": 0.099,
+   "bigcalls100": 1.79,
+   "fallback_rate": 0.0044
+  }
+ },
+ "busts": [
+  {
+   "match": "m_20261114t225919_3cd6ac",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 22,
+   "hole": [
+    "Th",
+    "6d"
+   ],
+   "chen": 1,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "8d",
+    "7s",
+    "8h",
+    "Kd",
+    "6c"
+   ]
+  },
+  {
+   "match": "m_20261114t230120_5dbf6c",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 23,
+   "hole": [
+    "Ah",
+    "3s"
+   ],
+   "chen": 5,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "Ks",
+    "8c",
+    "Jh",
+    "2c",
+    "As"
+   ]
+  },
+  {
+   "match": "m_20261114t233623_2a8147",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 11,
+   "hole": [
+    "Jh",
+    "Ah"
+   ],
+   "chen": 10,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "4s",
+    "2s",
+    "7s",
+    "Js",
+    "5c"
+   ]
+  },
+  {
+   "match": "m_20261114t235426_15b7d2",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 29,
+   "hole": [
+    "Jc",
+    "Qc"
+   ],
+   "chen": 9,
+   "actions": [
+    "raise",
+    "bet",
+    "check",
+    "call"
+   ],
+   "board": [
+    "5h",
+    "Td",
+    "6c",
+    "2s",
+    "6h"
+   ]
+  },
+  {
+   "match": "m_20261115t001601_1b8159",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 10,
+   "hole": [
+    "Th",
+    "5h"
+   ],
+   "chen": 2,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "Kd",
+    "8h",
+    "4s",
+    "3h",
+    "Ad"
+   ]
+  },
+  {
+   "match": "m_20261115t004746_71f18f",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 1,
+   "hole": [
+    "Td",
+    "9c"
+   ],
+   "chen": 6,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "Qs",
+    "5d",
+    "8s",
+    "2c",
+    "4h"
+   ]
+  },
+  {
+   "match": "m_20261115t005852_a76bce",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 16,
+   "hole": [
+    "Qh",
+    "7s"
+   ],
+   "chen": 2,
+   "actions": [
+    "call",
+    "check",
+    "call"
+   ],
+   "board": [
+    "3d",
+    "5s",
+    "3c",
+    "2c",
+    "Th"
+   ]
+  },
+  {
+   "match": "m_20261115t011625_a31bf2",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 30,
+   "hole": [
+    "Qd",
+    "3d"
+   ],
+   "chen": 4,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "Kc",
+    "Ac",
+    "6c",
+    "9d",
+    "2c"
+   ]
+  },
+  {
+   "match": "m_20261115t012329_b6f7d3",
+   "entry": "base (infer_66b2ff75a081)",
+   "hand": 13,
+   "hole": [
+    "Jc",
+    "Ah"
+   ],
+   "chen": 8,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "2d",
+    "Td",
+    "4d",
+    "2s",
+    "6d"
+   ]
+  },
+  {
+   "match": "m_20261115t015342_6c0f26",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 12,
+   "hole": [
+    "Js",
+    "6s"
+   ],
+   "chen": 3,
+   "actions": [
+    "call",
+    "check",
+    "call",
+    "bet",
+    "check",
+    "call"
+   ],
+   "board": [
+    "2c",
+    "Td",
+    "Jd",
+    "8c",
+    "Kh"
+   ]
+  },
+  {
+   "match": "m_20261115t020616_aaaaa9",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 3,
+   "hole": [
+    "8s",
+    "Jh"
+   ],
+   "chen": 4,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "Qh",
+    "7d",
+    "Ks",
+    "3d",
+    "7s"
+   ]
+  },
+  {
+   "match": "m_20261115t020922_c82792",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 16,
+   "hole": [
+    "Js",
+    "Th"
+   ],
+   "chen": 7,
+   "actions": [
+    "call",
+    "bet",
+    "bet",
+    "bet",
+    "call"
+   ],
+   "board": [
+    "Ks",
+    "Ts",
+    "Jc",
+    "2c",
+    "Ac"
+   ]
+  },
+  {
+   "match": "m_20261115t021344_102ff3",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 2,
+   "hole": [
+    "6c",
+    "6h"
+   ],
+   "chen": 6.0,
+   "actions": [
+    "call",
+    "call",
+    "raise"
+   ],
+   "board": [
+    "Ks",
+    "5s",
+    "5c",
+    "Js",
+    "8h"
+   ]
+  },
+  {
+   "match": "m_20261115t022136_ae9f6b",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 3,
+   "hole": [
+    "Qh",
+    "8d"
+   ],
+   "chen": 3,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "7s",
+    "8s",
+    "4d",
+    "Jh",
+    "9d"
+   ]
+  },
+  {
+   "match": "m_20261115t024346_941971",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 2,
+   "hole": [
+    "9h",
+    "6c"
+   ],
+   "chen": 2.5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "4s",
+    "2c",
+    "7d",
+    "2s",
+    "Kh"
+   ]
+  },
+  {
+   "match": "m_20261115t024721_18b974",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 4,
+   "hole": [
+    "Th",
+    "Jc"
+   ],
+   "chen": 7,
+   "actions": [
+    "call",
+    "call"
+   ],
+   "board": [
+    "As",
+    "7s",
+    "4s",
+    "Kd",
+    "4h"
+   ]
+  },
+  {
+   "match": "m_20261115t034428_4093b1",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 3,
+   "hole": [
+    "Qs",
+    "Qd"
+   ],
+   "chen": 14,
+   "actions": [
+    "raise",
+    "call",
+    "call",
+    "bet",
+    "bet"
+   ],
+   "board": [
+    "2c",
+    "4s",
+    "5d",
+    "6h",
+    "8h"
+   ]
+  },
+  {
+   "match": "m_20261115t040211_53d67e",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 30,
+   "hole": [
+    "Jd",
+    "Ks"
+   ],
+   "chen": 7,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "7h",
+    "Jc",
+    "Qs",
+    "6d",
+    "6h"
+   ]
+  },
+  {
+   "match": "m_20261115t040251_2888c0",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 14,
+   "hole": [
+    "6d",
+    "Kc"
+   ],
+   "chen": 3,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "Qh",
+    "Ac",
+    "Kh",
+    "4c",
+    "3c"
+   ]
+  },
+  {
+   "match": "m_20261115t043951_2413dc",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 19,
+   "hole": [
+    "5d",
+    "5s"
+   ],
+   "chen": 5,
+   "actions": [
+    "call",
+    "call",
+    "check",
+    "raise",
+    "call",
+    "bet",
+    "check",
+    "call"
+   ],
+   "board": [
+    "2s",
+    "Kd",
+    "8c",
+    "4d",
+    "Jd"
+   ]
+  },
+  {
+   "match": "m_20261115t044013_0524a1",
+   "entry": "\ud83d\udc40 (infer_2ff17466cceb)",
+   "hand": 22,
+   "hole": [
+    "9h",
+    "5h"
+   ],
+   "chen": 2.5,
+   "actions": [
+    "call",
+    "check",
+    "call",
+    "check",
+    "call",
+    "check",
+    "call"
+   ],
+   "board": [
+    "9s",
+    "8c",
+    "7s",
+    "3c",
+    "7h"
+   ]
+  },
+  {
+   "match": "m_20261115t045146_6eb4a5",
+   "entry": "Alea iacta est (infer_c5af0a968fd3)",
+   "hand": 2,
+   "hole": [
+    "9s",
+    "Js"
+   ],
+   "chen": 8,
+   "actions": [
+    "call",
+    "call"
+   ],
+   "board": [
+    "9h",
+    "8c",
+    "3c",
+    "Td",
+    "2h"
+   ]
+  },
+  {
+   "match": "m_20261115t045206_7aae66",
+   "entry": "Alea iacta est (infer_c5af0a968fd3)",
+   "hand": 12,
+   "hole": [
+    "Jh",
+    "Jc"
+   ],
+   "chen": 12,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "Ah",
+    "As",
+    "2s",
+    "Kd",
+    "5h"
+   ]
+  },
+  {
+   "match": "m_20261115t045248_a92a63",
+   "entry": "Alea iacta est (infer_c5af0a968fd3)",
+   "hand": 9,
+   "hole": [
+    "Ks",
+    "Ts"
+   ],
+   "chen": 8,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "2c",
+    "3c",
+    "Ah",
+    "Th",
+    "9h"
+   ]
+  },
+  {
+   "match": "m_20261115t060724_35cf92",
+   "entry": "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)",
+   "hand": 30,
+   "hole": [
+    "Js",
+    "Jc"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "bet",
+    "bet",
+    "bet"
+   ],
+   "board": [
+    "6h",
+    "5h",
+    "Tc",
+    "Ks",
+    "Td"
+   ]
+  },
+  {
+   "match": "m_20261115t070214_cf8d3a",
+   "entry": "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)",
+   "hand": 30,
+   "hole": [
+    "Qc",
+    "Qh"
+   ],
+   "chen": 14,
+   "actions": [
+    "raise",
+    "raise",
+    "call"
+   ],
+   "board": [
+    "5d",
+    "Js",
+    "6c",
+    "4h",
+    "6h"
+   ]
+  },
+  {
+   "match": "m_20261115t073435_6c10e5",
+   "entry": "solver-GRPO step 21 (54.7% agree) (infer_5fe0799751ef)",
+   "hand": 2,
+   "hole": [
+    "Ac",
+    "Jd"
+   ],
+   "chen": 8,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "6s",
+    "8h",
+    "Ks",
+    "2s",
+    "Js"
+   ]
+  },
+  {
+   "match": "m_20261115t075758_69c118",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 15,
+   "hole": [
+    "2s",
+    "2h"
+   ],
+   "chen": 5,
+   "actions": [
+    "raise",
+    "bet"
+   ],
+   "board": [
+    "5s",
+    "9h",
+    "Jc",
+    "Ac",
+    "Qd"
+   ]
+  },
+  {
+   "match": "m_20261115t082817_1064a7",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 3,
+   "hole": [
+    "As",
+    "Th"
+   ],
+   "chen": 6,
+   "actions": [
+    "raise",
+    "call",
+    "check",
+    "bet"
+   ],
+   "board": [
+    "5c",
+    "Kh",
+    "4h",
+    "6d",
+    "2d"
+   ]
+  },
+  {
+   "match": "m_20261115t083120_bf9dfd",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 8,
+   "hole": [
+    "Jc",
+    "Jh"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "Ad",
+    "8d",
+    "Kd",
+    "5c",
+    "3h"
+   ]
+  },
+  {
+   "match": "m_20261115t090728_de564f",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 7,
+   "hole": [
+    "Qs",
+    "As"
+   ],
+   "chen": 11,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "3c",
+    "5h",
+    "6c",
+    "4c",
+    "9h"
+   ]
+  },
+  {
+   "match": "m_20261115t091734_031585",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 14,
+   "hole": [
+    "Ah",
+    "2s"
+   ],
+   "chen": 5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "3c",
+    "Jh",
+    "Kh",
+    "Ks",
+    "5s"
+   ]
+  },
+  {
+   "match": "m_20261115t092122_798b04",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 13,
+   "hole": [
+    "Kc",
+    "Kh"
+   ],
+   "chen": 16,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "9c",
+    "Ah",
+    "Tc",
+    "Jd",
+    "6d"
+   ]
+  },
+  {
+   "match": "m_20261115t092456_6bf9fa",
+   "entry": "opsd4-s30 (infer_496116c2999d)",
+   "hand": 5,
+   "hole": [
+    "Th",
+    "Qs"
+   ],
+   "chen": 6,
+   "actions": [
+    "call",
+    "call"
+   ],
+   "board": [
+    "Ac",
+    "2c",
+    "9c",
+    "2d",
+    "Kh"
+   ]
+  },
+  {
+   "match": "m_20261115t094554_3868b0",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 26,
+   "hole": [
+    "Jh",
+    "Jd"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "7s",
+    "Th",
+    "Kc",
+    "3d",
+    "6c"
+   ]
+  },
+  {
+   "match": "m_20261115t095616_8ab294",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 11,
+   "hole": [
+    "6s",
+    "Td"
+   ],
+   "chen": 1,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "4c",
+    "4d",
+    "5h",
+    "3h",
+    "Qs"
+   ]
+  },
+  {
+   "match": "m_20261115t100005_0c64ec",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 25,
+   "hole": [
+    "As",
+    "Ah"
+   ],
+   "chen": 20,
+   "actions": [
+    "raise",
+    "call",
+    "bet",
+    "call",
+    "bet"
+   ],
+   "board": [
+    "Jd",
+    "Kh",
+    "9c",
+    "Th",
+    "5s"
+   ]
+  },
+  {
+   "match": "m_20261115t100049_a07061",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 16,
+   "hole": [
+    "7d",
+    "7s"
+   ],
+   "chen": 7.0,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "8d",
+    "Kc",
+    "Kh",
+    "8h",
+    "6s"
+   ]
+  },
+  {
+   "match": "m_20261115t100941_74d3c6",
+   "entry": "butter (infer_96d341a589e2)",
+   "hand": 8,
+   "hole": [
+    "Td",
+    "Qd"
+   ],
+   "chen": 8,
+   "actions": [
+    "call",
+    "bet",
+    "call",
+    "call"
+   ],
+   "board": [
+    "Th",
+    "4d",
+    "Kh",
+    "6d",
+    "As"
+   ]
+  },
+  {
+   "match": "m_20261115t103112_aba2ac",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 22,
+   "hole": [
+    "2h",
+    "Ac"
+   ],
+   "chen": 5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "8c",
+    "8s",
+    "4d",
+    "Kh",
+    "7c"
+   ]
+  },
+  {
+   "match": "m_20261115t110434_2c1023",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 17,
+   "hole": [
+    "6c",
+    "3h"
+   ],
+   "chen": 1.0,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "7s",
+    "Tc",
+    "4s",
+    "4h",
+    "Ts"
+   ]
+  },
+  {
+   "match": "m_20261115t115719_791dfb",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 28,
+   "hole": [
+    "Qs",
+    "Ks"
+   ],
+   "chen": 10,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "9c",
+    "7d",
+    "8h",
+    "6h",
+    "6s"
+   ]
+  },
+  {
+   "match": "m_20261115t120036_958420",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 18,
+   "hole": [
+    "Ad",
+    "4h"
+   ],
+   "chen": 5,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "5d",
+    "Ks",
+    "As",
+    "9c",
+    "8h"
+   ]
+  },
+  {
+   "match": "m_20261115t120424_7e694a",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 6,
+   "hole": [
+    "Ts",
+    "Ad"
+   ],
+   "chen": 6,
+   "actions": [
+    "call",
+    "call",
+    "bet",
+    "call",
+    "bet",
+    "call"
+   ],
+   "board": [
+    "4d",
+    "Kc",
+    "Th",
+    "3s",
+    "8d"
+   ]
+  },
+  {
+   "match": "m_20261115t152442_9a064f",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 12,
+   "hole": [
+    "Ks",
+    "Kc"
+   ],
+   "chen": 16,
+   "actions": [
+    "raise",
+    "call"
+   ],
+   "board": [
+    "Qh",
+    "Jh",
+    "9c",
+    "6c",
+    "7s"
+   ]
+  },
+  {
+   "match": "m_20261115t160016_00038d",
+   "entry": "Alea iacta est (infer_496116c2999d)",
+   "hand": 25,
+   "hole": [
+    "3h",
+    "6s"
+   ],
+   "chen": 1.0,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "2s",
+    "2h",
+    "Th",
+    "Jh",
+    "8h"
+   ]
+  },
+  {
+   "match": "m_20261115t164308_404794",
+   "entry": "Alea iacta est (infer_f617937bbaa3)",
+   "hand": 23,
+   "hole": [
+    "Qs",
+    "Qc"
+   ],
+   "chen": 14,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "7d",
+    "4d",
+    "4h",
+    "Jd",
+    "2s"
+   ]
+  },
+  {
+   "match": "m_20261115t170830_267dd8",
+   "entry": "Alea iacta est (infer_f617937bbaa3)",
+   "hand": 3,
+   "hole": [
+    "Ks",
+    "As"
+   ],
+   "chen": 12,
+   "actions": [
+    "raise",
+    "raise",
+    "call",
+    "call"
+   ],
+   "board": [
+    "Qh",
+    "8d",
+    "6c",
+    "Jd",
+    "Js"
+   ]
+  },
+  {
+   "match": "m_20261115t172046_4a88bd",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 16,
+   "hole": [
+    "7c",
+    "Kd"
+   ],
+   "chen": 3,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "8c",
+    "3d",
+    "2d",
+    "8d",
+    "Tc"
+   ]
+  },
+  {
+   "match": "m_20261115t172118_647985",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 25,
+   "hole": [
+    "3d",
+    "Ah"
+   ],
+   "chen": 5,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "Ks",
+    "Jc",
+    "9s",
+    "4s",
+    "5s"
+   ]
+  },
+  {
+   "match": "m_20261115t172131_8f5c95",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 8,
+   "hole": [
+    "Qc",
+    "Js"
+   ],
+   "chen": 7,
+   "actions": [
+    "call"
+   ],
+   "board": [
+    "3c",
+    "9h",
+    "2c",
+    "7h",
+    "4h"
+   ]
+  },
+  {
+   "match": "m_20261115t172202_5cad06",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 16,
+   "hole": [
+    "Qc",
+    "Qh"
+   ],
+   "chen": 14,
+   "actions": [
+    "raise"
+   ],
+   "board": [
+    "Td",
+    "3c",
+    "Th",
+    "Ts",
+    "Ad"
+   ]
+  },
+  {
+   "match": "m_20261115t173712_df2004",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 16,
+   "hole": [
+    "7d",
+    "Js"
+   ],
+   "chen": 2,
+   "actions": [
+    "call",
+    "call"
+   ],
+   "board": [
+    "2c",
+    "Ts",
+    "5d",
+    "2h",
+    "Ad"
+   ]
+  },
+  {
+   "match": "m_20261115t174115_f80808",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 17,
+   "hole": [
+    "9d",
+    "9h"
+   ],
+   "chen": 9.0,
+   "actions": [
+    "call",
+    "call",
+    "bet"
+   ],
+   "board": [
+    "5c",
+    "3c",
+    "4d",
+    "Kd",
+    "5d"
+   ]
+  },
+  {
+   "match": "m_20261115t174936_8f3061",
+   "entry": "solver-GRPO round 4 step 10 (61.7% agree) (infer_7fe0e70e868b)",
+   "hand": 22,
+   "hole": [
+    "6d",
+    "6h"
+   ],
+   "chen": 6.0,
+   "actions": [
+    "call",
+    "check",
+    "check",
+    "call"
+   ],
+   "board": [
+    "Jh",
+    "2s",
+    "4s",
+    "Kd",
+    "Qs"
+   ]
+  }
+ ],
+ "weak_busts": 33,
+ "total_busts": 55
+}

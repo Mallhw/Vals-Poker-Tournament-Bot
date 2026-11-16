@@ -10,7 +10,8 @@ import random
 
 from .table import Decision, DecisionContext
 
-ARCHETYPES = ("random", "maniac", "nit", "calling_station")
+ARCHETYPES = ("random", "maniac", "nit", "calling_station", "shover")
+SHOVE_RATE = 0.6  # `shover` (not in Vals' engine): goes all-in preflop with any two cards this often, and always when strong
 
 
 def _strong(hole_cards: list[str]) -> bool:
@@ -37,6 +38,12 @@ class ScriptedPlayer:
         if self.archetype == "maniac":
             if legal.raise_type and self.rng.random() < 0.7:
                 return Decision(legal.raise_type, min(legal.max_raise_to, max(legal.min_raise_to, ctx.pot * 2)))
+            return passive
+        if self.archetype == "shover":  # like the arena's "Bob the Buster": shove or fold preflop, then check/call
+            if ctx.street == "preflop":
+                if legal.raise_type and (_strong(ctx.hole_cards) or self.rng.random() < SHOVE_RATE):
+                    return Decision(legal.raise_type, legal.max_raise_to)
+                return Decision("check" if legal.can_check else "fold")
             return passive
         if self.archetype == "nit":
             if not _strong(ctx.hole_cards):
